@@ -1,0 +1,6 @@
+.idea/*
+*.pyc
+nucleartf.egg-info/*
+dist/*
+ckpts/*
+build/*
