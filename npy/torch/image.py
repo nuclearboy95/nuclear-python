@@ -3,15 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import transforms
 from PIL import Image
+from ..constants import MEAN_IMAGENET, STD_IMAGENET
 
 
 __all__ = ['show_imagenet_tensor', 'preprocess_imagenet_pil', 'read_imagenet_tensor',
            'preprocess_imagenet',
            ]
-
-
-MEAN_IMAGENET = [0.485, 0.456, 0.406]
-STD_IMAGENET = [0.229, 0.224, 0.225]
 
 
 # Plots image from tensor

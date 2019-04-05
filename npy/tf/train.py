@@ -5,7 +5,7 @@ from itertools import count
 from tqdm import tqdm
 
 
-__all__ = ['run_dict', 'run_op']
+__all__ = ['run_dict', 'run_op', 'hook_generator']
 
 
 def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None):
@@ -45,3 +45,26 @@ def run_op(sess, op, steps=None, verbose=True, hook=None, feed_dict=None):
     ops = {key: op}
     result_d = run_dict(sess, ops, steps=steps, verbose=verbose, hook=hook, feed_dict=feed_dict)
     return result_d[key]
+
+
+def hook_generator(keys, ln=False):
+    end = '\n' if ln else ''
+
+    def hook(result_one):
+        fmt_strs = list()
+        if 'i_batch' in result_one:
+            fmt_strs.append('Batch #{i_batch:04d}')
+        for key in keys:
+            fmt_strs.append('%s: {%s:.3f}' % (key, key))
+        fmt_str = '\r' + ', '.join(fmt_strs)
+
+        d = {}
+        for k in result_one:
+            if isinstance(result_one[k], np.ndarray):
+                d[k] = np.mean(result_one[k])
+            else:
+                d[k] = result_one[k]
+        print(fmt_str.format(**d), end=end)
+
+    return hook
+

@@ -2,6 +2,26 @@ import numpy as np
 from scipy.misc import imresize
 
 
+def img_shape(img):
+    shape = img.shape[-3:]
+    if len(shape) <= 1:
+        raise ValueError('Unexpected shape: {}'.format(shape))
+
+    elif len(shape) == 2:
+        H, W = shape
+        return H, W, 1
+
+    elif len(shape) == 3:
+        H, W, C = shape
+        if C in [1, 3]:
+            return H, W, C
+        else:
+            raise ValueError('Unexpected shape: {}'.format(shape))
+
+    else:
+        raise ValueError('Unexpected shape: {}'.format(shape))
+
+
 def pad(images, K, shape=None):
     if shape is None:
         shape = images.shape[1:]
@@ -13,8 +33,7 @@ def pad(images, K, shape=None):
 
 
 def iscolor(img):
-    shape = img.shape
-    return len(shape) == 3 and shape[-1] == 3
+    return img_shape(img)[-1] == 3
 
 
 def resize_imagenet(img):

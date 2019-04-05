@@ -1,11 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.misc import imresize
-from .utils_image import rescale_img, assure_image_dtype, assure_color_image
+from .utils_image import rescale_img, assure_image_dtype, assure_color_image, img_shape
 
 
 def flatten_imgs(imgs, show_shape):
     num_img = np.prod(show_shape)
+
+    if isinstance(imgs, list):
+        imgs = np.array(imgs)
+
     for i in range(len(imgs.shape)):
         if num_img == np.prod(imgs.shape[:i]):
             img_shape = imgs.shape[i:]
@@ -16,17 +20,28 @@ def flatten_imgs(imgs, show_shape):
         raise ValueError('Cannot distinguish images. imgs shape: %s, show_shape: %s' % (imgs.shape, show_shape))
 
 
-def merge_imgs(imgs, show_shape):
+def merge_imgs(imgs, show_shape, order='row'):
+    """
+
+    :param np.ndarray imgs:
+    :param tuple show_shape:
+    :param str order:
+    :return:
+    """
     imgs = flatten_imgs(imgs, show_shape)
-    image_shape = imgs.shape[1:3]
-    shape_result = show_shape[0] * image_shape[0], show_shape[1] * image_shape[1]
-    result = np.zeros(shape_result, dtype=imgs.dtype)
+    H, W, C = img_shape(imgs)
+    I, J = show_shape
+    result = np.zeros((I * H, J * W, C), dtype=imgs.dtype)
 
     for k, img in enumerate(imgs):
-        i = k // show_shape[1]
-        j = k % show_shape[1]
-        result[i * image_shape[0]: (i + 1) * image_shape[0], j * image_shape[1]: (j + 1) * image_shape[1]] \
-            = np.squeeze(img)
+        if order == 'row':
+            i = k // J
+            j = k % J
+        else:
+            i = k % I
+            j = k // I
+
+        result[i * H: (i + 1) * H, j * W: (j + 1) * W] = np.squeeze(img)
 
     return result
 
