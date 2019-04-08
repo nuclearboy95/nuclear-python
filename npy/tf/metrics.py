@@ -10,7 +10,7 @@ def accuracy(labels, preds, label=None):
 
     correct = tf.cast(tf.equal(preds_a, labels_a), tf.float32)
 
-    if labels is not None:
+    if label is not None:
         in_class = tf.equal(labels_a, label)
         correct = tf.boolean_mask(correct, in_class)
 

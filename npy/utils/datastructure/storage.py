@@ -1,6 +1,7 @@
 import os
 from .. import load_binary, save_binary
 import shutil
+from glob import glob
 
 
 class FileDict:
@@ -52,7 +53,7 @@ class FileDict:
         return os.path.exists(path) and os.path.isfile(path)
 
     def keys(self):
-        allnames = os.listdir(self.root_folder)
+        allnames = glob('**', recursive=True)
         filenames = list(filter(os.path.isfile, allnames))
         filenames.sort()
         return filenames

@@ -1,6 +1,6 @@
 .idea/*
 *.pyc
-nucleartf.egg-info/*
+nuclear_python.egg-info/*
 dist/*
 ckpts/*
 build/*

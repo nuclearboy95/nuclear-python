@@ -23,7 +23,6 @@ npy/tf/__init__.py
 npy/tf/datasets.py
 npy/tf/debug.py
 npy/tf/graph.py
-npy/tf/hooks.py
 npy/tf/image.py
 npy/tf/metrics.py
 npy/tf/train.py

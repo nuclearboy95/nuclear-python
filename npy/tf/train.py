@@ -59,11 +59,14 @@ def hook_generator(keys, ln=False):
         fmt_str = '\r' + ', '.join(fmt_strs)
 
         d = {}
-        for k in result_one:
-            if isinstance(result_one[k], np.ndarray):
-                d[k] = np.mean(result_one[k])
+        for k, v in result_one.items():
+            if isinstance(v, np.ndarray) or isinstance(v, list):
+                try:
+                    d[k] = np.mean(v)
+                except:
+                    pass
             else:
-                d[k] = result_one[k]
+                d[k] = v
         print(fmt_str.format(**d), end=end)
 
     return hook
