@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 
-__all__ = ['mix_datasets']
+__all__ = ['mix_datasets', 'repeat_elementwise']
 
 
 def mix_datasets(datasets, lengths, fit_longest=True):
@@ -20,3 +20,9 @@ def mix_datasets(datasets, lengths, fit_longest=True):
         )
                        )
         return d
+
+
+def repeat_elementwise(dataset, count):
+    return dataset.flat_map(
+        lambda x: tf.data.Dataset.from_tensors(x).repeat(count)
+    )

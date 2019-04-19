@@ -39,6 +39,8 @@ def iscolor(img):
 def resize_imagenet(img):
     # crop imgs to 224 x 224
     H, W = img.shape[:2]
+    if (H, W) == (224, 224):
+        return img
     scale = 1.15
     r = max(224. / H, 224. / W)
     Hp = int(H * r * scale)
@@ -198,3 +200,19 @@ def assure_image_dtype_uint8(image):
 
     else:
         raise_unknown_image_dtype()
+
+
+def ij_range(H, W, K=1, S=1, O=0):
+    """
+
+    :param int H:
+    :param int W:
+    :param int K:
+    :param int S:
+    :param int O:
+    :return:
+    """
+
+    for i in range(O, H - K + 1, S):
+        for j in range(O, W - K + 1, S):
+            yield i, j

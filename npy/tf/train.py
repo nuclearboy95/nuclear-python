@@ -5,7 +5,21 @@ from itertools import count
 from tqdm import tqdm
 
 
-__all__ = ['run_dict', 'run_op', 'hook_generator']
+__all__ = ['runner', 'run_dict', 'run_op', 'hook_generator']
+
+
+def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
+    i_batch_g = range(steps) if steps is not None else count()
+
+    if verbose:
+        i_batch_g = tqdm(i_batch_g)
+
+    for i_batch in i_batch_g:
+        try:
+            result = sess.run(ops, feed_dict=feed_dict)
+            yield (i_batch, result)
+        except tf.errors.OutOfRangeError:
+            raise StopIteration
 
 
 def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None):
@@ -18,20 +32,9 @@ def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None):
     :param hook:
     :return:
     """
-    i_batch_g = range(steps) if steps is not None else count()
-
-    if verbose:
-        i_batch_g = tqdm(i_batch_g)
-
     results = d_of_l()
-    for i_batch in i_batch_g:
-        try:
-            result_one = sess.run(ops, feed_dict=feed_dict)
-        except tf.errors.OutOfRangeError:
-            break
-
+    for i_batch, result_one in runner(sess, ops, steps=steps, verbose=verbose, feed_dict=feed_dict):
         append_d_of_l(results, result_one)
-
         if hook is not None:
             if 'i_batch' not in result_one:
                 result_one['i_batch'] = i_batch
