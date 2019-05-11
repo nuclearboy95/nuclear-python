@@ -6,9 +6,9 @@ import os
 from .utils_files import home_path
 
 
-def load_binary(path):
+def load_binary(path, encoding='ASCII'):
     with open(path, 'rb') as f:
-        return p.load(f)
+        return p.load(f, encoding=encoding)
 
 
 def load_json(path):

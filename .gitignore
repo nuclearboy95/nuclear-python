@@ -4,3 +4,4 @@ nuclear_python.egg-info/*
 dist/*
 ckpts/*
 build/*
+.eggs/*

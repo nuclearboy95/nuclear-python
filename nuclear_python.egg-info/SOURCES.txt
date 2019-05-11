@@ -25,7 +25,11 @@ npy/tf/debug.py
 npy/tf/graph.py
 npy/tf/image.py
 npy/tf/metrics.py
+npy/tf/misc.py
 npy/tf/train.py
+npy/tf/models/__init__.py
+npy/tf/models/alexnet.py
+npy/tf/models/vgg19.py
 npy/tk/__init__.py
 npy/tk/event_binder.py
 npy/tk/window_class.py
@@ -51,6 +55,7 @@ npy/utils/utils_io.py
 npy/utils/utils_misc.py
 npy/utils/utils_multiprocess.py
 npy/utils/utils_numbers.py
+npy/utils/utils_plot.py
 npy/utils/utils_profiler.py
 npy/utils/utils_show.py
 npy/utils/utils_task_context.py

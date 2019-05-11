@@ -5,7 +5,14 @@ from itertools import count
 from tqdm import tqdm
 
 
-__all__ = ['runner', 'run_dict', 'run_op', 'hook_generator']
+__all__ = ['runner', 'run_dict', 'run_op', 'hook_generator', 'minimize_clipped']
+
+
+def minimize_clipped(optimizer, loss, norm=1.):
+    gvs = optimizer.compute_gradients(loss)
+    capped = [(tf.clip_by_norm(grad, norm), v) for grad, v in gvs]
+    train_op = optimizer.apply_gradients(capped)
+    return train_op
 
 
 def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
@@ -30,6 +37,7 @@ def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None):
     :param int steps:
     :param bool verbose:
     :param hook:
+    :param dict feed_dict:
     :return:
     """
     results = d_of_l()
