@@ -8,7 +8,8 @@ __all__ = ['show_heatmap']
 
 
 def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
-                 nonnegative=False, thres=1e-5, vmax=None, bg=None, bg_alpha=0.6):
+                 nonnegative=False, thres=1e-5, vmax=None, bg=None, bg_alpha=0.6,
+                 cmap=None, cb_legend=False):
     """
 
     :param matplotlib.axes._subplots.AxesSubplot ax:
@@ -21,6 +22,7 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
     :param float vmax:
     :param np.ndarray bg:
     :param float bg_alpha:
+    :param str cmap:
     :return:
     """
     if ax is None:
@@ -40,10 +42,10 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
         vmax = top
     if nonnegative:
         vmin = 0
-        cmap = 'gray'
+        cmap = cmap or 'gray'
     else:
         vmin = -vmax
-        cmap = 'RdBu'
+        cmap = cmap or 'RdBu_r'
 
     if bg is not None:
         show_image(ax, bg)
@@ -57,3 +59,6 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
         cb.ax.tick_params(labelsize=10)
         cb.ax.yaxis.get_offset_text().set(size=8)
         cb.update_ticks()
+        if not cb_legend:
+            cb.ax.set_axis_off()
+

@@ -83,3 +83,9 @@ def save_rsc(d, *args):
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     save_binary(d, path)
+
+
+ldj = load_json
+ldb = load_binary
+svj = save_json
+svb = save_binary

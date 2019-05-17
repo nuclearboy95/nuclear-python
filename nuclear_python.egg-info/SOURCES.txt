@@ -1,5 +1,6 @@
 MANIFEST.in
 README.md
+pq.sh
 requirements.txt
 setup.py
 npy/__init__.py
@@ -43,6 +44,8 @@ npy/tk/tests/matplot_connect.py
 npy/tk/tests/notebook.py
 npy/tk/widgets/__init__.py
 npy/tk/widgets/scrollable_listbox.py
+npy/tools/__init__.py
+npy/tools/bash_commands.py
 npy/torch/__init__.py
 npy/torch/etc.py
 npy/torch/image.py

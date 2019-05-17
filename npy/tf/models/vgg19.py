@@ -9,6 +9,7 @@ __all__ = ['VGG19']
 class VGG19:
     def __init__(self, x):
         h = preprocess_imagenet(x)
+        self.preprocessed = h
 
         with tf.variable_scope('vgg19'):
             with tf.variable_scope('feature'):

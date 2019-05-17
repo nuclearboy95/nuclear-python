@@ -1,5 +1,5 @@
 include README.md
-
+include pq.sh
 include requirements.txt
 include npy/examples/example_images/*.png
 include npy/examples/example_images/mnist/*.png

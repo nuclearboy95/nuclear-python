@@ -1,5 +1,23 @@
 import numpy as np
 from scipy.misc import imresize
+from ..constants import MEAN_IMAGENET, STD_IMAGENET
+
+
+def preprocess_imagenet(x):
+    x = x.astype(np.float32)
+    x /= 255.
+    x -= np.array(MEAN_IMAGENET)
+    x /= np.array(STD_IMAGENET)
+    return x
+
+
+def unpreprocess_imagenet(x):
+    x *= np.array(STD_IMAGENET)
+    x += np.array(MEAN_IMAGENET)
+    x *= 255.
+    np.clip(x, 0, 255, out=x)
+    x = x.astype(np.uint8)
+    return x
 
 
 def img_shape(img):
