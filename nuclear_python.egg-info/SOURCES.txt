@@ -63,6 +63,9 @@ npy/utils/datastructure/d_of.py
 npy/utils/datastructure/dashboard.py
 npy/utils/datastructure/easy_path.py
 npy/utils/datastructure/storage.py
+npy/utils/logger/__init__.py
+npy/utils/logger/logger_funcs.py
+npy/utils/logger/logger_set.py
 ntf/__init__.py
 ntf/constants.py
 ntf/datasets.py

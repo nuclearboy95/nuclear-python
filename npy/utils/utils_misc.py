@@ -3,6 +3,7 @@ import numpy as np
 import math
 from collections.abc import Iterable
 import os
+from .logger import *
 
 
 def set_cuda(*args):
@@ -54,3 +55,36 @@ def inv_d(d):
 def append_d_of_l(d_of_l, d):
     for key, value in d.items():
         d_of_l[key].append(value)
+
+
+def track(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        logd('%s() called.' % f.__name__)
+        result = f(*args, **kwargs)
+        return result
+    return wrapper
+
+
+def trackall(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        logd('%s() called.' % f.__name__)
+        result = f(*args, **kwargs)
+        logd('%s() finished.' % f.__name__)
+        return result
+    return wrapper
+
+
+def failsafe(value=None):
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            try:
+                result = f(*args, **kwargs)
+                return result
+            except Exception as e:
+                loge('@failsafe %s() ended with %s.' % (f.__name__, e.__class__.__name__))
+                return value
+        return wrapper
+    return decorator
