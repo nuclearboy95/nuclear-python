@@ -1,2 +1,3 @@
 #!/bin/bash
-PYTHONSTARTUP=startup_pdf.py python
+SOURCE="${BASH_SOURCE[0]}"
+PYTHONSTARTUP="${SOURCE}_startup.py" python

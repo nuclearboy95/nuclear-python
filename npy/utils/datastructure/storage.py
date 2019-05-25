@@ -4,10 +4,10 @@ import shutil
 from glob import glob
 
 
-__all__ = ['Fdict', 'FileDict', 'SpawningCache']
+__all__ = ['fdict', 'FileDict', 'SpawningCache']
 
 
-class Fdict:
+class fdict:
     def __init__(self, root_folder='./'):
         self.root_folder = root_folder
         os.makedirs(root_folder, exist_ok=True)
@@ -16,14 +16,19 @@ class Fdict:
         key = self._preprocess_key(key)
         path = self._get_path(key)
 
-        if self._is_file(path):
-            try:
-                return load_binary(path)
-            except EOFError:
-                print('EOFError during loading. Key:', key)
-                raise
+        if os.path.exists(path):
+            if os.path.isfile(path):
+                try:
+                    return load_binary(path)
+                except EOFError:
+                    print('EOFError during loading. Key:', key)
+                    raise
+
+            else:
+                return fdict(path)
+
         else:
-            raise KeyError(key)
+            return fdict(path)
 
     def __setitem__(self, key, value):  # d[key] = value
         key = self._preprocess_key(key)
@@ -36,9 +41,8 @@ class Fdict:
 
         if os.path.exists(path):
             if os.path.isdir(path):  # 2. if a directory
-                raise ValueError('Key is a directory')
-            else:
-                save_binary(value, path)
+                shutil.rmtree(path)
+        save_binary(value, path)
 
     def __delitem__(self, key):  # del d[key]
         key = self._preprocess_key(key)
@@ -61,14 +65,16 @@ class Fdict:
     def _is_file(path):
         return os.path.exists(path) and os.path.isfile(path)
 
-    def keys(self):
-        allnames = glob('**', recursive=True)
+    def keys(self, recursive=False):
+        if recursive:
+            allnames = glob(os.path.join(self.root_folder, '**'), recursive=True)
+        else:
+            allnames = os.listdir(self.root_folder)
         filenames = list(filter(os.path.isfile, allnames))
-        filenames.sort()
-        return filenames
+        return sorted(filenames)
 
 
-FileDict = Fdict
+FileDict = fdict
 
 
 class SpawningCache:

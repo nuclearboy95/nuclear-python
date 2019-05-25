@@ -11,6 +11,7 @@ bash_scripts/pp
 bash_scripts/pp_startup.py
 npy/__init__.py
 npy/constants.py
+npy/namespace.py
 npy/examples/__init__.py
 npy/examples/images_imagenet.py
 npy/examples/images_mnist.py
@@ -43,6 +44,7 @@ npy/tk/widgets/__init__.py
 npy/tk/widgets/scrollable_listbox.py
 npy/tools/__init__.py
 npy/tools/bash_commands.py
+npy/tools/short_hands.py
 npy/utils/__init__.py
 npy/utils/utils_dataframe.py
 npy/utils/utils_exp.py
