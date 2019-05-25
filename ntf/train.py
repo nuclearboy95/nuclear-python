@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from ..utils import d_of_l, append_d_of_l
+from npy import d_of_l, append_d_of_l
 from itertools import count
 from tqdm import tqdm
 

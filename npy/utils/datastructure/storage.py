@@ -4,12 +4,15 @@ import shutil
 from glob import glob
 
 
-class FileDict:
+__all__ = ['Fdict', 'FileDict', 'SpawningCache']
+
+
+class Fdict:
     def __init__(self, root_folder='./'):
         self.root_folder = root_folder
         os.makedirs(root_folder, exist_ok=True)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key):  # value = d[key]
         key = self._preprocess_key(key)
         path = self._get_path(key)
 
@@ -22,16 +25,22 @@ class FileDict:
         else:
             raise KeyError(key)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value):  # d[key] = value
         key = self._preprocess_key(key)
         path = self._get_path(key)
         dirname = os.path.dirname(path)
+
+        # 1. make a directory
         if not os.path.exists(dirname):
             os.makedirs(dirname, exist_ok=True)
 
-        save_binary(value, path)
+        if os.path.exists(path):
+            if os.path.isdir(path):  # 2. if a directory
+                raise ValueError('Key is a directory')
+            else:
+                save_binary(value, path)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key):  # del d[key]
         key = self._preprocess_key(key)
         path = self._get_path(key)
 
@@ -57,6 +66,9 @@ class FileDict:
         filenames = list(filter(os.path.isfile, allnames))
         filenames.sort()
         return filenames
+
+
+FileDict = Fdict
 
 
 class SpawningCache:

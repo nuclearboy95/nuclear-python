@@ -1,0 +1,3 @@
+#!/bin/bash
+SOURCE="${BASH_SOURCE[0]}"
+PYTHONSTARTUP="${SOURCE}_startup.py" python

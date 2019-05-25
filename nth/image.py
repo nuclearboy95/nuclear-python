@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import transforms
 from PIL import Image
-from ..constants import MEAN_IMAGENET, STD_IMAGENET
+from .constants import MEAN_IMAGENET, STD_IMAGENET
 
 
 __all__ = ['show_imagenet_tensor', 'preprocess_imagenet_pil', 'read_imagenet_tensor',

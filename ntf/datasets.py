@@ -22,7 +22,14 @@ def mix_datasets(datasets, lengths, fit_longest=True):
         return d
 
 
-def repeat_elementwise(dataset, count):
+def repeat_elementwise(dataset, count) -> tf.data.Dataset:
+    """
+    Repeat element of each dataset by *count*.
+
+    :param tf.data.Dataset dataset:
+    :param int count:
+    :return:
+    """
     return dataset.flat_map(
         lambda x: tf.data.Dataset.from_tensors(x).repeat(count)
     )
