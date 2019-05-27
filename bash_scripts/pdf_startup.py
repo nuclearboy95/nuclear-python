@@ -5,4 +5,4 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import pandas as pd
 import npy
-from npy.namespace import *
+from npy.ns import *

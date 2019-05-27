@@ -1,7 +1,20 @@
 import logging
+import logging.handlers
 import coloredlogs
 
 logger = None
+logging_to_file = False
+
+
+def save_logs():
+    global logging_to_file
+
+    if not logging_to_file:
+        fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
+        fh = logging.handlers.TimedRotatingFileHandler('log.log', when='D')
+        fh.setFormatter(fmt)
+        logger.addHandler(fh)
+        logging_to_file = True
 
 
 def init_logger():
@@ -9,23 +22,23 @@ def init_logger():
 
     logger = logging.getLogger('npy')
     logger.propagate = False
-    # fmt = logging.Formatter('%(levelname).1s [%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
-    # handler = logging.StreamHandler()
-    # handler.setFormatter(fmt)
-    # logger.addHandler(handler)
+
     logger.setLevel(logging.DEBUG)
-    level_styles = {'critical': {'color': 'red', 'bold': True},
-                    'error': {'color': 'red'},
-                    'warning': {'color': 'yellow'},
-                    'success': {'color': 'green', 'bold': True},
-                    'notice': {'color': 'magenta'},
+    level_styles = {
+                    'critical': {'color': 'red', 'bold': True},
+                    'error': {'color': 'yellow'},
+                    'warning': {'color': 'green', 'bold': True},
                     'info': {},
-                    'verbose': {'color': 'black', 'bright': True},
-                    'debug': {'color': 'black'},
-                    'spam': {'color': 'black', 'faint': True},
+                    'debug': {'color': 'black', 'bright': True},
                     }
-    coloredlogs.install(level='DEBUG', logger=logger, fmt='%(levelname).1s [%(asctime)s] %(message)s', datefmt="%m-%d %H:%M:%S",
-                        field_styles={'asctime': {'color': 'white'}},
+    field_styles = {
+        'asctime': {'color': 'blue'},
+        'levelname': {'color': 'yellow', 'faint': True}
+    }
+    coloredlogs.install(level='DEBUG', logger=logger,
+                        fmt='[%(asctime)s] %(message)s',
+                        datefmt="%m-%d %H:%M:%S",
+                        field_styles=field_styles,
                         level_styles=level_styles)
 
 try:

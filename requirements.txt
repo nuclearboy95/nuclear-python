@@ -1,4 +1,4 @@
-coloredlogs
+coloredlogs>=10.0
 tabulate
 tqdm
 numpy>=1.14

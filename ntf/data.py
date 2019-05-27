@@ -27,7 +27,7 @@ def repeat_elementwise(dataset, count) -> tf.data.Dataset:
     Repeat element of each dataset by *count*.
 
     :param tf.data.Dataset dataset:
-    :param int count:
+    :param int count: number_of_repeats
     :return:
     """
     return dataset.flat_map(

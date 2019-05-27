@@ -1,40 +1,40 @@
 from .logger_set import logger
 
 
-__all__ = ['logc', 'loge', 'logw', 'logi', 'logd']
+__all__ = ['saye', 'sayw', 'sayi', 'sayd', 'says']
 
 
 def get_message(*args):
-    return ' '.join(args)
-
-
-def printc(*args):
-    message = get_message(*args)
-    logger.critical(message)
+    return ' '.join([str(v) for v in args])
 
 
 def printe(*args):
-    message = get_message(*args)
-    logger.error(message)
+    msg = get_message(*args)
+    logger.critical(msg)
 
 
 def printw(*args):
-    message = get_message(*args)
-    logger.warning(message)
+    msg = get_message(*args)
+    logger.error(msg)
+
+
+def prints(*args):
+    msg = get_message(*args)
+    logger.warning(msg)
 
 
 def printi(*args):
-    message = get_message(*args)
-    logger.info(message)
+    msg = get_message(*args)
+    logger.info(msg)
 
 
 def printd(*args):
-    message = get_message(*args)
-    logger.debug(message)
+    msg = get_message(*args)
+    logger.debug(msg)
 
 
-logc = printc
-loge = printe
-logw = printw
-logi = printi
-logd = printd
+saye = printe
+sayw = printw
+sayi = printi
+sayd = printd
+says = prints

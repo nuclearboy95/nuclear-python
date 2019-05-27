@@ -3,7 +3,7 @@ from glob import glob
 
 setup(name='nuclear-python',
 
-      version='0.8',
+      version='0.9',
 
       url='https://github.com/nuclearboy95/nuclear-python',
 
