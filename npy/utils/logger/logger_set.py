@@ -11,7 +11,7 @@ def save_logs():
 
     if not logging_to_file:
         fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
-        fh = logging.handlers.TimedRotatingFileHandler('log.log', when='D')
+        fh = logging.handlers.TimedRotatingFileHandler('logs/log.log', when='D')
         fh.setFormatter(fmt)
         logger.addHandler(fh)
         logging_to_file = True

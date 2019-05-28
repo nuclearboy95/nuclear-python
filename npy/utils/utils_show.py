@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.misc import imresize
-from .utils_image import rescale_img, assure_image_dtype, assure_color_image, img_shape
+from .utils_image import rescale_img, assure_image_dtype, assure_color_image, img_shape, imresize
 
 
 def flatten_imgs(imgs, show_shape):

@@ -2,9 +2,20 @@ import os
 from .. import load_binary, save_binary
 import shutil
 from glob import glob
+from collections import defaultdict
 
 
-__all__ = ['fdict', 'FileDict', 'SpawningCache']
+__all__ = ['fdict', 'FileDict', 'SpawningCache', 'ddict']
+
+
+class ddict(defaultdict):
+    def __missing__(self, key):
+        if self.default_factory is None:
+            raise KeyError(key)
+
+        else:
+            ret = self[key] = self.default_factory(key)
+            return ret
 
 
 class fdict:

@@ -76,6 +76,7 @@ ntf/image.py
 ntf/metrics.py
 ntf/misc.py
 ntf/profile.py
+ntf/tb_tools.py
 ntf/train.py
 ntf/models/__init__.py
 ntf/models/alexnet.py

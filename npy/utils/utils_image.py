@@ -1,6 +1,10 @@
 import numpy as np
-from scipy.misc import imresize
 from ..constants import MEAN_IMAGENET, STD_IMAGENET
+from PIL import Image
+
+
+def imresize(image, shape):
+    return np.array(Image.fromarray(image).resize(shape))
 
 
 def preprocess_imagenet(x):
