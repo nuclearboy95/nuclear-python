@@ -1,6 +1,7 @@
 import time
 from contextlib import contextmanager
 import cProfile
+from .logger import sayd
 
 
 __all__ = ['task']
@@ -14,7 +15,7 @@ def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime'):
             profiler.enable()
 
         else:
-            print('%s start.' % blockname)
+            sayd('%s start.' % blockname)
             s = time.time()
 
     yield
@@ -26,4 +27,4 @@ def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime'):
 
         else:
             e = time.time()
-            print('%s end. Took %.2fs' % (blockname, e - s))
+            sayd('%s end. Took %.2fs' % (blockname, e - s))

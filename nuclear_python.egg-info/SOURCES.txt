@@ -9,6 +9,7 @@ bash_scripts/pdf
 bash_scripts/pdf_startup.py
 bash_scripts/pp
 bash_scripts/pp_startup.py
+bash_scripts/tb
 npy/__init__.py
 npy/constants.py
 npy/images.py

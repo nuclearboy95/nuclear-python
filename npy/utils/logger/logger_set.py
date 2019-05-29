@@ -1,6 +1,7 @@
 import logging
 import logging.handlers
 import coloredlogs
+import os
 
 logger = None
 logging_to_file = False
@@ -11,6 +12,7 @@ def save_logs():
 
     if not logging_to_file:
         fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
+        os.makedirs('logs', exist_ok=True)
         fh = logging.handlers.TimedRotatingFileHandler('logs/log.log', when='D')
         fh.setFormatter(fmt)
         logger.addHandler(fh)
@@ -41,10 +43,6 @@ def init_logger():
                         field_styles=field_styles,
                         level_styles=level_styles)
 
-try:
-    logger
-except NameError:
-    init_logger()
 
 if logger is None:
     init_logger()
