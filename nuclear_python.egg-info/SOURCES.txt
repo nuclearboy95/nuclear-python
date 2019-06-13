@@ -12,7 +12,6 @@ bash_scripts/pp_startup.py
 bash_scripts/tb
 npy/__init__.py
 npy/constants.py
-npy/images.py
 npy/ns.py
 npy/examples/__init__.py
 npy/examples/images_imagenet.py
@@ -29,6 +28,12 @@ npy/examples/example_images/mnist/6.png
 npy/examples/example_images/mnist/7.png
 npy/examples/example_images/mnist/8.png
 npy/examples/example_images/mnist/9.png
+npy/image/__init__.py
+npy/image/basic.py
+npy/image/dtype.py
+npy/image/miscs.py
+npy/image/plot.py
+npy/image/transform.py
 npy/tk/__init__.py
 npy/tk/event_binder.py
 npy/tk/window_class.py
@@ -49,14 +54,11 @@ npy/utils/__init__.py
 npy/utils/utils_dataframe.py
 npy/utils/utils_exp.py
 npy/utils/utils_files.py
-npy/utils/utils_image.py
 npy/utils/utils_io.py
 npy/utils/utils_misc.py
 npy/utils/utils_multiprocess.py
 npy/utils/utils_numbers.py
-npy/utils/utils_plot.py
 npy/utils/utils_profiler.py
-npy/utils/utils_show.py
 npy/utils/utils_task_context.py
 npy/utils/datastructure/__init__.py
 npy/utils/datastructure/d_of.py
@@ -66,8 +68,6 @@ npy/utils/datastructure/storage.py
 npy/utils/logger/__init__.py
 npy/utils/logger/logger_funcs.py
 npy/utils/logger/logger_set.py
-npy/utils_images/__init__.py
-npy/utils_images/show.py
 ntf/__init__.py
 ntf/constants.py
 ntf/data.py
@@ -78,6 +78,7 @@ ntf/metrics.py
 ntf/misc.py
 ntf/profile.py
 ntf/tb_tools.py
+ntf/test.py
 ntf/train.py
 ntf/models/__init__.py
 ntf/models/alexnet.py
@@ -90,4 +91,5 @@ nuclear_python.egg-info/PKG-INFO
 nuclear_python.egg-info/SOURCES.txt
 nuclear_python.egg-info/dependency_links.txt
 nuclear_python.egg-info/not-zip-safe
+nuclear_python.egg-info/requires.txt
 nuclear_python.egg-info/top_level.txt

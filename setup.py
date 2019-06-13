@@ -1,9 +1,16 @@
 from setuptools import setup, find_packages
 from glob import glob
 
+with open('requirements.txt', 'r') as f:
+    install_reqs = [
+        s for s in [
+            line.strip(' \n') for line in f
+        ] if not s.startswith('#') and s != ''
+    ]
+
 setup(name='nuclear-python',
 
-      version='0.9.3',
+      version='0.10.0',
 
       url='https://github.com/nuclearboy95/nuclear-python',
 
@@ -23,5 +30,5 @@ setup(name='nuclear-python',
       zip_safe=False,
 
       setup_requires=['nose>=1.0'],
-
+      install_requires=install_reqs,
       test_suite='nose.collector')
