@@ -2,10 +2,10 @@ import numpy as np
 from npy import task
 
 
-__all__ = ['main']
+__all__ = ['test']
 
 
-def main():
+def test():
     with task('Import', debug=True):
         import tensorflow as tf
 

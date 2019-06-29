@@ -60,7 +60,7 @@ def append_d_of_l(d_of_l, d):
 def track(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        logd('%s() called.' % f.__name__)
+        sayd('%s() called.' % f.__name__)
         result = f(*args, **kwargs)
         return result
     return wrapper
@@ -69,9 +69,9 @@ def track(f):
 def trackall(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        logd('%s() called.' % f.__name__)
+        sayd('%s() called.' % f.__name__)
         result = f(*args, **kwargs)
-        logd('%s() finished.' % f.__name__)
+        sayd('%s() finished.' % f.__name__)
         return result
     return wrapper
 
@@ -84,7 +84,7 @@ def failsafe(value=None):
                 result = f(*args, **kwargs)
                 return result
             except Exception as e:
-                loge('@failsafe %s() ended with %s.' % (f.__name__, e.__class__.__name__))
+                saye('@failsafe %s() ended with %s.' % (f.__name__, e.__class__.__name__))
                 return value
         return wrapper
     return decorator

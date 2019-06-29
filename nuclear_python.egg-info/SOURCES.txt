@@ -78,8 +78,10 @@ ntf/metrics.py
 ntf/misc.py
 ntf/profile.py
 ntf/tb_tools.py
-ntf/test.py
 ntf/train.py
+ntf/example/__init__.py
+ntf/example/mnist.py
+ntf/example/test.py
 ntf/models/__init__.py
 ntf/models/alexnet.py
 ntf/models/vgg19.py
