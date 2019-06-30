@@ -24,7 +24,7 @@ def split_by_column(df, col) -> dict:
     :param str col:
     :return:
     """
-    dfs = {key: df for key, df in df.goupby(col)}
+    dfs = {key: df for key, df in df.groupby(col)}
     for key in dfs:
         del dfs[key][col]
     return dfs
