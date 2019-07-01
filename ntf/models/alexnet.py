@@ -1,16 +1,19 @@
 import tensorflow as tf
 from .. import preprocess_imagenet
-import os
-
+from .model import Model
 
 __all__ = ['AlexNet']
 
 
-class AlexNet:
+class AlexNet(Model):
+    @property
+    def name(self):
+        return 'alexnet'
+
     def __init__(self, x):
         h = preprocess_imagenet(x)
 
-        with tf.variable_scope('alexnet'):
+        with tf.variable_scope(self.name):
             with tf.variable_scope('feature'):
                 with tf.variable_scope('block1'):
                     h = tf.pad(h, [[0, 0], [2, 2], [2, 2], [0, 0]])
@@ -51,14 +54,3 @@ class AlexNet:
                     self.logits = tf.layers.dense(h, 1000)
 
                 self.probs = tf.nn.softmax(self.logits)
-
-    def load(self, sess, ckpt_path):
-        vs = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='alexnet')
-        saver = tf.train.Saver(var_list=vs)
-        saver.restore(sess, ckpt_path)
-
-    def save(self, sess, ckpt_path):
-        vs = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='alexnet')
-        saver = tf.train.Saver(var_list=vs)
-        os.makedirs(os.path.dirname(ckpt_path), exist_ok=True)
-        saver.save(sess, ckpt_path)

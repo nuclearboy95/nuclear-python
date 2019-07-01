@@ -7,3 +7,4 @@ from . import data
 from . import example
 from .utils.config import config
 from .utils.scheduler import Scheduler
+from .models import Model

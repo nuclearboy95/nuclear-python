@@ -71,7 +71,6 @@ npy/utils/logger/logger_set.py
 ntf/__init__.py
 ntf/constants.py
 ntf/data.py
-ntf/debug.py
 ntf/graph.py
 ntf/image.py
 ntf/metrics.py
@@ -85,6 +84,10 @@ ntf/example/test.py
 ntf/models/__init__.py
 ntf/models/alexnet.py
 ntf/models/vgg19.py
+ntf/utils/__init__.py
+ntf/utils/config.py
+ntf/utils/debug.py
+ntf/utils/scheduler.py
 nth/__init__.py
 nth/constants.py
 nth/etc.py
