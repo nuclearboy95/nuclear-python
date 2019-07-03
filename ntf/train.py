@@ -1,9 +1,10 @@
 import tensorflow as tf
 
 from .misc import abs_max, norms2
+from .metrics import accuracy
 
 
-__all__ = ['minimize_clipped', 'minimize', 'make_ops']
+__all__ = ['minimize_clipped', 'minimize', 'make_train_ops', 'make_metric_ops']
 
 
 def minimize_clipped(optimizer, loss, norm=1., return_max=False):
@@ -63,10 +64,9 @@ def minimize(optimizer, loss, norm=None, return_grads_norm=False,
     return ret
 
 
-def make_ops(optimizer, loss, norm=1.,
-             train=True,
-             return_grads_norm=True, return_grads_max=True,
-             return_vars_norm=True, return_vars_max=True) -> dict:
+def make_train_ops(optimizer, loss, norm=1., train=True,
+                   return_grads_norm=True, return_grads_max=True,
+                   return_vars_norm=True, return_vars_max=True) -> dict:
     """
 
     :param tf.train.Optimizer optimizer:
@@ -86,22 +86,51 @@ def make_ops(optimizer, loss, norm=1.,
 
     grads = [grad for grad, v in grads_and_vars]
     vs = [v for grad, v in grads_and_vars]
+    mode = 'train' if train else 'test'
     ret = {}
+
+    if True:
+        key = '{mode}/Loss'.format(mode=mode)
+        ret.update({key: tf.reduce_mean(loss)})
 
     if train:
         ret.update({':train_op': optimizer.apply_gradients(grads_and_vars)})
 
     if return_grads_norm:
-        ret.update({'train/grad_norm': norms2(grads)})
+        key = '{mode}/monitor/grad_norm'.format(mode=mode)
+        ret.update({key: norms2(grads)})
 
     if return_grads_max:
-        ret.update({'train/grad_max': abs_max(grads)})
+        key = '{mode}/monitor/grad_max'.format(mode=mode)
+        ret.update({key: abs_max(grads)})
 
     if return_vars_norm:
-        ret.update({'train/vars_norm': norms2(vs)})
+        key = '{mode}/monitor/vars_norm'.format(mode=mode)
+        ret.update({key: norms2(vs)})
 
     if return_vars_max:
-        ret.update({'train/vars_max': abs_max(vs)})
+        key = '{mode}/monitor/vars_max'.format(mode=mode)
+        ret.update({key: abs_max(vs)})
 
     return ret
 
+
+def make_metric_ops(labels, preds, train=True, num_class=None,
+                    return_class_acc=True, return_batch_size=True) -> dict:
+    ret = {}
+    mode = 'train' if train else 'test'
+
+    if True:
+        key = '{mode}/Acc'.format(mode=mode)
+        ret.update({key: accuracy(labels=labels, preds=preds)})
+
+    if return_class_acc:
+        if num_class is not None:
+            for c in range(num_class):
+                key = '{mode}/Acc{c}'.format(mode=mode, c=c)
+                ret.update({key: accuracy(labels=labels, preds=preds, label=c)})
+
+    if return_batch_size:
+        ret.update({'batch_size': tf.shape(labels)[0]})
+
+    return ret

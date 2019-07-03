@@ -10,7 +10,7 @@ def set_cuda(*args):
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(arg) for arg in args)
 
 
-def set_tf_log(level):
+def set_tf_log(level=5):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = str(level)
 
 

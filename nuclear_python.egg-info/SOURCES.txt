@@ -76,6 +76,7 @@ ntf/image.py
 ntf/metrics.py
 ntf/misc.py
 ntf/profile.py
+ntf/sessions.py
 ntf/tb_tools.py
 ntf/train.py
 ntf/example/__init__.py

@@ -5,7 +5,8 @@ from .misc import *
 from .tb_tools import *
 from . import data
 from . import example
+from . import train
+from . import metrics
 from .utils.config import config
 from .utils.scheduler import Scheduler
 from .models import Model
-from . import train

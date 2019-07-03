@@ -9,7 +9,7 @@ __all__ = ['Model']
 class Model:
     @property
     def name(self):
-        return NotImplemented
+        return self.__class__.__name__
 
     @lazy_property
     def saver(self):
