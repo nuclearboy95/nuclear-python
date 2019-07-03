@@ -1,6 +1,7 @@
 import tensorflow as tf
 from collections import defaultdict
 from npy import ddict
+from npy.ns import sayi
 import datetime
 
 
@@ -21,10 +22,15 @@ def add_summary_values(d, step=None, name=''):
 
 def filewriter_factory(name) -> tf.summary.FileWriter:
     time_str = datetime.datetime.now().strftime('%m-%d %H:%M:%S.%f')
+
     if name == '':
-        log_name = 'tblog/{}'.format(time_str)
+        exp_name = '{}'.format(time_str)
     else:
-        log_name = 'tblog/{} ({})'.format(name, time_str)
+        exp_name = '{} ({})'.format(name, time_str)
+
+    sayi('Tensorboard exp name is %s' % exp_name)
+
+    log_name = 'tblog/%s' % exp_name
     return tf.summary.FileWriter(log_name)
 
 

@@ -83,6 +83,7 @@ ntf/example/mnist.py
 ntf/example/test.py
 ntf/models/__init__.py
 ntf/models/alexnet.py
+ntf/models/model.py
 ntf/models/vgg19.py
 ntf/utils/__init__.py
 ntf/utils/config.py

@@ -1,4 +1,4 @@
-from .train import *
+from .sessions import *
 from .image import *
 from ntf.utils.debug import *
 from .misc import *
@@ -8,3 +8,4 @@ from . import example
 from .utils.config import config
 from .utils.scheduler import Scheduler
 from .models import Model
+from . import train

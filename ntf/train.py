@@ -1,12 +1,9 @@
 import tensorflow as tf
-import numpy as np
-from npy import d_of_l, append_d_of_l
-from itertools import count
-from tqdm import tqdm
+
 from .misc import abs_max, norms2
 
 
-__all__ = ['runner', 'run_dict', 'run_op', 'hook_generator', 'minimize_clipped', 'minimize']
+__all__ = ['minimize_clipped', 'minimize', 'make_ops']
 
 
 def minimize_clipped(optimizer, loss, norm=1., return_max=False):
@@ -66,70 +63,45 @@ def minimize(optimizer, loss, norm=None, return_grads_norm=False,
     return ret
 
 
-def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
-    i_batch_g = range(steps) if steps is not None else count()
-
-    if verbose:
-        i_batch_g = tqdm(i_batch_g)
-
-    for i_batch in i_batch_g:
-        try:
-            result = sess.run(ops, feed_dict=feed_dict)
-            yield (i_batch, result)
-        except tf.errors.OutOfRangeError:
-            raise StopIteration
-
-
-def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None):
+def make_ops(optimizer, loss, norm=1.,
+             train=True,
+             return_grads_norm=True, return_grads_max=True,
+             return_vars_norm=True, return_vars_max=True) -> dict:
     """
 
-    :param tf.Session sess:
-    :param dict ops:
-    :param int steps:
-    :param bool verbose:
-    :param hook:
-    :param dict feed_dict:
+    :param tf.train.Optimizer optimizer:
+    :param tf.Tensor loss:
+    :param float norm:
+    :param bool train:
+    :param bool return_grads_norm:
+    :param bool return_grads_max:
+    :param bool return_vars_norm:
+    :param bool return_vars_max:
+
     :return:
     """
-    results = d_of_l()
-    for i_batch, result_one in runner(sess, ops, steps=steps, verbose=verbose, feed_dict=feed_dict):
-        append_d_of_l(results, result_one)
-        if hook is not None:
-            if 'i_batch' not in result_one:
-                result_one['i_batch'] = i_batch
+    grads_and_vars = optimizer.compute_gradients(loss)
+    if norm is not None:
+        grads_and_vars = [(tf.clip_by_norm(grad, norm), v) for grad, v in grads_and_vars]
 
-            hook(result_one)
-    return results.as_dict()
+    grads = [grad for grad, v in grads_and_vars]
+    vs = [v for grad, v in grads_and_vars]
+    ret = {}
 
+    if train:
+        ret.update({':train_op': optimizer.apply_gradients(grads_and_vars)})
 
-def run_op(sess, op, steps=None, verbose=True, hook=None, feed_dict=None):
-    key = 'run_op'
-    ops = {key: op}
-    result_d = run_dict(sess, ops, steps=steps, verbose=verbose, hook=hook, feed_dict=feed_dict)
-    return result_d[key]
+    if return_grads_norm:
+        ret.update({'train/grad_norm': norms2(grads)})
 
+    if return_grads_max:
+        ret.update({'train/grad_max': abs_max(grads)})
 
-def hook_generator(keys, ln=False):
-    end = '\n' if ln else ''
+    if return_vars_norm:
+        ret.update({'train/vars_norm': norms2(vs)})
 
-    def hook(result_one):
-        fmt_strs = list()
-        if 'i_batch' in result_one:
-            fmt_strs.append('Batch #{i_batch:04d}')
-        for key in keys:
-            fmt_strs.append('%s: {%s:.3f}' % (key, key))
-        fmt_str = '\r' + ', '.join(fmt_strs)
+    if return_vars_max:
+        ret.update({'train/vars_max': abs_max(vs)})
 
-        d = {}
-        for k, v in result_one.items():
-            if isinstance(v, np.ndarray) or isinstance(v, list):
-                try:
-                    d[k] = np.mean(v)
-                except:
-                    pass
-            else:
-                d[k] = v
-        print(fmt_str.format(**d), end=end)
-
-    return hook
+    return ret
 
