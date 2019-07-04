@@ -2,14 +2,14 @@ import numpy as np
 from npy import task
 
 
-__all__ = ['test']
+__all__ = ['main']
 
 
-def test():
+def main():
     with task('Import', debug=True):
         import tensorflow as tf
 
-    with task('Build net'):
+    with task('Build graph'):
         x = tf.placeholder(tf.float32, [None, None])
         y = tf.matmul(x, x)
 

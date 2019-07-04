@@ -82,9 +82,9 @@ ntf/train.py
 ntf/example/__init__.py
 ntf/example/mnist.py
 ntf/example/test.py
-ntf/hook/__init__.py
-ntf/hook/batch_hook.py
-ntf/hook/epoch_hook.py
+ntf/hooks/__init__.py
+ntf/hooks/batch_hook.py
+ntf/hooks/epoch_hook.py
 ntf/models/__init__.py
 ntf/models/alexnet.py
 ntf/models/model.py

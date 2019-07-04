@@ -4,7 +4,7 @@ from ntf.utils.debug import *
 from .misc import *
 from .tb_tools import *
 from . import data
-from . import example
+from . import ex
 from . import train
 from . import metrics
 from . import hooks
