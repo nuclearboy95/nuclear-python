@@ -7,6 +7,7 @@ from . import data
 from . import example
 from . import train
 from . import metrics
+from . import hooks
 from .utils.config import config
 from .utils.scheduler import Scheduler
 from .models import Model

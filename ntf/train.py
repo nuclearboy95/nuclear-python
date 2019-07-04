@@ -97,19 +97,19 @@ def make_train_ops(optimizer, loss, norm=1., train=True,
         ret.update({':train_op': optimizer.apply_gradients(grads_and_vars)})
 
     if return_grads_norm:
-        key = '{mode}/monitor/grad_norm'.format(mode=mode)
+        key = '{mode}_monitor/grad_norm'.format(mode=mode)
         ret.update({key: norms2(grads)})
 
     if return_grads_max:
-        key = '{mode}/monitor/grad_max'.format(mode=mode)
+        key = '{mode}_monitor/grad_max'.format(mode=mode)
         ret.update({key: abs_max(grads)})
 
     if return_vars_norm:
-        key = '{mode}/monitor/vars_norm'.format(mode=mode)
+        key = '{mode}_monitor/vars_norm'.format(mode=mode)
         ret.update({key: norms2(vs)})
 
     if return_vars_max:
-        key = '{mode}/monitor/vars_max'.format(mode=mode)
+        key = '{mode}_monitor/vars_max'.format(mode=mode)
         ret.update({key: abs_max(vs)})
 
     return ret
@@ -127,7 +127,7 @@ def make_metric_ops(labels, preds, train=True, num_class=None,
     if return_class_acc:
         if num_class is not None:
             for c in range(num_class):
-                key = '{mode}/Acc{c}'.format(mode=mode, c=c)
+                key = '{mode}/Acc/class{c}'.format(mode=mode, c=c)
                 ret.update({key: accuracy(labels=labels, preds=preds, label=c)})
 
     if return_batch_size:

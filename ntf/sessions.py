@@ -3,6 +3,8 @@ from npy import d_of_l, append_d_of_l
 from itertools import count
 from tqdm import tqdm
 import tensorflow as tf
+from .tb_tools import add_summary_values
+from npy import task
 
 
 __all__ = ['runner', 'run_dict', 'run_op', 'hook_generator']
@@ -16,8 +18,9 @@ def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
 
     for i_batch in i_batch_g:
         try:
-            result = sess.run(ops, feed_dict=feed_dict)
-            yield (i_batch, result)
+            result_batch = sess.run(ops, feed_dict=feed_dict)
+            result_batch.update({'i_batch': i_batch})
+            yield (i_batch, result_batch)
         except tf.errors.OutOfRangeError:
             raise StopIteration
 
@@ -37,9 +40,6 @@ def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None) -> 
     for i_batch, result_one in runner(sess, ops, steps=steps, verbose=verbose, feed_dict=feed_dict):
         append_d_of_l(results, result_one)
         if hook is not None:
-            if 'i_batch' not in result_one:
-                result_one['i_batch'] = i_batch
-
             hook(result_one)
     return results.as_dict()
 
@@ -74,4 +74,3 @@ def hook_generator(keys, ln=False):
         print(fmt_str.format(**d), end=end)
 
     return hook
-
