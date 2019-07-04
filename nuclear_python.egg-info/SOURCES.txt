@@ -79,9 +79,9 @@ ntf/profile.py
 ntf/sessions.py
 ntf/tb_tools.py
 ntf/train.py
-ntf/example/__init__.py
-ntf/example/mnist.py
-ntf/example/test.py
+ntf/ex/__init__.py
+ntf/ex/mnist.py
+ntf/ex/test.py
 ntf/hooks/__init__.py
 ntf/hooks/batch_hook.py
 ntf/hooks/epoch_hook.py

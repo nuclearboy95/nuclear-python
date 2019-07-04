@@ -1,12 +1,13 @@
 from npy.ns import *
 import tensorflow as tf
+from ..models import Model
 import ntf
 
 
-__all__ = ['main']
+__all__ = ['mnist']
 
 
-class MNISTModel(ntf.Model):
+class MNISTModel(Model):
     def __init__(self, x):
         h = x
         with tf.variable_scope('MNISTModel'):
@@ -29,10 +30,6 @@ class MNISTModel(ntf.Model):
                 h = tf.nn.softmax(h)
                 self.probs = h
 
-    @property
-    def name(self):
-        return 'MNISTModel'
-
 
 class Iterators:
     @staticmethod
@@ -53,7 +50,7 @@ class Iterators:
         return ds.make_initializable_iterator()
 
 
-def main():
+def mnist():
     set_cuda()
     set_tf_log(5)
     data = tf.keras.datasets.mnist.load_data()

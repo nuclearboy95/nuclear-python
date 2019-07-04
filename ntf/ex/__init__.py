@@ -1,2 +1,2 @@
-from . import mnist
-from . import test
+from .mnist import mnist
+from .test import test
