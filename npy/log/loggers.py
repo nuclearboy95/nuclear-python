@@ -1,4 +1,4 @@
-from .logger_set import logger
+from .setters import logger
 
 
 __all__ = ['saye', 'sayw', 'sayi', 'sayd', 'says']

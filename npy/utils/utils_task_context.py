@@ -1,7 +1,7 @@
 import time
 from contextlib import contextmanager
 import cProfile
-from .logger import sayd
+from ..log import sayd
 
 
 __all__ = ['task']

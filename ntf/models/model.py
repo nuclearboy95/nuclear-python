@@ -1,7 +1,7 @@
 import tensorflow as tf
 import os
 from npy.utils import lazy_property
-from npy.ns import sayi, saye
+from npy.ns import sayd, sayw
 
 
 __all__ = ['Model']
@@ -28,7 +28,7 @@ class Model:
         self.saver.save(sess, ckpt_path)
 
         if verbose:
-            sayi('Model [{name}] saved to "{ckpt_path}".'.format(name=name, ckpt_path=ckpt_path))
+            sayd("Model [{name}] saved to '{ckpt_path}'.".format(name=name, ckpt_path=ckpt_path))
 
     def load(self, sess, ckpt_path=None, name=None, ignore=False, verbose=True):
         if name is None:
@@ -41,8 +41,8 @@ class Model:
             self.saver.restore(sess, ckpt_path)
 
             if verbose:
-                sayi('Model [{name}] loaded from "{ckpt_path}".'.format(name=name, ckpt_path=ckpt_path))
+                sayd("Model [{name}] loaded from '{ckpt_path}'.".format(name=name, ckpt_path=ckpt_path))
         except:
-            saye('Failed loading model [{name}] from "{ckpt_path}".'.format(name=name, ckpt_path=ckpt_path))
+            sayw("Failed loading model [{name}] from '{ckpt_path}'.".format(name=name, ckpt_path=ckpt_path))
             if not ignore:
                 raise

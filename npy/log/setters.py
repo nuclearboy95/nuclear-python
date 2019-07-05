@@ -7,19 +7,10 @@ logger = None
 logging_to_file = False
 
 
-def save_logs():
-    global logging_to_file
-
-    if not logging_to_file:
-        fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
-        os.makedirs('logs', exist_ok=True)
-        fh = logging.handlers.TimedRotatingFileHandler('logs/log.log', when='D')
-        fh.setFormatter(fmt)
-        logger.addHandler(fh)
-        logging_to_file = True
+__all__ = ['verbosity', 'save']
 
 
-def init_logger():
+def _init():
     global logger
 
     logger = logging.getLogger('npy')
@@ -44,5 +35,45 @@ def init_logger():
                         level_styles=level_styles)
 
 
+def save():
+    global logging_to_file
+
+    if not logging_to_file:
+        fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
+        os.makedirs('log', exist_ok=True)
+        fh = logging.handlers.TimedRotatingFileHandler('log/log.log', when='D')
+        fh.setFormatter(fmt)
+        logger.addHandler(fh)
+        logging_to_file = True
+
+
+def verbosity(level=2):
+    """
+
+    :param int level:
+    :return:
+    """
+    if not isinstance(level, int):
+        return
+
+    if logger is None:
+        _init()
+
+    if level <= 1:
+        logger.setLevel(logging.DEBUG)
+
+    elif level <= 2:
+        logger.setLevel(logging.INFO)
+
+    elif level <= 3:
+        logger.setLevel(logging.WARNING)
+
+    elif level <= 4:
+        logger.setLevel(logging.ERROR)
+
+    else:
+        logger.setLevel(logging.CRITICAL)
+
+
 if logger is None:
-    init_logger()
+    _init()

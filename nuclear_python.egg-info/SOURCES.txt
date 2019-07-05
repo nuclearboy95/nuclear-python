@@ -34,6 +34,9 @@ npy/image/dtype.py
 npy/image/miscs.py
 npy/image/plot.py
 npy/image/transform.py
+npy/log/__init__.py
+npy/log/loggers.py
+npy/log/setters.py
 npy/tk/__init__.py
 npy/tk/event_binder.py
 npy/tk/window_class.py
@@ -65,9 +68,6 @@ npy/utils/datastructure/d_of.py
 npy/utils/datastructure/dashboard.py
 npy/utils/datastructure/easy_path.py
 npy/utils/datastructure/storage.py
-npy/utils/logger/__init__.py
-npy/utils/logger/logger_funcs.py
-npy/utils/logger/logger_set.py
 ntf/__init__.py
 ntf/constants.py
 ntf/data.py

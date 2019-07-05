@@ -3,7 +3,7 @@ import numpy as np
 import math
 from collections.abc import Iterable
 import os
-from .logger import *
+from ..log import *
 
 
 def set_cuda(*args):
