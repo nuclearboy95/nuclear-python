@@ -16,7 +16,7 @@ class MNISTModel(Model):
         h = preprocess(x)
         self.preprocessed = h
 
-        with tf.variable_scope('MNISTModel'):
+        with tf.variable_scope(self.name):
             with tf.variable_scope('block1'):
                 h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)
                 h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)

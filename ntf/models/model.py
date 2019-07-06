@@ -13,6 +13,10 @@ class Model:
         return self.__class__.__name__
 
     @lazy_property
+    def is_training(self):
+        return tf.placeholder(tf.bool, [], name='is_training')
+
+    @lazy_property
     def saver(self):
         vs = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=self.name)
         return tf.train.Saver(var_list=vs)
