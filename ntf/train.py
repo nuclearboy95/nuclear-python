@@ -127,7 +127,7 @@ def make_metric_ops(labels, preds, train=True, num_class=None,
     if return_class_acc:
         if num_class is not None:
             for c in range(num_class):
-                key = '{mode}/Acc/class{c}'.format(mode=mode, c=c)
+                key = '{mode}/Acc_{c}'.format(mode=mode, c=c)
                 ret.update({key: accuracy(labels=labels, preds=preds, label=c)})
 
     if return_batch_size:

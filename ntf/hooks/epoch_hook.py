@@ -36,13 +36,23 @@ def refine_result(result) -> dict:
     :return:
     """
     with task('Filter keys'):
+        keys = list(filter(lambda key: not key.startswith(':'), result.keys()))
+        result = {k: result[k] for k in keys}
+
         result = filter_d_of_l_of_num(result)
         keys = sorted(result.keys())
 
     with task('Take average'):
         if 'batch_size' in keys:
-            result = {key: np.average(result[key], weights=result['batch_size'])
-                      for key in keys if key != 'batch_size'}
+            try:
+                result = {key: np.average(result[key], weights=result['batch_size'])
+                          for key in keys if key != 'batch_size'}
+            except Exception as e:
+                print(e)
+                print(result)
+                for key in result:
+                    print(key, type(result[key][0]), len(result[key]))
+                raise
 
         else:
             result = {key: np.mean(result[key]) for key in keys}
