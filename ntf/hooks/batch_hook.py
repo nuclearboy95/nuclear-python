@@ -21,10 +21,10 @@ def get_fmt_str(result):
         key_token = key.split('/')[-1]
         fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
 
-    fmt_str = ', '.join(fmt_tokens)
+    fmt_str = '  '.join(fmt_tokens)
 
     if 'i_batch' in result:
-        fmt_str = 'Batch #{i_batch:04d} ' + fmt_str
+        fmt_str = 'Batch {i_batch:3d}  ' + fmt_str
 
     return fmt_str
 

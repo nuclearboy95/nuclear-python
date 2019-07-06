@@ -1,5 +1,4 @@
 import tensorflow as tf
-from collections import defaultdict
 from npy import ddict
 from npy.ns import sayi
 import datetime

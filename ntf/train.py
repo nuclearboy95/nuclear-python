@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from .misc import abs_max, norms2
+from .utils import abs_max, norms2
 from .metrics import accuracy
 
 

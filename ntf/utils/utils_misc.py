@@ -19,13 +19,23 @@ def choice_deep(N, p, shape):
         return tf.stack(l)
 
 
-def abs_max(tensors):
+def abs_max(tensors) -> tf.Tensor:
+    """
+
+    :param list tensors:
+    :return:
+    """
     maxs = [tf.reduce_max(tf.abs(tensor)) for tensor in tensors]
     max_v = tf.reduce_max([0] + maxs)
     return max_v
 
 
-def norms2(tensors):
+def norms2(tensors) -> tf.Tensor:
+    """
+
+    :param list tensors:
+    :return:
+    """
     squares = [tf.reduce_sum(tf.square(tensor)) for tensor in tensors]
     square = tf.reduce_sum(squares)
     return tf.sqrt(square)

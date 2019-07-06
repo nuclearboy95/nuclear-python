@@ -1,42 +1,16 @@
 from npy.ns import *
 import tensorflow as tf
-from ..models import Model
+from ..models import MNISTModel
 import ntf
 
 
 __all__ = ['mnist']
 
 
-class MNISTModel(Model):
-    def __init__(self, x):
-        h = x
-        with tf.variable_scope('MNISTModel'):
-            with tf.variable_scope('block1'):
-                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)
-                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)
-                h = tf.layers.max_pooling2d(h, 2, 2)
-
-            with tf.variable_scope('block2'):
-                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu)
-                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu)
-                h = tf.layers.max_pooling2d(h, 2, 2)
-
-            with tf.variable_scope('classifier'):
-                h = tf.layers.flatten(h)
-                h = tf.layers.dense(h, 64, activation=tf.nn.relu)
-                h = tf.layers.dense(h, 10, activation=None)
-                self.logits = h
-
-                h = tf.nn.softmax(h)
-                self.probs = h
-
-
 class Iterators:
     @staticmethod
     def get_iterator(x, y, batch_size=128):
         def foo(images, labels):
-            images = tf.cast(images, tf.float32)
-            images /= 255.
             images = tf.reshape(images, [-1, 28, 28, 1])
             labels = tf.one_hot(labels, depth=10)
             return images, labels
@@ -56,7 +30,7 @@ def mnist():
     (x_train, y_train), (x_test, y_test) = data
 
     with task('Make Iterators'):
-        it_train = Iterators.get_iterator(x_train[:1000], y_train[:1000])
+        it_train = Iterators.get_iterator(x_train, y_train)
         it_test = Iterators.get_iterator(x_test, y_test)
 
         handle_ph, it = ntf.data.iterator_like(it_train)

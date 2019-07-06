@@ -1,5 +1,5 @@
 import tensorflow as tf
-from .constants import MEAN_IMAGENET, STD_IMAGENET
+from npy.constants import MEAN_IMAGENET, STD_IMAGENET
 
 
 __all__ = ['preprocess_imagenet', 'unpreprocess_imagenet']

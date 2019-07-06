@@ -1,13 +1,16 @@
-import numpy as np
 from npy import d_of_l, append_d_of_l
 from itertools import count
 from tqdm import tqdm
 import tensorflow as tf
-from .tb_tools import add_summary_values
-from npy import task
 
 
-__all__ = ['runner', 'run_dict', 'run_op', 'hook_generator']
+__all__ = ['runner', 'run_dict', 'run_op', 'config']
+
+
+def config():
+    con = tf.ConfigProto()
+    con.gpu_options.allow_growth = True
+    return con
 
 
 def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
@@ -49,28 +52,3 @@ def run_op(sess, op, steps=None, verbose=True, hook=None, feed_dict=None) -> lis
     ops = {key: op}
     result_d = run_dict(sess, ops, steps=steps, verbose=verbose, hook=hook, feed_dict=feed_dict)
     return result_d[key]
-
-
-def hook_generator(keys, ln=False):
-    end = '\n' if ln else ''
-
-    def hook(result_one):
-        fmt_strs = list()
-        if 'i_batch' in result_one:
-            fmt_strs.append('Batch #{i_batch:04d}')
-        for key in keys:
-            fmt_strs.append('%s: {%s:.3f}' % (key, key))
-        fmt_str = '\r' + ', '.join(fmt_strs)
-
-        d = {}
-        for k, v in result_one.items():
-            if isinstance(v, np.ndarray) or isinstance(v, list):
-                try:
-                    d[k] = np.mean(v)
-                except:
-                    pass
-            else:
-                d[k] = v
-        print(fmt_str.format(**d), end=end)
-
-    return hook

@@ -1,5 +1,5 @@
 import tensorflow as tf
-from .. import preprocess_imagenet
+from ..image import preprocess_imagenet
 from .model import Model
 
 
