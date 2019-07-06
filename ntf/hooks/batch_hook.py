@@ -1,47 +1,68 @@
 from npy import task
+import numpy as np
 
 
 __all__ = ['on_batch']
 
 
-def get_fmt_str(result_batch) -> str:  # FIXME logic-based
-    return 'Batch #{i_batch:04d} Acc:{Acc:0.3f}, Loss:{Loss:0.3f}'
+def get_fmt_str(result):
+    fmt_tokens = list()
+    keys = sorted(result.keys())
+
+    def is_key(key):
+        tokens = key.split('/')
+        if len(tokens) != 2:
+            return False
+        if tokens[0] not in ['train', 'test']:
+            return False
+        return True
+
+    for key in list(filter(is_key, keys)):
+        key_token = key.split('/')[-1]
+        fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
+
+    fmt_str = ', '.join(fmt_tokens)
+
+    if 'i_batch' in result:
+        fmt_str = 'Batch #{i_batch:04d} ' + fmt_str
+
+    return fmt_str
 
 
-def get_keys(result_batch) -> list:  # FIXME logic-based
-    return ['i_batch', 'train/Acc', 'train/Loss']
-
-
-def refine_result(result_batch) -> dict:
+def refine_result(result) -> dict:
     with task('Filter keys'):
-        keys = get_keys(result_batch)
-        result_batch = {key: result_batch[key] for key in keys}
+        keys = sorted(result.keys())
 
-    return result_batch
+        # 1. exclude ":train_op"
+        keys = list(filter(lambda key: not key.startswith(':'), keys))
+
+        # 2. only 0-dimensional numerical data.
+        keys = list(filter(lambda key: np.issubdtype(type(result[key]), np.number), keys))
+
+        result = {key: result[key] for key in keys}
+
+    return result
 
 
-def rename_result(result_batch) -> dict:
-    keys = sorted(result_batch.keys())
-    with task('Rename keys'):
-        ret = {}
-        for key in keys:
-            ret[key.split('/')[-1]] = result_batch[key]
-    return ret
+def rename_result(result) -> dict:
+    return {key.split('/')[-1]: value for key, value in result.items()}
 
 
 #############################
 
-def on_batch(result_batch):
+def on_batch(result):
     with task('Preprocess result'):
-        result_batch = refine_result(result_batch)
+        result = refine_result(result)
 
-    with task('Print'):
-        fmt_str = get_fmt_str(result_batch)
-        result_renamed = rename_result(result_batch)
+    with task('1. Tensorboard'):  # For now, do nothings.
+        pass
+
+    with task('2. Print'):
+        fmt_str = get_fmt_str(result)
+        result_renamed = rename_result(result)
         log_str = fmt_str.format(**result_renamed)
 
         print('\r' + log_str, end='')
 
-    with task('Tensorboard'):  # For now, do nothings.
-        pass
+
 
