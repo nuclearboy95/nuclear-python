@@ -1,4 +1,4 @@
-from .setters import logger
+from .setters import _logger
 
 
 __all__ = ['saye', 'sayw', 'sayi', 'sayd', 'says']
@@ -10,27 +10,27 @@ def get_message(*args):
 
 def printe(*args):
     msg = get_message(*args)
-    logger.critical(msg)
+    _logger.critical(msg)
 
 
 def printw(*args):
     msg = get_message(*args)
-    logger.error(msg)
+    _logger.error(msg)
 
 
 def prints(*args):
     msg = get_message(*args)
-    logger.warning(msg)
+    _logger.warning(msg)
 
 
 def printi(*args):
     msg = get_message(*args)
-    logger.info(msg)
+    _logger.info(msg)
 
 
 def printd(*args):
     msg = get_message(*args)
-    logger.debug(msg)
+    _logger.debug(msg)
 
 
 saye = printe

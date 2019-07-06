@@ -3,7 +3,8 @@ import logging.handlers
 import coloredlogs
 import os
 
-logger = None
+_logger = None
+_sh = None
 logging_to_file = False
 
 
@@ -11,12 +12,13 @@ __all__ = ['verbosity', 'save']
 
 
 def _init():
-    global logger
+    global _logger
+    global _sh
 
-    logger = logging.getLogger('npy')
-    logger.propagate = False
+    _logger = logging.getLogger('npy')
+    _logger.propagate = False
 
-    logger.setLevel(logging.DEBUG)
+    _logger.setLevel(logging.DEBUG)
     level_styles = {
                     'critical': {'color': 'red', 'bold': True},
                     'error': {'color': 'yellow'},
@@ -28,22 +30,24 @@ def _init():
         'asctime': {'color': 'blue'},
         'levelname': {'color': 'yellow', 'faint': True}
     }
-    coloredlogs.install(level='DEBUG', logger=logger,
+    coloredlogs.install(level='DEBUG', logger=_logger,
                         fmt='[%(asctime)s] %(message)s',
                         datefmt="%m-%d %H:%M:%S",
                         field_styles=field_styles,
                         level_styles=level_styles)
+    _sh = _logger.handlers[0]
 
 
 def save():
     global logging_to_file
 
     if not logging_to_file:
-        fmt = logging.Formatter('[%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
+        fmt = logging.Formatter('P%(process)05d L%(levelno).1s [%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
         os.makedirs('log', exist_ok=True)
         fh = logging.handlers.TimedRotatingFileHandler('log/log.log', when='D')
         fh.setFormatter(fmt)
-        logger.addHandler(fh)
+        fh.setLevel(logging.DEBUG)
+        _logger.addHandler(fh)
         logging_to_file = True
 
 
@@ -56,24 +60,24 @@ def verbosity(level=2):
     if not isinstance(level, int):
         return
 
-    if logger is None:
+    if _logger is None:
         _init()
 
     if level <= 1:
-        logger.setLevel(logging.DEBUG)
+        _sh.setLevel(logging.DEBUG)
 
     elif level <= 2:
-        logger.setLevel(logging.INFO)
+        _sh.setLevel(logging.INFO)
 
     elif level <= 3:
-        logger.setLevel(logging.WARNING)
+        _sh.setLevel(logging.WARNING)
 
     elif level <= 4:
-        logger.setLevel(logging.ERROR)
+        _sh.setLevel(logging.ERROR)
 
     else:
-        logger.setLevel(logging.CRITICAL)
+        _sh.setLevel(logging.CRITICAL)
 
 
-if logger is None:
+if _logger is None:
     _init()

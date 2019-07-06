@@ -22,7 +22,7 @@ class Model:
             save_name = self.name
 
         if ckpt_path is None:
-            ckpt_path = './ckpts/%s/%s' % (save_name, save_name)
+            ckpt_path = './ckpts/%s/%s.ckpt' % (save_name, save_name)
 
         os.makedirs(os.path.dirname(ckpt_path), exist_ok=True)
         self.saver.save(sess, ckpt_path)
@@ -35,7 +35,7 @@ class Model:
             save_name = self.name
 
         if ckpt_path is None:
-            ckpt_path = './ckpts/%s/%s' % (save_name, save_name)
+            ckpt_path = './ckpts/%s/%s.ckpt' % (save_name, save_name)
 
         try:
             self.saver.restore(sess, ckpt_path)

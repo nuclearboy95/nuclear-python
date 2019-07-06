@@ -6,8 +6,8 @@ import ntf
 __all__ = ['on_epoch']
 
 
-def __get_fmt_str(result):
-    fmt_strs = list()
+def get_fmt_str(result):
+    fmt_tokens = list()
     keys = sorted(result.keys())
 
     def is_key(key):
@@ -18,16 +18,16 @@ def __get_fmt_str(result):
             return False
         return True
 
+    for key in list(filter(is_key, keys)):
+        key_token = key.split('/')[-1]
+        fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
+
+    fmt_str = ', '.join(fmt_tokens)
+
     if 'i_batch' in result:
-        fmt_strs.append('Batch #{i_batch:04d}')
-    for key in keys:
-        fmt_strs.append('%s: {%s:.3f}' % (key, key))
-    fmt_str = '\r' + ', '.join(fmt_strs)
+        fmt_str = 'Batch #{i_batch:04d} ' + fmt_str
+
     return fmt_str
-
-
-def get_fmt_str(result_epoch) -> str:
-    return 'Epoch #{i_epoch:03d} Acc:{Acc:0.3f}, Loss:{Loss:0.3f}'
 
 
 def get_keys(result_epoch):
@@ -41,11 +41,13 @@ def refine_result(result_epoch) -> dict:
     with task('Filter keys'):
         keys = get_keys(result_epoch)
         result_epoch = {key: np.asarray(result_epoch[key]) for key in keys}
+        keys = list(filter(lambda key: np.issubdtype(result_epoch[key].dtype, np.number), keys))
 
     with task('Take average'):
         if 'batch_size' in keys:
-            result_epoch = {key: np.average(result_epoch[key], weights=result_epoch['batch_size']) for key in keys
-                            if key != 'batch_size'}
+            result_epoch = {key: np.average(result_epoch[key], weights=result_epoch['batch_size'])
+                            for key in keys if key != 'batch_size'}
+
         else:
             result_epoch = {key: np.mean(result_epoch[key]) for key in keys}
 
