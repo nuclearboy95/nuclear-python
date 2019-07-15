@@ -65,7 +65,7 @@ def normalize(img):
 
 
 def resize(image, shape):
-    return np.array(Image.fromarray(image).resize(shape))
+    return np.array(Image.fromarray(image).resize(shape[::-1]))
 
 
 def resizes(images, new_shape):
