@@ -53,3 +53,7 @@ def rpath_listdir(dname, only_files=False, absolute=True):
 
 def home_path():
     return os.path.expanduser('~')
+
+
+def home_rsc_path():
+    return os.path.join(home_path(), '.nucpy')

@@ -18,13 +18,21 @@ class MNISTModel(Model):
 
         with tf.variable_scope(self.name):
             with tf.variable_scope('block1'):
-                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)
-                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu)
+                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.conv2d(h, 8, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.batch_normalization(h, training=self.is_training)
                 h = tf.layers.max_pooling2d(h, 2, 2)
 
             with tf.variable_scope('block2'):
-                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu)
-                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu)
+                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.batch_normalization(h, training=self.is_training)
+                h = tf.layers.max_pooling2d(h, 2, 2)
+
+            with tf.variable_scope('block3'):
+                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.conv2d(h, 16, 3, activation=tf.nn.relu, padding='same')
+                h = tf.layers.batch_normalization(h, training=self.is_training)
                 h = tf.layers.max_pooling2d(h, 2, 2)
 
             with tf.variable_scope('classifier'):

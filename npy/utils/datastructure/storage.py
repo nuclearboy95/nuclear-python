@@ -1,11 +1,11 @@
 import os
-from .. import load_binary, save_binary
+from .. import load_binary, save_binary, home_rsc_path
 import shutil
 from glob import glob
 from collections import defaultdict
 
 
-__all__ = ['fdict', 'FileDict', 'SpawningCache', 'ddict']
+__all__ = ['fdict', 'FileDict', 'SpawningCache', 'ddict', 'rsc']
 
 
 class ddict(defaultdict):
@@ -86,6 +86,7 @@ class fdict:
 
 
 FileDict = fdict
+rsc = fdict(home_rsc_path())
 
 
 class SpawningCache:

@@ -81,11 +81,13 @@ def make_train_ops(optimizer, loss, norm=1., train=True,
     :return:
     """
     grads_and_vars = optimizer.compute_gradients(loss)
-    if norm is not None:
-        grads_and_vars = [(tf.clip_by_norm(grad, norm), v) for grad, v in grads_and_vars]
-
     grads = [grad for grad, v in grads_and_vars]
     vs = [v for grad, v in grads_and_vars]
+
+    if norm is not None:
+        grads, _ = tf.clip_by_global_norm(grads, norm)
+        grads_and_vars = [(grad, v) for grad, v in zip(grads, vs)]
+
     mode = 'train' if train else 'test'
     ret = {}
 
@@ -116,11 +118,12 @@ def make_train_ops(optimizer, loss, norm=1., train=True,
 
 
 def make_metric_ops(labels, preds, train=True, num_class=None,
+                    return_acc=True,
                     return_class_acc=True, return_batch_size=True) -> dict:
     ret = {}
     mode = 'train' if train else 'test'
 
-    if True:
+    if return_acc:
         key = '{mode}/Acc'.format(mode=mode)
         ret.update({key: accuracy(labels=labels, preds=preds)})
 

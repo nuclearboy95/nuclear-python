@@ -41,8 +41,10 @@ def mnist():
         loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=model.logits, labels=y)
         optimizer = tf.train.AdamOptimizer(1e-3)
 
-        train_ops = ntf.train.make_train_ops(optimizer, loss)
-        train_ops.update(ntf.train.make_metric_ops(labels=y, preds=model.logits))
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(update_ops):
+            train_ops = ntf.train.make_train_ops(optimizer, loss)
+            train_ops.update(ntf.train.make_metric_ops(labels=y, preds=model.logits))
 
         test_ops = ntf.train.make_train_ops(optimizer, loss, train=False)
         test_ops.update(ntf.train.make_metric_ops(labels=y, preds=model.logits, train=False))
@@ -58,15 +60,15 @@ def mnist():
             with task('Train'):
                 sess.run(it_train.initializer)
 
-                result = ntf.run_dict(sess, train_ops, verbose=False, feed_dict={handle_ph: train_handle},
-                                      hook=ntf.hooks.on_batch)
+                result = ntf.run_dict(sess, train_ops, verbose=False, hook=ntf.hooks.on_batch,
+                                      feed_dict={handle_ph: train_handle, model.is_training: True})
                 print('\r', end='', flush=True)
                 ntf.hooks.on_epoch(result, i_epoch)
 
             with task('Test'):
                 sess.run(it_test.initializer)
                 result = ntf.run_dict(sess, test_ops, verbose=False,
-                                      feed_dict={handle_ph: test_handle})
+                                      feed_dict={handle_ph: test_handle, model.is_training: False})
 
                 print('\r', end='', flush=True)
                 ntf.hooks.on_epoch(result, i_epoch)

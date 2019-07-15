@@ -45,6 +45,7 @@ npy/utils/__init__.py
 npy/utils/utils_dataframe.py
 npy/utils/utils_exp.py
 npy/utils/utils_files.py
+npy/utils/utils_info.py
 npy/utils/utils_io.py
 npy/utils/utils_misc.py
 npy/utils/utils_profiler.py

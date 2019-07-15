@@ -3,7 +3,7 @@ import json
 import yaml
 import multiprocessing as mp
 import os
-from .utils_files import home_path
+from .utils_files import home_rsc_path
 
 
 def load_binary(path, encoding='ASCII'):
@@ -66,7 +66,7 @@ class AsyncWriter:
 
 def load_rsc(*args):
     path = os.sep.join(args)
-    path_rsc = os.path.join(home_path(), '.nucpy')
+    path_rsc = home_rsc_path()
     os.makedirs(path_rsc, exist_ok=True)
     path = os.path.join(path_rsc, path)
     try:
@@ -77,7 +77,7 @@ def load_rsc(*args):
 
 def save_rsc(d, *args):
     path = os.sep.join(args)
-    path_rsc = os.path.join(home_path(), '.nucpy')
+    path_rsc = home_rsc_path()
     os.makedirs(path_rsc, exist_ok=True)
     path = os.path.join(path_rsc, path)
     os.makedirs(os.path.dirname(path), exist_ok=True)
