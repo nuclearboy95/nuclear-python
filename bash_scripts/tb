@@ -1,2 +1,2 @@
 #!/bin/bash
-tensorboard --logdir=./tblog
+tensorboard --logdir=./tblog "$@"
