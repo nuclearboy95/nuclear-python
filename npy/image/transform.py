@@ -1,6 +1,11 @@
 import numpy as np
 from ..constants import MEAN_IMAGENET, STD_IMAGENET
 from PIL import Image
+from .basic import shape
+
+
+__all__ = ['pad', 'preprocess_imagenet', 'unpreprocess_imagenet', 'resize_imagenet', 'rescale',
+           'normalize', 'resize', 'scale', 'resizes']
 
 
 def pad(images, K, shape=None):
@@ -74,3 +79,10 @@ def resizes(images, new_shape):
     for i, img in enumerate(images):
         result[i] = resize(img, new_shape)
     return result
+
+
+def scale(image, s):
+    H, W = shape(image)[:2]
+    h = int(H * s)
+    w = int(W * s)
+    return resize(image, (h, w))
