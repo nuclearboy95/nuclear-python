@@ -19,7 +19,7 @@ def add_summary_values(d, step=None, name=''):
     filewriter.add_summary(summary, global_step=step)
 
 
-def filewriter_factory(name) -> tf.summary.FileWriter:
+def filewriter_factory(name):
     time_str = datetime.datetime.now().strftime('%m-%d %H:%M:%S.%f')
 
     if name == '':

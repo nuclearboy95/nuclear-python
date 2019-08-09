@@ -52,7 +52,7 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
         cmap = cmap or 'RdBu_r'
 
     if bg is not None:
-        show(ax, bg)
+        show(data=bg, ax=ax)
     else:
         bg_alpha = None
     mappable = ax.imshow(data, cmap=cmap, interpolation='nearest', vmax=vmax, vmin=vmin, alpha=bg_alpha)
