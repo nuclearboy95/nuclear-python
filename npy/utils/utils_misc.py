@@ -70,3 +70,18 @@ def failsafe(value=None):
                 return value
         return wrapper
     return decorator
+
+
+def sample_multivariate(mu, cov, N, D):
+    """
+
+    :param np.ndarray mu:
+    :param np.ndarray cov:
+    :param int N:
+    :param int D:
+
+    :return:
+    """
+    A = np.linalg.cholesky(cov)
+    z = np.random.normal(size=N * D).reshape(D, N)
+    return mu[np.newaxis, :] + np.dot(A, z).T

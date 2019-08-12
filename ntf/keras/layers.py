@@ -1,7 +1,8 @@
 import tensorflow as tf
+from npy.constants import MEAN_IMAGENET, STD_IMAGENET
 
 
-__all__ = ['Standardize']
+__all__ = ['Standardize', 'ImageNetStandardize']
 
 
 class Standardize(tf.keras.layers.Layer):
@@ -18,3 +19,8 @@ class Standardize(tf.keras.layers.Layer):
         inputs -= self._mean
         inputs /= self._std
         return inputs
+
+
+class ImageNetStandardize(Standardize):
+    def __init__(self):
+        super(ImageNetStandardize, self).__init__(MEAN_IMAGENET, STD_IMAGENET)
