@@ -51,7 +51,8 @@ def merge(images, show_shape, order='row') -> np.ndarray:
             i = k % I
             j = k // I
 
-        result[i * H: (i + 1) * H, j * W: (j + 1) * W] = image
+        target_shape = result[i * H: (i + 1) * H, j * W: (j + 1) * W].shape
+        result[i * H: (i + 1) * H, j * W: (j + 1) * W] = image.reshape(target_shape)
 
     return result
 

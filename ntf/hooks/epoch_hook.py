@@ -73,7 +73,7 @@ def on_epoch(result, i_epoch, tbname=None, tb=True):
 
     with task('1. Tensorboard'):
         if tb:
-            ntf.add_summary_values(result, step=i_epoch, name=tbname)
+            ntf.tb.add_scalars(result, step=i_epoch, name=tbname)
 
     with task('2. Print'):
         fmt_str = get_fmt_str(result)

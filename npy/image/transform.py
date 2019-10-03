@@ -59,7 +59,8 @@ def resize_imagenet(img):
 def rescale(img, min_from=-1, max_from=1, min_to=0, max_to=255, dtype='float32'):
     len_from = max_from - min_from
     len_to = max_to - min_to
-    return ((img.astype(np.float32) - min_from) * len_to / len_from + min_to).astype(dtype)
+    img = (img.astype(np.float32) - min_from) * len_to / len_from + min_to
+    return img.astype(dtype)
 
 
 def normalize(img):

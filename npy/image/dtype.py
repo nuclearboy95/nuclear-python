@@ -71,29 +71,32 @@ def assure_image_dtype_uint8(image):
     min_v = image.min()
     if image.dtype in [np.float32, np.float64]:
         if 0 <= max_v <= 1:
-            if 0 <= min_v <= 1:  # [0, 1) (Normal)
-                return image
+            if 0 <= min_v <= 1:  # [0, 1)
+                min_v, max_v = 0, 1
+
             elif -1 <= min_v <= 0:  # Presumably [-1, 1)
-                return rescale(image, min_from=-1, max_from=1,
-                               min_to=0, max_to=255,
-                               dtype='uint8')
+                min_v, max_v = -1, 1
+
             else:
                 raise_unknown_float_image()
 
         elif 0 <= max_v <= 255:
             if 0 <= min_v <= 255:  # Presumably [0, 255)
-                return rescale(image, min_from=0, max_from=255,
-                               min_to=0, max_to=255,
-                               dtype='uint8')
+                min_v, max_v = 0, 255
 
             elif -256 <= min_v <= 0:  # Presumably [-256, 255)
-                return rescale(image, min_from=-256, max_from=255,
-                               min_to=0, max_to=255,
-                               dtype='uint8')
+                min_v, max_v = -256, 255
+
             else:
                 raise_unknown_float_image()
+
         else:
             raise_unknown_float_image()
+
+        return rescale(image,
+                       min_from=min_v, max_from=max_v,
+                       min_to=0, max_to=255,
+                       dtype='uint8')
 
     elif image.dtype in [np.uint8]:
         return image

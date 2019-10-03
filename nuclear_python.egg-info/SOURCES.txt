@@ -77,6 +77,7 @@ ntf/data.py
 ntf/graph.py
 ntf/image.py
 ntf/metrics.py
+ntf/tb.py
 ntf/train.py
 ntf/ex/__init__.py
 ntf/ex/ae.py
@@ -86,6 +87,7 @@ ntf/ex/test.py
 ntf/hooks/__init__.py
 ntf/hooks/batch_hook.py
 ntf/hooks/epoch_hook.py
+ntf/hooks/other_hook.py
 ntf/keras/__init__.py
 ntf/keras/layers.py
 ntf/keras/models.py
@@ -99,7 +101,6 @@ ntf/utils/scheduler.py
 ntf/utils/utils_misc.py
 ntf/utils/utils_profile.py
 ntf/utils/utils_session.py
-ntf/utils/utils_tb.py
 nth/__init__.py
 nth/constants.py
 nth/etc.py

@@ -6,16 +6,16 @@ def shape(image):
     if len(shape_) <= 1:
         raise ValueError('Unexpected shape: {}'.format(shape_))
 
-    elif len(shape_) == 2:
+    elif len(shape_) == 2:  # (H, W)
         H, W = shape_
         return H, W, 1
 
     elif len(shape_) == 3:
-        H, W, C = shape_
-        if C in [1, 3]:
-            return H, W, C
-        else:
-            raise ValueError('Unexpected shape: {}'.format(shape_))
+        s1, s2, s3 = shape_
+        if s3 in [1, 3, 4]:  # (H, W, C)
+            return s1, s2, s3
+        else:  # (N, H, W)
+            return s2, s3, 1
 
     else:
         raise ValueError('Unexpected shape: {}'.format(shape_))

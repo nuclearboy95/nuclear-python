@@ -5,12 +5,20 @@ from npy.image import image_to_bytes, shape
 import datetime
 
 
-__all__ = ['add_summary', 'add_summary_values',
-           'add_summary_images', 'add_summary_imagess',
-           'add_summary_scalars']
+_DEFAULT_TB_NAME = ''
 
 
-def add_summary(summary, step=None, name='', filewriter=None):
+__all__ = ['add', 'set_name', 'add_images', 'add_imagess', 'add_scalars']
+
+
+def set_name(name):
+    global _DEFAULT_TB_NAME
+    _DEFAULT_TB_NAME = name
+
+
+def add(summary, step=None, name=None, filewriter=None):
+    if name is None:
+        name = _DEFAULT_TB_NAME
     if filewriter is None:
         filewriter = writers[name]
     filewriter.add_summary(summary, global_step=step)
@@ -23,16 +31,19 @@ def _to_value_scalar(tag, scalar):
     return tf.summary.Summary.Value(tag=tag, simple_value=scalar)
 
 
-def add_summary_scalars(d, step=None, name='', prefix='', filewriter=None):
+def add_scalars(d, step=None, name=None, prefix='', filewriter=None):
     if prefix:
         d2 = {prefix + '/' + key: value for key, value in d.items()}
-        add_summary_scalars(d2, step=step, name=name, filewriter=filewriter)
+        add_scalars(d2, step=step, name=name, filewriter=filewriter)
         return
+
+    if name is None:
+        name = _DEFAULT_TB_NAME
 
     summary = tf.summary.Summary(
         value=[_to_value_scalar(tag, scalar) for tag, scalar in d.items()]
     )
-    add_summary(summary, step=step, name=name, filewriter=filewriter)
+    add(summary, step=step, name=name, filewriter=filewriter)
 
 
 ##############################################
@@ -53,15 +64,18 @@ def _to_summary_image(tag, image):
     return tf.summary.Summary(value=[_to_value_image(tag, image)])
 
 
-def add_summary_images(d, step=None, name='', prefix='', filewriter=None):
+def add_images(d, step=None, name=None, prefix='', filewriter=None):
     if prefix:
         d2 = {prefix + '/' + key: value for key, value in d.items()}
-        add_summary_images(d2, step=step, name=name, filewriter=filewriter)
+        add_images(d2, step=step, name=name, filewriter=filewriter)
         return
+
+    if name is None:
+        name = _DEFAULT_TB_NAME
 
     for tag, image in d.items():
         summary = _to_summary_image(tag, image)
-        add_summary(summary, step=step, name=name, filewriter=filewriter)
+        add(summary, step=step, name=name, filewriter=filewriter)
 
 
 def _to_summary_images(tag, images):
@@ -73,15 +87,18 @@ def _to_summary_images(tag, images):
     return summary
 
 
-def add_summary_imagess(d, step=None, name='', prefix='', filewriter=None):
+def add_imagess(d, step=None, name=None, prefix='', filewriter=None):
     if prefix:
         d2 = {prefix + '/' + key: value for key, value in d.items()}
-        add_summary_imagess(d2, step=step, name=name, filewriter=filewriter)
+        add_imagess(d2, step=step, name=name, filewriter=filewriter)
         return
+
+    if name is None:
+        name = _DEFAULT_TB_NAME
 
     for tag, image in d.items():
         summary = _to_summary_images(tag, image)
-        add_summary(summary, step=step, name=name, filewriter=filewriter)
+        add(summary, step=step, name=name, filewriter=filewriter)
 
 
 ##############################################
@@ -101,4 +118,3 @@ def filewriter_factory(name):
 
 
 writers = ddict(filewriter_factory)
-add_summary_values = add_summary_scalars
