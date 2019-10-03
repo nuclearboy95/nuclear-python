@@ -79,9 +79,9 @@ ntf/image.py
 ntf/metrics.py
 ntf/train.py
 ntf/ex/__init__.py
+ntf/ex/ae.py
 ntf/ex/loop.py
 ntf/ex/mnist.py
-ntf/ex/profile.py
 ntf/ex/test.py
 ntf/hooks/__init__.py
 ntf/hooks/batch_hook.py

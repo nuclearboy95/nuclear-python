@@ -6,8 +6,8 @@ __all__ = ['Standardize', 'ImageNetStandardize']
 
 
 class Standardize(tf.keras.layers.Layer):
-    def __init__(self, mean=0., std=1.):
-        super(Standardize, self).__init__()
+    def __init__(self, mean=0., std=1., *args, **kwargs):
+        super(Standardize, self).__init__(*args, **kwargs)
         self._mean = mean
         self._std = std
 

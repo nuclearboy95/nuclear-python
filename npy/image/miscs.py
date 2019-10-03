@@ -1,5 +1,10 @@
 import numpy as np
 from .basic import shape
+import io
+import imageio
+
+
+__all__ = ['flatten_image_list', 'merge', 'image_to_bytes']
 
 
 def flatten_image_list(images, show_shape) -> np.ndarray:
@@ -38,7 +43,7 @@ def merge(images, show_shape, order='row') -> np.ndarray:
     I, J = show_shape
     result = np.zeros((I * H, J * W, C), dtype=images.dtype)
 
-    for k, img in enumerate(images):
+    for k, image in enumerate(images):
         if order.lower().startswith('row'):
             i = k // J
             j = k % J
@@ -46,6 +51,12 @@ def merge(images, show_shape, order='row') -> np.ndarray:
             i = k % I
             j = k // I
 
-        result[i * H: (i + 1) * H, j * W: (j + 1) * W] = np.squeeze(img)
+        result[i * H: (i + 1) * H, j * W: (j + 1) * W] = image
 
     return result
+
+
+def image_to_bytes(image, format='png'):
+    buf = io.BytesIO()
+    imageio.imsave(buf, image, format=format)
+    return buf

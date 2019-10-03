@@ -1,13 +1,24 @@
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 import numpy as np
+import PIL
+import io
 from ..utils import max_n, ceil_to_1
 from .dtype import assure_image_dtype
 from .basic import nshape, shape
 from .miscs import flatten_image_list, merge
 
 
-__all__ = ['show_heatmap', 'show', 'shows', 'shows_merged']
+__all__ = ['show_heatmap', 'show', 'shows', 'shows_merged', 'plot_to_image']
+
+
+def plot_to_image(figure):
+    buf = io.BytesIO()
+    figure.savefig(buf, format='png')
+    plt.close(figure)
+    buf.seek(0)
+    image = np.array(PIL.Image.open(buf))
+    return image
 
 
 def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
