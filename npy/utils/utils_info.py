@@ -4,24 +4,25 @@ import numpy as np
 __all__ = ['info']
 
 
-def _info_ndarray(obj) -> str:
+def _info_ndarray(obj, name) -> str:
     """
 
     :param np.ndarray obj:
+    :param str name:
     :return:
     """
     if np.prod(obj.shape) != 0:
-        return 'np.ndarray  shape: %s  ndtype: %s  max: %s  min: %s  mean: %s  std: %s  med: %s' % (
-            obj.shape, obj.dtype, obj.max(), obj.min(), obj.mean(), obj.std(), np.median(obj)
+        return '[np.ndarray] %s shape: %s dtype: %s, max: %.3g  min: %.3g  mean: %.3g  std: %.3g  med: %.3g' % (
+            name, obj.shape, obj.dtype, obj.max(), obj.min(), obj.mean(), obj.std(), np.median(obj)
         )
 
     else:
-        return 'np.ndarray  shape: %s  ndtype: %s' % (
-            obj.shape, obj.dtype
+        return '[np.ndarray] %s shape: %s dtype: %s' % (
+            name, obj.shape, obj.dtype
         )
 
 
-def info(obj) -> str:
+def info(obj, name='') -> str:
     if isinstance(obj, np.ndarray):
-        return _info_ndarray(obj)
+        return _info_ndarray(obj, name)
     return str(obj)

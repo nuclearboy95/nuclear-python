@@ -1,4 +1,4 @@
-from npy import d_of_l, append_d_of_l
+from npy import d_of_l
 from itertools import count
 from tqdm import tqdm
 import tensorflow as tf
@@ -24,6 +24,7 @@ def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
             result_batch = sess.run(ops, feed_dict=feed_dict)
             result_batch.update({'i_batch': i_batch})
             yield (i_batch, result_batch)
+
         except tf.errors.OutOfRangeError:
             raise StopIteration
 
@@ -41,9 +42,11 @@ def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None) -> 
     """
     results = d_of_l()
     for i_batch, result_one in runner(sess, ops, steps=steps, verbose=verbose, feed_dict=feed_dict):
-        append_d_of_l(results, result_one)
+        results.appends(result_one)
+
         if hook is not None:
             hook(result_one)
+
     return results.as_dict()
 
 

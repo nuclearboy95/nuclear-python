@@ -64,7 +64,7 @@ def minimize(optimizer, loss, norm=None, return_grads_norm=False,
     return ret
 
 
-def make_train_ops(optimizer, loss, norm=1., train=True,
+def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None,
                    return_grads_norm=True, return_grads_max=True,
                    return_vars_norm=True, return_vars_max=True) -> dict:
     """
@@ -73,6 +73,7 @@ def make_train_ops(optimizer, loss, norm=1., train=True,
     :param tf.Tensor loss:
     :param float norm:
     :param bool train:
+    :param list var_list:
     :param bool return_grads_norm:
     :param bool return_grads_max:
     :param bool return_vars_norm:
@@ -80,7 +81,7 @@ def make_train_ops(optimizer, loss, norm=1., train=True,
 
     :return:
     """
-    grads_and_vars = optimizer.compute_gradients(loss)
+    grads_and_vars = optimizer.compute_gradients(loss, var_list=var_list)
     grads = [grad for grad, v in grads_and_vars]
     vs = [v for grad, v in grads_and_vars]
 

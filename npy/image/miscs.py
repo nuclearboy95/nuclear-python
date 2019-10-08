@@ -2,9 +2,11 @@ import numpy as np
 from .basic import shape
 import io
 import imageio
+from math import ceil
+from itertools import product
 
 
-__all__ = ['flatten_image_list', 'merge', 'image_to_bytes']
+__all__ = ['flatten_image_list', 'merge', 'image_to_bytes', 'to_patches', 'to_patch']
 
 
 def flatten_image_list(images, show_shape) -> np.ndarray:
@@ -61,3 +63,28 @@ def image_to_bytes(image, format='png'):
     buf = io.BytesIO()
     imageio.imsave(buf, image, format=format)
     return buf
+
+
+def to_patch(image, K, S=1, HO=0, WO=0, result=None):
+    H, W, C = shape(image)
+    NH = (H - K + 1 - HO) // S
+    NW = (W - K + 1 - WO) // S
+    N = NH * NW
+
+    result_shape = (N, K, K, C)
+    if result is None:
+        result = np.empty(result_shape, dtype=image.dtype)
+    else:
+        if result.shape != result.shape:
+            raise ValueError()
+
+    for i, (h, w) in enumerate(product(range(HO, H - K + 1, S),
+                                       range(WO, W - K + 1, S))):
+        result[i] = image[h: h + K, w: w + K].reshape(result[i].shape)
+
+    return result
+
+
+def to_patches(images, K, S=1, HO=0, WO=0):
+    patches = [to_patch(image, K, S, HO, WO) for image in images]
+    return np.concatenate(patches, axis=0)

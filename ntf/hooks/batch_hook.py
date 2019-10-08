@@ -13,7 +13,7 @@ def get_fmt_str(result):
         tokens = key.split('/')
         if len(tokens) != 2:
             return False
-        if tokens[0] not in ['train', 'test']:
+        if tokens[0] not in ['train', 'test', 'train_loss', 'test_loss']:
             return False
         return True
 
