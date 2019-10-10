@@ -2,21 +2,21 @@ import numpy as np
 from .transform import rescale
 
 
-def assure_image_dtype(image, min_to=0, max_to=1):
+def assure_dtype(image, min_to=0, max_to=1):
     def raise_unknown_image_dtype():
         raise ValueError('Unknown image dtype: {}'.format(image.dtype))
 
     if image.dtype in [np.float32, np.float64]:
-        return assure_image_dtype_float32(image, min_to, max_to)
+        return assure_dtype_float32(image, min_to, max_to)
 
     elif image.dtype in [np.uint8]:
-        return assure_image_dtype_uint8(image)
+        return assure_dtype_uint8(image)
 
     else:
         raise_unknown_image_dtype()
 
 
-def assure_image_dtype_float32(image, min_to=0, max_to=1):
+def assure_dtype_float32(image, min_to=0, max_to=1):
     def raise_unknown_float_image():
         raise ValueError('Unknown float image range. Min: {}, Max: {}'.format(min_v, max_v))
 
@@ -60,7 +60,7 @@ def assure_image_dtype_float32(image, min_to=0, max_to=1):
         raise_unknown_image_dtype()
 
 
-def assure_image_dtype_uint8(image):
+def assure_dtype_uint8(image):
     def raise_unknown_float_image():
         raise ValueError('Unknown float image range. Min: {}, Max: {}'.format(min_v, max_v))
 

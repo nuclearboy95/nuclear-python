@@ -4,7 +4,7 @@ import numpy as np
 import PIL
 import io
 from ..utils import max_n, ceil_to_1
-from .dtype import assure_image_dtype
+from .dtype import assure_dtype
 from .basic import nshape, shape
 from .miscs import flatten_image_list, merge
 
@@ -86,7 +86,7 @@ def show(data, ax=None, title='', show_axis=False, interpolation=None, inverse=F
         fig, ax = plt.subplots()
 
     # 2. Dtype: To Float[0, 1] or uint8[0, 255]
-    data = assure_image_dtype(data)
+    data = assure_dtype(data)
 
     H, W, C = shape(data)
 

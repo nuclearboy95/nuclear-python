@@ -27,8 +27,11 @@ def lazy_property(f):
     return decorator
 
 
-def calc_num_batch(num_data, batch_size):
-    return int(math.ceil(num_data / batch_size))
+def calc_num_batch(num_data, batch_size, strict=False) -> int:
+    if strict:
+        return num_data // batch_size
+    else:
+        return int(math.ceil(num_data / batch_size))
 
 
 def shuffled(x, y=None):
