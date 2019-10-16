@@ -18,15 +18,16 @@ def get_fmt_str(result):
         return True
 
     for key in list(filter(is_key, keys)):
-        key_token = key.split('/')[-1]
+        key_token = '/'.join(key.split('/')[1:])
         fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
 
     fmt_str = '  '.join(fmt_tokens)
-
     if 'i_batch' in result:
-        fmt_str = 'Batch {i_batch:3d}  ' + fmt_str
+        prefix = 'Batch {i_batch:3d}  '
+    else:
+        prefix = ''
 
-    return fmt_str
+    return prefix + fmt_str
 
 
 def refine_result(result) -> dict:

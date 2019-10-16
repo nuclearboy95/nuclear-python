@@ -1,21 +1,11 @@
 import numpy as np
-from ..constants import MEAN_IMAGENET, STD_IMAGENET
 from PIL import Image
+from ..constants import MEAN_IMAGENET, STD_IMAGENET
 from .basic import shape
 
 
-__all__ = ['pad', 'preprocess_imagenet', 'unpreprocess_imagenet', 'resize_imagenet', 'rescale',
-           'normalize', 'resize', 'scale', 'resizes', 'rgb2gray']
-
-
-def pad(images, K, shape=None):
-    if shape is None:
-        shape = images.shape[1:]
-    pad_width = ((0, 0), (K, K), (K, K))
-    if len(shape) == 3:
-        pad_width += ((0, 0),)
-
-    return np.pad(images, pad_width, mode='constant')
+__all__ = ['preprocess_imagenet', 'unpreprocess_imagenet', 'resize_imagenet', 'rescale',
+           'normalize', 'resize', 'scale', 'resizes']
 
 
 def preprocess_imagenet(x):
@@ -87,17 +77,4 @@ def scale(image, s):
     h = int(H * s)
     w = int(W * s)
     return resize(image, (h, w))
-
-
-def rgb2gray(images):
-    H, W, C = shape(images)
-    if C == 1:
-        return images
-
-    elif C == 3:
-        R, G, B = images[..., 0], images[..., 1], images[..., 2]
-        return 0.2989 * R + 0.5870 * G + 0.1140 * B
-
-    else:
-        raise ValueError()
 

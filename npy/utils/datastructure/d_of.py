@@ -15,6 +15,9 @@ class attrdict(dict):
     def as_dict(self):
         return dict(self)
 
+    def filt_keys(self, prefix=''):
+        return attrdict({k: v for k, v in self.items() if k.startswith(prefix)})
+
 
 class d_of_sth(defaultdict):
     __metaclass__ = ABCMeta
@@ -22,6 +25,8 @@ class d_of_sth(defaultdict):
 
     def as_dict(self):
         return dict(self)
+
+    filt_keys = attrdict.filt_keys
 
 
 #############################

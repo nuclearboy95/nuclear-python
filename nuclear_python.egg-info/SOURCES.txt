@@ -33,6 +33,7 @@ npy/image/__init__.py
 npy/image/basic.py
 npy/image/dtype.py
 npy/image/miscs.py
+npy/image/modify.py
 npy/image/plot.py
 npy/image/transform.py
 npy/log/__init__.py

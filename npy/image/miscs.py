@@ -65,15 +65,19 @@ def image_to_bytes(image, format='png'):
     return buf
 
 
-def to_patch(image, K, S=1, HO=0, WO=0, result=None):
+def to_patch(image, K, S=1, HO=0, WO=0, result=None, return_indexes=False):
     H, W, C = shape(image)
     NH = (H - K + 1 - HO) // S
     NW = (W - K + 1 - WO) // S
     N = NH * NW
 
     result_shape = (N, K, K, C)
+    Hs = np.empty([N], dtype=int)
+    Ws = np.empty([N], dtype=int)
+
     if result is None:
         result = np.empty(result_shape, dtype=image.dtype)
+
     else:
         if result.shape != result.shape:
             raise ValueError()
@@ -81,8 +85,13 @@ def to_patch(image, K, S=1, HO=0, WO=0, result=None):
     for i, (h, w) in enumerate(product(range(HO, H - K + 1, S),
                                        range(WO, W - K + 1, S))):
         result[i] = image[h: h + K, w: w + K].reshape(result[i].shape)
+        Hs[i] = h
+        Ws[i] = w
 
-    return result
+    if return_indexes:
+        return result, Hs, Ws
+    else:
+        return result
 
 
 def to_patches(images, K, S=1, HO=0, WO=0):

@@ -20,13 +20,12 @@ def get_fmt_str(result):
         return True
 
     for key in list(filter(is_key, keys)):
-        key_token = key.split('/')[-1]
-        fmt_tokens.append('%s:{%s:.3f}' % (key_token, key_token))
+        key_token = '/'.join(key.split('/')[1:])
+        fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
 
     fmt_str = '  '.join(fmt_tokens)
-    fmt_str = 'Epoch {i_epoch:2d}]  ' + fmt_str
-
-    return fmt_str
+    prefix = 'Epoch {i_epoch:2d}]  '
+    return prefix + fmt_str
 
 
 def refine_result(result) -> dict:
