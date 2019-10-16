@@ -1,7 +1,12 @@
 import tensorflow as tf
 
 
-__all__ = ['choice_deep', 'abs_max', 'norms2']
+__all__ = ['choice_deep', 'abs_max', 'norms2', 'set_tf_deprecation']
+
+
+def set_tf_deprecation():
+    from tensorflow import python
+    python.util.deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 
 def choice_deep(N, p, shape):

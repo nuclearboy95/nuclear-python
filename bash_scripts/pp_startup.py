@@ -10,7 +10,5 @@ import npy
 from npy.ns import *
 import ntf
 
-import tensorflow.python.util.deprecation as deprecation
-deprecation._PRINT_DEPRECATION_WARNINGS = False
-
+ntf.set_tf_deprecation()
 set_tf_log(5)

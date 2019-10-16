@@ -10,7 +10,7 @@ with open('requirements.txt', 'r') as f:
 
 setup(name='nuclear-python',
 
-      version='0.11.4',
+      version='0.11.5',
 
       url='https://github.com/nuclearboy95/nuclear-python',
 
