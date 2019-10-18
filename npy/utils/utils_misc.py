@@ -27,13 +27,6 @@ def lazy_property(f):
     return decorator
 
 
-def calc_num_batch(num_data, batch_size, strict=False) -> int:
-    if strict:
-        return num_data // batch_size
-    else:
-        return int(math.ceil(num_data / batch_size))
-
-
 def shuffled(x, y=None):
     inds = np.random.permutation(len(x))
     if y is None:
@@ -88,3 +81,14 @@ def sample_multivariate(mu, cov, N, D):
     A = np.linalg.cholesky(cov)
     z = np.random.normal(size=N * D).reshape(D, N)
     return mu[np.newaxis, :] + np.dot(A, z).T
+
+
+def score2mask(H, W, K, Hs, Ws, scores):
+    mask = np.zeros([H, W], dtype=np.float32)
+    cnt = np.zeros([H, W], dtype=np.int32)
+    for H, W, score in zip(Hs, Ws, scores):
+        mask[H: H + K, W: W + K] += score
+        cnt[H: H + K, W: W + K] += 1
+    cnt[cnt == 0] = 1  # avoid divide by zero
+    return mask / cnt
+

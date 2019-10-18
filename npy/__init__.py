@@ -4,3 +4,4 @@ from . import image
 from . import tk
 from . import log
 from . import ex
+from . import calc

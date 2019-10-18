@@ -4,7 +4,8 @@ from functools import partial
 from itertools import product
 
 
-__all__ = ['npw', 'nmax', 'ranges', 'ceil_x', 'ceil_to_1', 'top_kth', 'max_n', 'max95', 'max99']
+__all__ = ['npw', 'nmax', 'ranges', 'ceil_x', 'ceil_to_1', 'top_kth', 'max_n', 'max95', 'max99',
+           'range_strict']
 
 
 def top_kth(arr, f):
@@ -43,6 +44,16 @@ def nmax(n):
 def ranges(*args):
     generators = [range(arg) for arg in args]
     return product(*generators)
+
+
+def range_strict(low, high, stride):
+    for i in range(low, high, stride):
+        yield i
+
+    print('range_strict(%d, %d, %d) end.' % (low, high, stride))
+    if (high - low) % stride != 0:
+        print('i am here', high-stride+1)
+        yield high - stride + 1
 
 
 def ceil_x(value, d):

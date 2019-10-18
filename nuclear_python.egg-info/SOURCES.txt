@@ -14,6 +14,8 @@ bash_scripts/tb
 npy/__init__.py
 npy/constants.py
 npy/ns.py
+npy/calc/__init__.py
+npy/calc/miscs.py
 npy/ex/__init__.py
 npy/ex/images_imagenet.py
 npy/ex/images_mnist.py
@@ -85,6 +87,8 @@ ntf/ex/ae.py
 ntf/ex/loop.py
 ntf/ex/mnist.py
 ntf/ex/test.py
+ntf/ex/ad/__init__.py
+ntf/ex/ad/datasets.py
 ntf/hooks/__init__.py
 ntf/hooks/batch_hook.py
 ntf/hooks/epoch_hook.py

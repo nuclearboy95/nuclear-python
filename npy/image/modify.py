@@ -5,14 +5,18 @@ from .dtype import assure_dtype_uint8
 __all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border']
 
 
-def rgb2gray(images):
+def rgb2gray(images, keep_dims=False):
     H, W, C = shape(images)
     if C == 1:
         return images
 
     elif C == 3:
         R, G, B = images[..., 0], images[..., 1], images[..., 2]
-        return 0.2989 * R + 0.5870 * G + 0.1140 * B
+        images = 0.2989 * R + 0.5870 * G + 0.1140 * B
+        if keep_dims:
+            return np.expand_dims(images, axis=-1)
+        else:
+            return images
 
     else:
         raise ValueError()

@@ -4,6 +4,7 @@ import io
 import imageio
 from math import ceil
 from itertools import product
+from ..calc import num_segments
 
 
 __all__ = ['flatten_image_list', 'merge', 'image_to_bytes', 'to_patches', 'to_patch']
@@ -65,10 +66,11 @@ def image_to_bytes(image, format='png'):
     return buf
 
 
-def to_patch(image, K, S=1, HO=0, WO=0, result=None, return_indexes=False):
+def to_patch(image, K, S=1, HO=0, WO=0, result=None, return_indexes=False, strict=False):
     H, W, C = shape(image)
-    NH = (H - K + 1 - HO) // S
-    NW = (W - K + 1 - WO) // S
+
+    NH = num_segments(H - K + 1 - HO, S, strict=strict)
+    NW = num_segments(W - K + 1 - WO, S, strict=strict)
     N = NH * NW
 
     result_shape = (N, K, K, C)
@@ -82,8 +84,14 @@ def to_patch(image, K, S=1, HO=0, WO=0, result=None, return_indexes=False):
         if result.shape != result.shape:
             raise ValueError()
 
-    for i, (h, w) in enumerate(product(range(HO, H - K + 1, S),
-                                       range(WO, W - K + 1, S))):
+    if strict:
+        from ..utils import range_strict
+        r = range_strict
+    else:
+        r = range
+
+    for i, (h, w) in enumerate(product(r(HO, H - K + 1, S),
+                                       r(WO, W - K + 1, S))):
         result[i] = image[h: h + K, w: w + K].reshape(result[i].shape)
         Hs[i] = h
         Ws[i] = w

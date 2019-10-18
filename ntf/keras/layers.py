@@ -2,7 +2,18 @@ import tensorflow as tf
 from npy.constants import MEAN_IMAGENET, STD_IMAGENET
 
 
-__all__ = ['Standardize', 'ImageNetStandardize']
+__all__ = ['Standardize', 'ImageNetStandardize', 'Identity']
+
+
+class Identity(tf.keras.layers.Layer):
+    def __init__(self, *args, **kwargs):
+        super(Identity, self).__init__(*args, **kwargs)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape
+
+    def call(self, inputs, **kwargs):
+        return inputs
 
 
 class Standardize(tf.keras.layers.Layer):
