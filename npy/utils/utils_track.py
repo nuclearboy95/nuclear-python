@@ -1,31 +1,23 @@
 import functools
 from ..log import *
-from ..track import _TRACK_FLAG
+from ..track import TRACK_FLAG, TRACK_TIME_FLAG
 import time
 
 
-__all__ = ['watch', 'watchtime']
+__all__ = ['watch']
 
 
 def watch(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        if _TRACK_FLAG:
-            sayd('%s() called.' % f.__name__)
-        result = f(*args, **kwargs)
-        return result
-    return wrapper
-
-
-def watchtime(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        FLAG = _TRACK_FLAG
+        FLAG = TRACK_FLAG
         if FLAG:
             sayd('%s() called.' % f.__name__)
             s = time.time()
+
         result = f(*args, **kwargs)
-        if FLAG:
+
+        if FLAG and TRACK_TIME_FLAG:
             e = time.time()
             sayd('%s() finished. Took %.2fs' % (f.__name__, e - s))
 
