@@ -1,4 +1,4 @@
-from npy.tk import *
+from tk import *
 from tkinter import *
 import tkinter
 import tkinter.ttk

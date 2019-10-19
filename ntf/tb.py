@@ -8,7 +8,7 @@ import datetime
 _DEFAULT_TB_NAME = ''
 
 
-__all__ = ['add', 'set_name', 'add_images', 'add_imagess', 'add_scalars']
+__all__ = ['add', 'set_name', 'add_images', 'add_imagess', 'add_scalars', 'add_scalar']
 
 
 def set_name(name):
@@ -44,6 +44,10 @@ def add_scalars(d, step=None, name=None, prefix='', filewriter=None):
         value=[_to_value_scalar(tag, scalar) for tag, scalar in d.items()]
     )
     add(summary, step=step, name=name, filewriter=filewriter)
+
+
+def add_scalar(key, value, step=None, name=None, prefix='', filewriter=None):
+    add_scalars({key: value}, step=step, name=name, prefix=prefix, filewriter=filewriter)
 
 
 ##############################################

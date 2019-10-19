@@ -1,8 +1,26 @@
 from collections import defaultdict
 from abc import ABCMeta
+import numpy as np
 
 
 __all__ = ['d_of_l', 'd_of_f', 'd_of_i', 'attrdict']
+
+
+
+class BetterDict(dict):
+    def filt_keys(self, prefix=''):
+        return self.__class__.__init__({k: v for k, v in self.items() if k.startswith(prefix)})
+
+    def apply(self, func):
+        for k, v in self.items():
+            self[k] = func(v)
+        return self
+
+    def applyarr(self, func):
+        for k, v in self.items():
+            if isinstance(v, list) or isinstance(v, np.ndarray):
+                self[k] = func(v)
+        return self
 
 
 class attrdict(dict):
@@ -15,8 +33,9 @@ class attrdict(dict):
     def as_dict(self):
         return dict(self)
 
-    def filt_keys(self, prefix=''):
-        return attrdict({k: v for k, v in self.items() if k.startswith(prefix)})
+    filt_keys = BetterDict.filt_keys
+    apply = BetterDict.apply
+    applyarr = BetterDict.applyarr
 
 
 class d_of_sth(defaultdict):
@@ -26,14 +45,16 @@ class d_of_sth(defaultdict):
     def as_dict(self):
         return dict(self)
 
-    filt_keys = attrdict.filt_keys
+    filt_keys = BetterDict.filt_keys
+    apply = BetterDict.apply
+    applyarr = BetterDict.applyarr
 
 
 #############################
 
 class d_of_l(d_of_sth):
-    def __init__(self):
-        super().__init__(list)
+    def __init__(self, *args, **kwargs):
+        super().__init__(list, *args, **kwargs)
 
     def appends(self, d):
         for key, value in d.items():
@@ -41,10 +62,10 @@ class d_of_l(d_of_sth):
 
 
 class d_of_f(d_of_sth):
-    def __init__(self):
-        super().__init__(float)
+    def __init__(self, *args, **kwargs):
+        super().__init__(float, *args, **kwargs)
 
 
 class d_of_i(d_of_sth):
-    def __init__(self):
-        super().__init__(int)
+    def __init__(self, *args, **kwargs):
+        super().__init__(int, *args, **kwargs)

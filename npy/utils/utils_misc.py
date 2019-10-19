@@ -35,25 +35,6 @@ def shuffled(x, y=None):
         return take(x, inds), take(y, inds)
 
 
-def track(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        sayd('%s() called.' % f.__name__)
-        result = f(*args, **kwargs)
-        return result
-    return wrapper
-
-
-def trackall(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        sayd('%s() called.' % f.__name__)
-        result = f(*args, **kwargs)
-        sayd('%s() finished.' % f.__name__)
-        return result
-    return wrapper
-
-
 def failsafe(value=None):
     def decorator(f):
         @functools.wraps(f)

@@ -1,4 +1,4 @@
-from npy.tk.examples import ImageViewer
+from tk.examples import ImageViewer
 
 
 viewer = ImageViewer()
