@@ -6,10 +6,9 @@ import numpy as np
 __all__ = ['d_of_l', 'd_of_f', 'd_of_i', 'attrdict']
 
 
-
 class BetterDict(dict):
     def filt_keys(self, prefix=''):
-        return self.__class__.__init__({k: v for k, v in self.items() if k.startswith(prefix)})
+        return self.__class__({k: v for k, v in self.items() if k.startswith(prefix)})
 
     def apply(self, func):
         for k, v in self.items():
@@ -22,6 +21,9 @@ class BetterDict(dict):
                 self[k] = func(v)
         return self
 
+    def as_dict(self):
+        return dict(self)
+
 
 class attrdict(dict):
     def __init__(self, *args, **kwargs):
@@ -30,9 +32,7 @@ class attrdict(dict):
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
 
-    def as_dict(self):
-        return dict(self)
-
+    as_dict = BetterDict.as_dict
     filt_keys = BetterDict.filt_keys
     apply = BetterDict.apply
     applyarr = BetterDict.applyarr
@@ -42,9 +42,7 @@ class d_of_sth(defaultdict):
     __metaclass__ = ABCMeta
     __getattr__ = dict.__getitem__
 
-    def as_dict(self):
-        return dict(self)
-
+    as_dict = BetterDict.as_dict
     filt_keys = BetterDict.filt_keys
     apply = BetterDict.apply
     applyarr = BetterDict.applyarr

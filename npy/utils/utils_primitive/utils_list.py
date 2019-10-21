@@ -2,7 +2,7 @@ import numpy as np
 from collections.abc import Iterable
 
 
-__all__ = ['take']
+__all__ = ['take', 'isarray', 'isnum']
 
 
 def take(l, inds_or_ind):
@@ -13,3 +13,10 @@ def take(l, inds_or_ind):
     else:
         return l[inds_or_ind]
 
+
+def isarray(obj) -> bool:
+    return isinstance(obj, list) or isinstance(obj, np.ndarray)
+
+
+def isnum(obj) -> bool:
+    return np.issubdtype(type(obj), np.number)

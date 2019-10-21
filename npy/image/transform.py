@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 from ..constants import MEAN_IMAGENET, STD_IMAGENET
-from .basic import shape
+from .basic import shape, nshape
 
 
 __all__ = ['preprocess_imagenet', 'unpreprocess_imagenet', 'resize_imagenet', 'rescale',
@@ -64,9 +64,21 @@ def resize(image, shape):
     return np.array(Image.fromarray(image).resize(shape[::-1]))
 
 
-def resizes(images, new_shape):
-    new_shapes = (images.shape[0],) + tuple(new_shape)
-    result = np.zeros(new_shapes, dtype=images.dtype)
+def resizes(images, new_shape) -> np.ndarray:
+    """
+
+    :param np.ndarray images:
+    :param tuple new_shape:
+    :return:
+    """
+    N, H, W, C = nshape(images)
+    H2, W2 = new_shape
+    new_shapes = (N, H2, W2, C)
+
+    if images.shape[-1] != C:
+        new_shapes = new_shapes[:-1]
+
+    result = np.empty(new_shapes, dtype=images.dtype)
     for i, img in enumerate(images):
         result[i] = resize(img, new_shape)
     return result

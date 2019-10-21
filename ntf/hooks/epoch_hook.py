@@ -1,7 +1,7 @@
 from npy.ns import *
 import numpy as np
 import ntf
-from npy import filter_d_of_l_of_num
+from npy import keys_d_of_l_of_num, keys_d_of_num, isarray
 
 
 __all__ = ['on_epoch']
@@ -35,28 +35,25 @@ def refine_result(result) -> dict:
     :return:
     """
     with task('Filter keys'):
-        keys = list(filter(lambda key: not key.startswith(':'), result.keys()))
-        result = {k: result[k] for k in keys}
-
-        result = filter_d_of_l_of_num(result)
-        keys = sorted(result.keys())
+        keys = keys_d_of_num(result) + keys_d_of_l_of_num(result)
+        keys = list(filter(lambda k: not k.startswith(':'), keys))
+        keys.sort()
 
     with task('Take average'):
         if 'batch_size' in keys:
-            try:
-                result = {key: np.average(result[key], weights=result['batch_size'])
-                          for key in keys if key != 'batch_size'}
-            except Exception as e:
-                print(e)
-                print(result)
-                for key in result:
-                    print(key, type(result[key][0]), len(result[key]))
-                raise
+            ret = {}
+            for k in keys:
+                if k == 'batch_size':
+                    continue
+                if isarray(result[k]):
+                    ret[k] = np.average(result[k], weights=result['batch_size'])
+                else:
+                    ret[k] = result[k]
 
         else:
-            result = {key: np.mean(result[key]) for key in keys}
+            ret = {key: np.mean(result[key]) for key in keys}
 
-    return result
+    return ret
 
 
 def rename_result(result) -> dict:

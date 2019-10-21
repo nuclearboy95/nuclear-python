@@ -1,7 +1,42 @@
 import numpy as np
+from .utils_list import isarray, isnum
 
 
-__all__ = ['filter_d_of_l_of_num', 'filter_d_of_num', 'append_d_of_l', 'inv_d']
+__all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
+           'filter_d_of_l_of_num', 'filter_d_of_num', 'append_d_of_l', 'inv_d']
+
+
+def keys_d_of_l_of_num(d) -> list:
+    """
+
+    :param dict d:
+    :return:
+    """
+    def is_valid_key(k):
+        if not isarray(d[k]):
+            return False
+        if not isnum(d[k][0]):
+            return False
+        return True
+
+    keys = list(filter(is_valid_key, d.keys()))
+    return keys
+
+
+def keys_d_of_num(d) -> list:
+    """
+
+    :param dict d:
+    :return:
+    """
+    def is_valid_key(k):
+        return isnum(d[k])
+
+    keys = list(filter(is_valid_key, d.keys()))
+    return keys
+
+
+#############################
 
 
 def filter_d_of_l_of_num(d) -> dict:
@@ -12,16 +47,8 @@ def filter_d_of_l_of_num(d) -> dict:
 
     :return:
     """
-    keys = list(d.keys())
-    ret = {}
-
-    keys = list(filter(lambda k: isinstance(d[k], list) or isinstance(d[k], np.ndarray), keys))
-    ret = {k: np.asarray(d[k]) for k in keys}
-
-    keys = list(filter(lambda k: np.issubdtype(ret[k].dtype, np.number), keys))
-    ret = {k: ret[k] for k in keys}
-
-    return ret
+    keys = keys_d_of_l_of_num(d)
+    return {k: d[k] for k in keys}
 
 
 def filter_d_of_num(d) -> dict:
@@ -32,10 +59,8 @@ def filter_d_of_num(d) -> dict:
     :param d:
     :return:
     """
-    keys = list(d.keys())
-    keys = list(filter(lambda k: np.issubdtype(type(d[k]), np.number), keys))
-    ret = {k: d[k] for k in keys}
-    return ret
+    keys = keys_d_of_num(d)
+    return {k: d[k] for k in keys}
 
 
 def append_d_of_l(d_of_l, d):

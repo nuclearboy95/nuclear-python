@@ -22,7 +22,8 @@ def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
     for i_batch in i_batch_g:
         try:
             result_batch = sess.run(ops, feed_dict=feed_dict)
-            result_batch.update({'i_batch': i_batch})
+            if isinstance(result_batch, dict):
+                result_batch.update({'i_batch': i_batch})
             yield (i_batch, result_batch)
 
         except tf.errors.OutOfRangeError:
