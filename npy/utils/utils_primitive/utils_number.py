@@ -5,7 +5,7 @@ from itertools import product
 
 
 __all__ = ['npw', 'nmax', 'ranges', 'ceil_x', 'ceil_to_1', 'top_kth', 'max_n', 'max95', 'max99',
-           'range_strict']
+           'range_strict', 'ij_range']
 
 
 def top_kth(arr, f):
@@ -44,6 +44,22 @@ def nmax(n):
 def ranges(*args):
     generators = [range(arg) for arg in args]
     return product(*generators)
+
+
+def ij_range(H, W, K=1, S=1, O=0):
+    """
+
+    :param int H:
+    :param int W:
+    :param int K:
+    :param int S:
+    :param int O:
+    :return:
+    """
+
+    for i in range(O, H - K + 1, S):
+        for j in range(O, W - K + 1, S):
+            yield i, j
 
 
 def range_strict(low, high, stride):
