@@ -119,3 +119,12 @@ def ij_range(H, W, K=1, S=1, O=0):
     for i in range(O, H - K + 1, S):
         for j in range(O, W - K + 1, S):
             yield i, j
+
+
+def to_float32(images):
+    pass
+
+
+def to_uint8(images):
+    pass
+

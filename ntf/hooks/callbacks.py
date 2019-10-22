@@ -1,15 +1,29 @@
-from abc import ABCMeta
-import numpy as np
-from npy import isnum, d_of_l, keys_d_of_l_of_num, keys_d_of_num, isarray, sayi
 import time
+import numpy as np
+from npy import isnum, d_of_l, keys_d_of_l_of_num, keys_d_of_num, isarray, sayi, task
+from .. import tb
+
+__all__ = ['HistoryCallback']
 
 
-__all__ = ['PrintCallback', 'Callback', 'TensorboardCallback']
+def removed_prefix(key):
+    tokens = key.split('/')
+    if tokens[0] in ['train', 'train_loss']:
+        return '/'.join(tokens[1:])
+    if tokens[0] in ['test', 'test_loss']:
+        return 'test_' + '/'.join(tokens[1:])
+    return key
 
 
-def refine_batch_result(result) -> dict:
+def sorted_keys(keys):
+    keys_test = sorted(list(filter(lambda x: x.startswith('test'), keys)))
+    keys_train = sorted(list(filter(lambda x: x not in keys_test, keys)))
+    return keys_train + keys_test
+
+
+def refine_result_batch(i_batch, result) -> dict:
     """
-
+    :param int i_batch:
     :param dict result:
     :return:
     """
@@ -20,14 +34,16 @@ def refine_batch_result(result) -> dict:
             return False
         return True
 
-    keys = sorted(list(filter(is_valid_key, result.keys())))
+    keys = sorted_keys(list(filter(is_valid_key, result.keys())))
     result = {key: result[key] for key in keys}
+    result['i_batch'] = i_batch
 
     return result
 
 
-def refine_epoch_result(result) -> dict:
+def refine_result_epoch(i_epoch, result) -> dict:
     """
+    :param int i_epoch:
     :param dict result:
 
     :return:
@@ -37,17 +53,21 @@ def refine_epoch_result(result) -> dict:
     keys.sort()
 
     if 'batch_size' in keys:
+        weights = result['batchs_size']
         ret = {}
         for k in keys:
             if k == 'batch_size':
                 continue
+
             if isarray(result[k]):
-                ret[k] = np.average(result[k], weights=result['batch_size'])
+                ret[k] = np.average(result[k], weights=weights)
             else:
                 ret[k] = result[k]
 
     else:
         ret = {key: np.mean(result[key]) for key in keys}
+
+    ret['i_epoch'] = i_epoch
 
     return ret
 
@@ -59,7 +79,7 @@ def get_batch_fmt_str(result) -> str:
     :return:
     """
     fmt_tokens = list()
-    keys = sorted(result.keys())
+    keys = sorted_keys(result.keys())
 
     def is_valid_key(key):
         tokens = key.split('/')
@@ -70,8 +90,10 @@ def get_batch_fmt_str(result) -> str:
         return True
 
     for key in list(filter(is_valid_key, keys)):
-        key_token = '/'.join(key.split('/')[1:])
-        fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
+        # key_token = '/'.join(key.split('/')[1:])
+        key_name = removed_prefix(key)
+        key_token = key.replace('/', '_')
+        fmt_tokens.append('%s: {%s:.3f}' % (key_name, key_token))
 
     fmt_str = '  '.join(fmt_tokens)
     if 'i_batch' in result:
@@ -84,7 +106,7 @@ def get_batch_fmt_str(result) -> str:
 
 def get_epoch_fmt_str(result):
     fmt_tokens = list()
-    keys = sorted(result.keys())
+    keys = sorted_keys(result.keys())
 
     def is_valid_key(key):
         tokens = key.split('/')
@@ -95,8 +117,12 @@ def get_epoch_fmt_str(result):
         return True
 
     for key in list(filter(is_valid_key, keys)):
-        key_token = '/'.join(key.split('/')[1:])
-        fmt_tokens.append('%s: {%s:.3f}' % (key_token, key_token))
+        # key_token = '/'.join(key.split('/')[1:])
+
+        key_name = removed_prefix(key)
+        key_token = key.replace('/', '_')
+
+        fmt_tokens.append('%s: {%s:.3f}' % (key_name, key_token))
 
     fmt_str = '  '.join(fmt_tokens)
     prefix = 'Epoch {i_epoch:2d}]  '
@@ -104,112 +130,81 @@ def get_epoch_fmt_str(result):
 
 
 def rename_result(result) -> dict:
-    return {key.split('/')[-1]: value for key, value in result.items()}
+    ret = {}
+    for key, value in result.items():
+        new_key = key.replace('/', '_')
+        ret[new_key] = value
+    return ret
 
 
-class Callback:
-    __metaclass__ = ABCMeta
-
-    def on_train_begin(self):
-        pass
-
-    def on_train_end(self, result=None):
-        pass
-
-    def on_test_begin(self):
-        pass
-
-    def on_test_end(self, result=None):
-        pass
-
-    def on_train_batch_begin(self, i_batch, result_batch=None):
-        pass
-
-    def on_train_batch_end(self, i_batch, result_batch=None):
-        pass
-
-    def on_epoch_begin(self, i_epoch, result_epoch=None):
-        pass
-
-    def on_epoch_end(self, i_epoch, result_epoch=None):
-        pass
-
-    def on_test_batch_begin(self, i_batch, result_batch=None):
-        pass
-
-    def on_test_batch_end(self, i_batch, result_batch=None):
-        pass
-
-
-class HistoryCallback(Callback):
+class HistoryCallback:
     def __init__(self):
-        self.result_epoch = d_of_l()
-        self.result_test = d_of_l()
+        self.result_train_epoch = d_of_l()
+        self.result_test_epoch = d_of_l()
 
-    def on_train_batch_end(self, i_batch, result_batch=None):
-        self.result_epoch.appends(result_batch)
+    def on_epoch_begin(self, i_epoch):
+        self.result_train_epoch.clear()
+        self.result_test_epoch.clear()
 
-    def on_epoch_begin(self, i_epoch, result_epoch=None):
-        self.result_epoch.clear()
-        if result_epoch is not None:
-            self.result_epoch.update(result_epoch)
+        self.clear_line()
 
-    def on_epoch_end(self, i_epoch, result_epoch=None):
-        if result_epoch is not None:
-            self.result_epoch.update(result_epoch)
+    def on_epoch_end(self, i_epoch):
+        self.clear_line()
 
-    def on_test_begin(self):
-        self.result_test.clear()
+        with task('Print'):
+            result_train_epoch = refine_result_epoch(i_epoch, self.result_train_epoch)
+            result_test_epoch = refine_result_epoch(i_epoch, self.result_test_epoch)
 
-    def on_test_end(self, i_epoch=None, result=None):
-        if result is not None:
-            self.result_test.update(result)
+            result_epoch = result_test_epoch.copy()
+            result_epoch.update(result_train_epoch)
 
+            self.print_every_epoch(result_epoch)
 
-class PrintCallback(HistoryCallback):
-    def __init__(self):
-        super(PrintCallback, self).__init__()
+        with task('Tensorboard'):
+            tb.add_scalars(result_epoch, step=i_epoch)
+
+    def on_train_batch_begin(self, i_batch):
+        pass
 
     def on_train_batch_end(self, i_batch, result_batch=None):
         if result_batch is None:
             result_batch = {}
-        super().on_train_batch_end(i_batch, result_batch)
+        self.result_train_epoch.appends(result_batch)
 
-        result_batch = refine_batch_result(result_batch)
-        fmt_str = get_batch_fmt_str(result_batch)
-        result_renamed = rename_result(result_batch)
-        log_str = fmt_str.format(**result_renamed)
-        print('\r' + log_str, end='')
+        result_batch = refine_result_batch(i_batch, result_batch)
+        self.print_every_batch(result_batch)
 
-    def on_epoch_begin(self, i_epoch, result_epoch=None):
-        super().on_epoch_begin(i_epoch, result_epoch)
+    def on_test_batch_begin(self, i_batch):
+        pass
 
+    def on_test_batch_end(self, i_batch, result_batch=None):
+        self.result_test_epoch.appends(result_batch)
+
+    ##################
+
+    def report_train(self, result):
+        self.result_train_epoch.appends(result)
+
+    def report_test(self, result):
+        self.result_test_epoch.appends(result)
+
+    ##################
+
+    @staticmethod
+    def clear_line():
         print('\r', end='', flush=True)
         time.sleep(0.01)
 
-    def on_epoch_end(self, i_epoch, result_epoch=None):
-        super().on_epoch_end(i_epoch, result_epoch)
+    @staticmethod
+    def print_every_batch(result):
+        fmt_str = get_batch_fmt_str(result)
+        result_renamed = rename_result(result)
+        log_str = fmt_str.format(**result_renamed)
+        print('\r' + log_str, end='')
 
-        print('\r', end='')
-        result_epoch = self.result_epoch
-        result_epoch = refine_epoch_result(result_epoch)
-        fmt_str = get_epoch_fmt_str(result_epoch)
-        renamed_result = rename_result(result_epoch)
-        log_str = fmt_str.format(i_epoch=i_epoch, **renamed_result)
+    @staticmethod
+    def print_every_epoch(result):
+        fmt_str = get_epoch_fmt_str(result)
+        renamed_result = rename_result(result)
+        log_str = fmt_str.format(**renamed_result)
         sayi(log_str)
-
-    def on_test_end(self, i_epoch=None, result=None):
-        super().on_test_end(i_epoch, result)
-
-        print('\r', end='')
-        result_test = self.result_test
-        result_test = refine_epoch_result(result_test)
-        fmt_str = get_epoch_fmt_str(result_test)
-        renamed_result = rename_result(result_test)
-        log_str = fmt_str.format(i_epoch=i_epoch, **renamed_result)
-        sayi(log_str)
-
-
-class TensorboardCallback(Callback):
-    def on_epoch_end(self, i_epoch, result_epoch=None):
-        pass

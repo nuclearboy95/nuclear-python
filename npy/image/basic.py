@@ -1,8 +1,16 @@
 import numpy as np
 
 
-def shape(image):
-    shape_ = image.shape[-3:]
+__all__ = ['shape', 'nshape', 'iscolor', 'assure_color_image']
+
+
+def shape(images_or_image) -> tuple:
+    """
+
+    :param np.ndarray images_or_image:
+    :return:
+    """
+    shape_ = images_or_image.shape[-3:]
     if len(shape_) <= 1:
         raise ValueError('Unexpected shape: {}'.format(shape_))
 
@@ -21,14 +29,25 @@ def shape(image):
         raise ValueError('Unexpected shape: {}'.format(shape_))
 
 
-def nshape(image):
-    H, W, C = shape(image)
-    N = int(np.prod(image.shape) / (H * W * C))
+def nshape(images_or_image) -> tuple:
+    """
+
+    :param np.ndarray images_or_image:
+    :return:
+    """
+    H, W, C = shape(images_or_image)
+    N = int(np.prod(images_or_image.shape) / (H * W * C))
     return N, H, W, C
 
 
-def iscolor(img):
-    return shape(img)[-1] == 3
+def iscolor(images_or_image) -> bool:
+    """
+
+    :param np.ndarray images_or_image:
+    :return:
+    """
+    H, W, C = shape(images_or_image)
+    return C == 3
 
 
 def assure_color_image(image):
@@ -61,3 +80,4 @@ def assure_color_image(image):
 
     else:
         raise_unknown_image_shape()
+

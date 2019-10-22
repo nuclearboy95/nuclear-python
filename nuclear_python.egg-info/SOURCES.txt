@@ -33,6 +33,7 @@ npy/ex/example_images/mnist/7.png
 npy/ex/example_images/mnist/8.png
 npy/ex/example_images/mnist/9.png
 npy/image/__init__.py
+npy/image/augment.py
 npy/image/basic.py
 npy/image/dtype.py
 npy/image/miscs.py
