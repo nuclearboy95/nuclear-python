@@ -64,7 +64,7 @@ def minimize(optimizer, loss, norm=None, return_grads_norm=False,
     return ret
 
 
-def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None,
+def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None, global_step=None,
                    return_grads_norm=True, return_grads_max=True,
                    return_vars_norm=True, return_vars_max=True) -> dict:
     """
@@ -74,6 +74,7 @@ def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None,
     :param float norm:
     :param bool train:
     :param list var_list:
+    :param tf.Variable global_step:
     :param bool return_grads_norm:
     :param bool return_grads_max:
     :param bool return_vars_norm:
@@ -97,7 +98,7 @@ def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None,
         ret.update({key: tf.reduce_mean(loss)})
 
     if train:
-        ret.update({':train_op': optimizer.apply_gradients(grads_and_vars)})
+        ret.update({':train_op': optimizer.apply_gradients(grads_and_vars, global_step=global_step)})
 
     if return_grads_norm:
         key = '{mode}_monitor/grad_norm'.format(mode=mode)

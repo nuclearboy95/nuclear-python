@@ -72,6 +72,13 @@ def refine_result_epoch(i_epoch, result) -> dict:
     return ret
 
 
+def filter_result_epoch_tensorboard(i_epoch, result) -> dict:
+    keys = list(result.keys())
+    keys = [key for key in keys if key not in ['i_batch', 'i_epoch']]
+    ret = {key: result[key] for key in keys}
+    return ret
+
+
 def get_batch_fmt_str(result) -> str:
     """
 
@@ -161,7 +168,8 @@ class HistoryCallback:
             self.print_every_epoch(result_epoch)
 
         with task('Tensorboard'):
-            tb.add_scalars(result_epoch, step=i_epoch)
+            result_tb = filter_result_epoch_tensorboard(i_epoch, result_epoch)
+            tb.add_scalars(result_tb, step=i_epoch)
 
     def on_train_batch_begin(self, i_batch):
         pass
