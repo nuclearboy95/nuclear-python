@@ -1,9 +1,8 @@
 import numpy as np
-from .basic import shape, nshape
+from .basic import shape, nshape, to_NHWC, match_fmt
 from .dtype import assure_dtype_uint8
 
-__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border',
-           'to_NHWC', 'to_HWC', 'to_NHW']
+__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border']
 
 
 def rgb2gray(images_or_image, keep_dims=False) -> np.ndarray:
@@ -61,48 +60,3 @@ def add_border(images, color=(0, 255, 0), border=0.07):
     images[:, :, -T:] = color
 
     return images
-
-
-def to_NHWC(images_or_image) -> np.ndarray:
-    """
-
-    :param np.ndarray images_or_image:
-    :return:
-    """
-    N, H, W, C = nshape(images_or_image)
-    result_shape = (N, H, W, C)
-    if images_or_image.shape == result_shape:
-        return images_or_image
-    else:
-        return images_or_image.reshape(result_shape)
-
-
-def to_HWC(images_or_image) -> np.ndarray:
-    """
-    :param np.ndarray images_or_image:
-    :return:
-    """
-    N, H, W, C = nshape(images_or_image)
-    assert N == 1, 'N(%s) should be 1' % C
-
-    result_shape = (H, W, C)
-    if images_or_image.shape == result_shape:
-        return images_or_image
-    else:
-        return images_or_image.reshape(result_shape)
-
-
-def to_NHW(images_or_image) -> np.ndarray:
-    """
-
-    :param np.ndarray images_or_image:
-    :return:
-    """
-    N, H, W, C = nshape(images_or_image)
-    assert C == 1, 'C(%s) should be 1' % C
-
-    result_shape = (N, H, W)
-    if images_or_image.shape == result_shape:
-        return images_or_image
-    else:
-        return images_or_image.reshape(result_shape)

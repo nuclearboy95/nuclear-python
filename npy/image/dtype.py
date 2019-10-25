@@ -6,15 +6,22 @@ __all__ = ['assure_dtype', 'assure_dtype_float32', 'assure_dtype_uint8',
            'to_float32', 'to_uint8']
 
 
-def assure_dtype(image, min_to=0, max_to=1):
+def assure_dtype(images_or_image, min_to=0, max_to=1) -> np.ndarray:
+    """
+
+    :param np.ndarray images_or_image:
+    :param min_to:
+    :param max_to:
+    :return:
+    """
     def raise_unknown_image_dtype():
-        raise ValueError('Unknown image dtype: {}'.format(image.dtype))
+        raise ValueError('Unknown image dtype: {}'.format(images_or_image.dtype))
 
-    if image.dtype in [np.float32, np.float64]:
-        return assure_dtype_float32(image, min_to, max_to)
+    if images_or_image.dtype in [np.float32, np.float64]:
+        return assure_dtype_float32(images_or_image, min_to, max_to)
 
-    elif image.dtype in [np.uint8]:
-        return assure_dtype_uint8(image)
+    elif images_or_image.dtype in [np.uint8]:
+        return assure_dtype_uint8(images_or_image)
 
     else:
         raise_unknown_image_dtype()
@@ -136,4 +143,9 @@ def to_float32(images_or_image) -> np.ndarray:
 
 
 def to_uint8(images_or_image) -> np.ndarray:
+    """
+
+    :param np.ndarray images_or_image:
+    :return:
+    """
     return assure_dtype_uint8(images_or_image)

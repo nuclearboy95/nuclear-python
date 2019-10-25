@@ -24,4 +24,3 @@ def horizontal_flip(images) -> np.ndarray:
     result[1::2] = images[:, :, ::-1, :]
 
     return result
-
