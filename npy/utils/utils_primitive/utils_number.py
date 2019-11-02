@@ -4,7 +4,7 @@ from functools import partial
 from itertools import product
 
 
-__all__ = ['npw', 'nmax', 'ranges', 'ceil_x', 'ceil_to_1', 'top_kth', 'max_n', 'max95', 'max99',
+__all__ = ['npw', 'nmax', 'ranges', 'top_kth', 'max_n', 'max95', 'max99',
            'range_strict', 'ij_range']
 
 

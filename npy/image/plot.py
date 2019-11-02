@@ -3,7 +3,8 @@ from matplotlib import ticker
 import numpy as np
 import PIL
 import io
-from ..utils import max_n, ceil_to_1
+from ..utils import max_n
+from ..calc import ceil_to_1digit
 from .dtype import assure_dtype
 from .basic import nshape, shape
 from .miscs import flatten_image_list, merge
@@ -50,7 +51,7 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
 
     top = max_n(abs(data), percentile)
     # top = nmax(top)
-    top = ceil_to_1(top)
+    top = ceil_to_1digit(top)
     top = max(top, thres)
 
     if vmax is None:
