@@ -1,4 +1,0 @@
-npy
-ntf
-nth
-ntk

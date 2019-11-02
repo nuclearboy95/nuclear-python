@@ -1,5 +1,5 @@
 import numpy as np
-from .basic import shape, nshape, to_NHWC, match_fmt
+from .basic import shape, nshape, to_NHWC, to_fmt, get_fmt, match_fmt
 from .dtype import assure_dtype_uint8
 
 __all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border']
@@ -45,18 +45,20 @@ def pad(images, K, shape=None):
     return np.pad(images, pad_width, mode='constant')
 
 
-def add_border(images, color=(0, 255, 0), border=0.07):
-    H, W, C = shape(images)
+def add_border(images_or_image, color=(0, 255, 0), border=0.07):
+    H, W, C = shape(images_or_image)
 
     if isinstance(border, float):  # if fraction
         border = int(round(min(H, W) * border))
 
     T = border
-    images = images.copy()
-    images = assure_dtype_uint8(images)
-    images[:, :T, :] = color
-    images[:, -T:, :] = color
-    images[:, :, :T] = color
-    images[:, :, -T:] = color
+    result = images_or_image.copy()
+    result = to_NHWC(result)
+    result = assure_dtype_uint8(result)
+    result[:, :T, :] = color
+    result[:, -T:, :] = color
+    result[:, :, :T] = color
+    result[:, :, -T:] = color
+    result = match_fmt(result, images_or_image)
 
-    return images
+    return result
