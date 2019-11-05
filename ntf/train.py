@@ -94,26 +94,26 @@ def make_train_ops(optimizer, loss, norm=1., train=True, var_list=None, global_s
     ret = {}
 
     if True:
-        key = '{mode}/Loss'.format(mode=mode)
+        key = f'{mode}/Loss'
         ret.update({key: tf.reduce_mean(loss)})
 
     if train:
         ret.update({':train_op': optimizer.apply_gradients(grads_and_vars, global_step=global_step)})
 
     if return_grads_norm:
-        key = '{mode}_monitor/grad_norm'.format(mode=mode)
+        key = f'{mode}_monitor/grad_norm'
         ret.update({key: norms2(grads)})
 
     if return_grads_max:
-        key = '{mode}_monitor/grad_max'.format(mode=mode)
+        key = f'{mode}_monitor/grad_max'
         ret.update({key: abs_max(grads)})
 
     if return_vars_norm:
-        key = '{mode}_monitor/vars_norm'.format(mode=mode)
+        key = f'{mode}_monitor/vars_norm'
         ret.update({key: norms2(vs)})
 
     if return_vars_max:
-        key = '{mode}_monitor/vars_max'.format(mode=mode)
+        key = f'{mode}_monitor/vars_max'
         ret.update({key: abs_max(vs)})
 
     return ret
@@ -126,13 +126,13 @@ def make_metric_ops(labels, preds, train=True, num_class=None,
     mode = 'train' if train else 'test'
 
     if return_acc:
-        key = '{mode}/Acc'.format(mode=mode)
+        key = f'{mode}/Acc'
         ret.update({key: accuracy(labels=labels, preds=preds)})
 
     if return_class_acc:
         if num_class is not None:
             for c in range(num_class):
-                key = '{mode}/Acc_{c}'.format(mode=mode, c=c)
+                key = f'{mode}/Acc_{c}'
                 ret.update({key: accuracy(labels=labels, preds=preds, label=c)})
 
     if return_batch_size:

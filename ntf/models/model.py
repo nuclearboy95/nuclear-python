@@ -32,7 +32,7 @@ class Model:
         self.saver.save(sess, ckpt_path)
 
         if verbose:
-            sayd("Model [{name}] saved to '{ckpt_path}'.".format(name=self.name, ckpt_path=ckpt_path))
+            sayd(f"Model [{self.name}] saved to '{ckpt_path}'.")
 
     def load(self, sess, ckpt_path=None, save_name=None, ignore=False, verbose=True):
         if save_name is None:
@@ -45,8 +45,8 @@ class Model:
             self.saver.restore(sess, ckpt_path)
 
             if verbose:
-                sayd("Model [{name}] loaded from '{ckpt_path}'.".format(name=self.name, ckpt_path=ckpt_path))
+                sayd(f"Model [{self.name}] loaded from '{ckpt_path}'.")
         except:
-            sayw("Failed loading model [{name}] from '{ckpt_path}'.".format(name=self.name, ckpt_path=ckpt_path))
+            sayw(f"Failed loading model [{self.name}] from '{ckpt_path}'.")
             if not ignore:
                 raise

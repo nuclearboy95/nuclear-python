@@ -7,7 +7,7 @@ class EasyPath:
         if not path:
             path = home_path()
         if not self.is_valid(path):
-            raise ValueError('Invalid path: {}'.format(path))
+            raise ValueError(f'Invalid path: {path}')
         self.path = path
 
     def __getattr__(self, item):

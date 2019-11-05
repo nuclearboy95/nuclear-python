@@ -111,13 +111,13 @@ def filewriter_factory(name):
     time_str = datetime.datetime.now().strftime('%m-%d %H:%M:%S.%f')
 
     if name == '':
-        exp_name = '{}'.format(time_str)
+        exp_name = f'{time_str}'
     else:
-        exp_name = '{} ({})'.format(name, time_str)
+        exp_name = f'{name} ({time_str})'
 
-    sayi('Tensorboard exp name is %s' % exp_name)
+    sayi(f'Tensorboard exp name is {exp_name}')
 
-    log_name = 'tblog/%s' % exp_name
+    log_name = f'tblog/{exp_name}'
     return tf.summary.FileWriter(log_name, graph=tf.get_default_graph())
 
 

@@ -8,15 +8,15 @@ __all__ = ['assure_dtype', 'assure_dtype_float32', 'assure_dtype_uint8',
 
 
 def raise_unknown_float_image(min_v, max_v):
-    raise ValueError('Unknown float image range. Min: {}, Max: {}'.format(min_v, max_v))
+    raise ValueError(f'Unknown float image range. Min: {min_v}, Max: {max_v}')
 
 
 def raise_unknown_image_dtype(dtype):
-    raise ValueError('Unknown image dtype: {}'.format(dtype))
+    raise ValueError(f'Unknown image dtype: {dtype}')
 
 
 def raise_unknown_imagetype(imagetype):
-    raise ValueError('Unknown imagetype: {}'.format(imagetype))
+    raise ValueError(f'Unknown imagetype: {imagetype}')
 
 
 #############################################
@@ -115,9 +115,6 @@ def assure_dtype(images_or_image, min_to=0, max_to=1) -> np.ndarray:
     :param max_to:
     :return:
     """
-    def raise_unknown_image_dtype():
-        raise ValueError('Unknown image dtype: {}'.format(images_or_image.dtype))
-
     if images_or_image.dtype in [np.float32, np.float64]:
         return assure_dtype_float32(images_or_image, min_to, max_to)
 
@@ -125,7 +122,7 @@ def assure_dtype(images_or_image, min_to=0, max_to=1) -> np.ndarray:
         return assure_dtype_uint8(images_or_image)
 
     else:
-        raise_unknown_image_dtype()
+        raise_unknown_image_dtype(images_or_image.dtype)
 
 
 def assure_dtype_float32(images_or_image, min_to=0., max_to=1.) -> np.ndarray:

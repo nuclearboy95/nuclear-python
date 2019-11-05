@@ -111,7 +111,7 @@ def ceil_to_1digit(v) -> float:
         return ceil_pow(v, exponent, base=10)
 
     except ValueError:
-        print('Input x: {}'.format(v))
+        print(f'Input x: {v}')
         raise
 
 
