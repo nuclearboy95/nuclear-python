@@ -31,7 +31,7 @@ def runner(sess, ops, steps=None, verbose=True, feed_dict=None):
             yield (i_batch, result_batch)
 
         except tf.errors.OutOfRangeError:
-            raise StopIteration
+            return
 
 
 def runner_train(sess, ops, steps=None, verbose=True, feed_dict=None, cbk=None):
@@ -63,7 +63,7 @@ def runner_train(sess, ops, steps=None, verbose=True, feed_dict=None, cbk=None):
             yield (i_batch, result_batch)
 
         except tf.errors.OutOfRangeError:
-            raise StopIteration
+            return
 
 
 def runner_test(sess, ops, steps=None, verbose=True, feed_dict=None, cbk=None):
@@ -95,7 +95,7 @@ def runner_test(sess, ops, steps=None, verbose=True, feed_dict=None, cbk=None):
             yield (i_batch, result_batch)
 
         except tf.errors.OutOfRangeError:
-            raise StopIteration
+            return
 
 
 def run_dict(sess, ops, steps=None, verbose=True, hook=None, feed_dict=None) -> dict:

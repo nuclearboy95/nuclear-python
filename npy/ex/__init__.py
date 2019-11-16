@@ -1,2 +1,2 @@
-from .images_mnist import *
-from .images_imagenet import *
+from . import mnist
+from . import imagenet
