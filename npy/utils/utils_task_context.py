@@ -8,7 +8,7 @@ __all__ = ['task']
 
 
 @contextmanager
-def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime'):
+def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime', verbose=False):
     if debug:
         if detailed:
             profiler = cProfile.Profile()
@@ -17,6 +17,9 @@ def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime'):
         else:
             sayd('%s start.' % blockname)
             s = time.time()
+    else:
+        if verbose:
+            sayd(blockname)
 
     yield
 
