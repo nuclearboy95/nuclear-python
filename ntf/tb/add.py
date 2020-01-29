@@ -1,27 +1,9 @@
 import tensorflow as tf
-from npy import ddict
-from npy.ns import sayi
 from npy.image import image_to_bytes, shape
-import datetime
+from .core import add_summary
 
 
-_DEFAULT_TB_NAME = ''
-
-
-__all__ = ['add', 'set_name', 'add_images', 'add_imagess', 'add_scalars', 'add_scalar']
-
-
-def set_name(name):
-    global _DEFAULT_TB_NAME
-    _DEFAULT_TB_NAME = name
-
-
-def add(summary, step=None, name=None, filewriter=None):
-    if name is None:
-        name = _DEFAULT_TB_NAME
-    if filewriter is None:
-        filewriter = writers[name]
-    filewriter.add_summary(summary, global_step=step)
+__all__ = ['add_images', 'add_imagess', 'add_scalars', 'add_scalar']
 
 
 ##############################################
@@ -37,13 +19,10 @@ def add_scalars(d, step=None, name=None, prefix='', filewriter=None):
         add_scalars(d2, step=step, name=name, filewriter=filewriter)
         return
 
-    if name is None:
-        name = _DEFAULT_TB_NAME
-
     summary = tf.summary.Summary(
         value=[_to_value_scalar(tag, scalar) for tag, scalar in d.items()]
     )
-    add(summary, step=step, name=name, filewriter=filewriter)
+    add_summary(summary, step=step, name=name, filewriter=filewriter)
 
 
 def add_scalar(key, value, step=None, name=None, prefix='', filewriter=None):
@@ -74,12 +53,9 @@ def add_images(d, step=None, name=None, prefix='', filewriter=None):
         add_images(d2, step=step, name=name, filewriter=filewriter)
         return
 
-    if name is None:
-        name = _DEFAULT_TB_NAME
-
     for tag, image in d.items():
         summary = _to_summary_image(tag, image)
-        add(summary, step=step, name=name, filewriter=filewriter)
+        add_summary(summary, step=step, name=name, filewriter=filewriter)
 
 
 def _to_summary_images(tag, images):
@@ -97,28 +73,6 @@ def add_imagess(d, step=None, name=None, prefix='', filewriter=None):
         add_imagess(d2, step=step, name=name, filewriter=filewriter)
         return
 
-    if name is None:
-        name = _DEFAULT_TB_NAME
-
     for tag, image in d.items():
         summary = _to_summary_images(tag, image)
-        add(summary, step=step, name=name, filewriter=filewriter)
-
-
-##############################################
-
-def filewriter_factory(name):
-    time_str = datetime.datetime.now().strftime('%m-%d %H:%M:%S.%f')
-
-    if name == '':
-        exp_name = f'{time_str}'
-    else:
-        exp_name = f'{name} ({time_str})'
-
-    sayi(f'Tensorboard exp name is {exp_name}')
-
-    log_name = f'tblog/{exp_name}'
-    return tf.summary.FileWriter(log_name, graph=tf.get_default_graph())
-
-
-writers = ddict(filewriter_factory)
+        add_summary(summary, step=step, name=name, filewriter=filewriter)
