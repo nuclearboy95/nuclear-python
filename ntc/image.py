@@ -8,6 +8,7 @@ from .constants import MEAN_IMAGENET, STD_IMAGENET
 
 __all__ = ['show_imagenet_tensor', 'preprocess_imagenet_pil', 'read_imagenet_tensor',
            'preprocess_imagenet',
+           'NHWC2NCHW', 'NCHW2NHWC'
            ]
 
 
@@ -47,3 +48,11 @@ read_imagenet_tensor = transforms.Compose([
     preprocess_imagenet_pil,
     lambda x: torch.unsqueeze(x, 0)
 ])
+
+
+def NCHW2NHWC(images: np.ndarray) -> np.ndarray:
+    return np.transpose(images, [0, 2, 3, 1])
+
+
+def NHWC2NCHW(images: np.ndarray) -> np.ndarray:
+    return np.transpose(images, [0, 3, 1, 2])

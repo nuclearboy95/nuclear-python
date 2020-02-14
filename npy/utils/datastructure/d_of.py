@@ -3,7 +3,9 @@ from abc import ABCMeta
 import numpy as np
 
 
-__all__ = ['d_of_l', 'd_of_f', 'd_of_i', 'attrdict']
+__all__ = ['d_of_l', 'd_of_f', 'd_of_i',
+           'd_of_d_of_l', 'd_of_d_of_f',
+           'attrdict']
 
 
 class BetterDict(dict):
@@ -67,3 +69,13 @@ class d_of_f(d_of_sth):
 class d_of_i(d_of_sth):
     def __init__(self, *args, **kwargs):
         super().__init__(int, *args, **kwargs)
+
+
+class d_of_d_of_l(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(d_of_l, *args, **kwargs)
+
+
+class d_of_d_of_f(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(d_of_f, *args, **kwargs)
