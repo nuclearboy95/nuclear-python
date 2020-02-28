@@ -32,7 +32,7 @@ def _init():
     }
     coloredlogs.install(level='DEBUG', logger=_logger,
                         fmt='[%(asctime)s] %(message)s',
-                        datefmt="%m-%d %H:%M:%S",
+                        datefmt="%d %b %H:%M:%S",
                         field_styles=field_styles,
                         level_styles=level_styles)
     _sh = _logger.handlers[0]
