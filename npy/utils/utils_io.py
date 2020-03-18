@@ -4,45 +4,59 @@ import yaml
 import multiprocessing as mp
 import os
 from .utils_files import home_rsc_path
+from .utils_files import makedirpath
+import functools
 
 
-def load_binary(path, encoding='ASCII'):
-    with open(path, 'rb') as f:
+def ensure_dir_exist(f):
+    @functools.wraps(f)
+    def wrapper(content, fpath, *args, **kwargs):
+        makedirpath(fpath)
+        return f(content, fpath, *args, **kwargs)
+    return wrapper
+
+
+def load_binary(fpath, encoding='ASCII'):
+    with open(fpath, 'rb') as f:
         return p.load(f, encoding=encoding)
 
 
-def load_json(path):
-    with open(path, 'r') as f:
+def load_json(fpath):
+    with open(fpath, 'r') as f:
         return json.load(f)
 
 
-def load_yaml(path):
-    with open(path, 'r') as f:
+def load_yaml(fpath):
+    with open(fpath, 'r') as f:
         return yaml.load(f)
 
 
-def load_txt(path):
-    with open(path, 'r') as f:
+def load_txt(fpath):
+    with open(fpath, 'r') as f:
         return f.read()
 
 
-def save_binary(d, path):
-    with open(path, 'wb') as f:
+@ensure_dir_exist
+def save_binary(d, fpath):
+    with open(fpath, 'wb') as f:
         p.dump(d, f)
 
 
-def save_json(d, path):
-    with open(path, 'w') as f:
+@ensure_dir_exist
+def save_json(d, fpath):
+    with open(fpath, 'w') as f:
         json.dump(d, f, indent=4)
 
 
-def save_yaml(d, path):
-    with open(path, 'w') as f:
+@ensure_dir_exist
+def save_yaml(d, fpath):
+    with open(fpath, 'w') as f:
         yaml.dump(d, f)
 
 
-def save_txt(s, path):
-    with open(path, 'w') as f:
+@ensure_dir_exist
+def save_txt(s, fpath):
+    with open(fpath, 'w') as f:
         return f.write(s)
 
 

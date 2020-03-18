@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 
-__all__ = ['mix_datasets', 'repeat_elementwise', 'from_dataset', 'iterator_like']
+__all__ = ['mix_datasets', 'repeat_elementwise', 'from_dataset_one', 'from_dataset', 'iterator_like']
 
 
 def mix_datasets(datasets, lengths, fit_longest=True):
@@ -33,6 +33,23 @@ def repeat_elementwise(dataset, count) -> tf.data.Dataset:
     return dataset.flat_map(
         lambda x: tf.data.Dataset.from_tensors(x).repeat(count)
     )
+
+
+def from_dataset_one(x) -> tf.data.Dataset:
+    N = x.shape[0]
+    shape_x = x.shape[1:]
+
+    def index(i):
+        return x[i]
+
+    def shaper(x_):
+        return tf.reshape(x_, shape_x)
+
+    d = tf.data.Dataset.range(N)
+    d = d.map(lambda i: tf.py_func(index, [i], [x.dtype]))
+    d = d.map(shaper)
+
+    return d
 
 
 def from_dataset(x, y) -> tf.data.Dataset:

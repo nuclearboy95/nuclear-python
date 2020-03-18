@@ -5,6 +5,7 @@ from functools import partial
 __all__ = ['num_batch', 'num_segments', 'closest_multiple', 'closest_power',
            'ceil_pow', 'ceil_to_1digit',
            'greatest_less_multiple', 'least_greater_multiple',
+           'cnn_output_size'
            ]
 
 
@@ -113,6 +114,18 @@ def ceil_to_1digit(v) -> float:
     except ValueError:
         print(f'Input x: {v}')
         raise
+
+
+def cnn_output_size(H, K, S=1, P=0) -> int:
+    """
+
+    :param int H: input_size
+    :param int K: filter_size
+    :param int S: stride
+    :param int P: padding
+    :return:
+    """
+    return 1 + (H - K + 2 * P) // S
 
 
 greatest_less_multiple = partial(closest_multiple, mode='less')

@@ -1,6 +1,14 @@
 import os
 
 
+__all__ = ['sub_files', 'path_listdir', 'rpath_listdir2', 'rpath_listdir', 'home_path', 'home_rsc_path', 'makedirpath']
+
+
+def makedirpath(fpath: str):
+    dpath = os.path.dirname(fpath)
+    os.makedirs(dpath, exist_ok=True)
+
+
 def sub_files(path, endswith=None):
     for root, dirs, files in os.walk(path):
         for file in files:
