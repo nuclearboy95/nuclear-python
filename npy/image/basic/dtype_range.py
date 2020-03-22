@@ -1,7 +1,7 @@
 import numpy as np
-from .transform import rescale
-from ..constants import *
-from ..errors import *
+from ..transform import rescale
+from ...constants import *
+from ...errors import *
 
 
 __all__ = ['assure_dtype', 'assure_dtype_float32', 'assure_dtype_uint8',

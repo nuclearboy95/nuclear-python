@@ -81,7 +81,7 @@ def to_patch(image, K, S=1, HO=0, WO=0, result=None, return_indexes=False, stric
         result = np.empty(result_shape, dtype=image.dtype)
 
     else:
-        if result.shape != result.shape:
+        if result_shape != result.shape:
             raise ValueError()
 
     if strict:

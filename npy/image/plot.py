@@ -5,8 +5,7 @@ import PIL
 import io
 from ..utils import max_n
 from ..calc import ceil_to_1digit
-from .dtype_range import assure_dtype
-from .basic import nshape, shape
+from .basic import nshape, shape, assure_dtype
 from .miscs import flatten_image_list, merge
 
 
