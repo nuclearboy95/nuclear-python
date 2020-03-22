@@ -4,8 +4,24 @@ from npy.ns import sayi
 import datetime
 
 _DEFAULT_TB_NAME = ''
+_USE_TB = True
 
-__all__ = ['set_name', 'get_name', 'add_summary']
+__all__ = ['set_name', 'get_name', 'add_summary', 'off', 'on']
+
+
+def off():
+    global _USE_TB
+    _USE_TB = False
+
+
+def on():
+    global _USE_TB
+    _USE_TB = True
+
+
+def get_tb_use():
+    global _USE_TB
+    return _USE_TB
 
 
 def set_name(name: str):
@@ -36,6 +52,8 @@ writers = ddict(filewriter_factory)
 
 
 def add_summary(summary, step: int = None, name: str = None, filewriter=None):
+    if not _USE_TB:
+        return
     if name is None:
         name = get_name()
     if filewriter is None:

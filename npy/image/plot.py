@@ -24,7 +24,7 @@ def plot_to_image(figure):
 
 def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
                  nonnegative=False, thres=1e-5, vmax=None, bg=None, bg_alpha=0.6,
-                 cmap=None, cb_legend=False):
+                 cmap=None, cb_legend=False, interpolation='nearest'):
     """
 
     :param matplotlib.axes._subplots.AxesSubplot ax:
@@ -39,6 +39,7 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
     :param float bg_alpha:
     :param str cmap:
     :param bool cb_legend:
+    :param str interpolation:
     :return:
     """
     if ax is None:
@@ -67,7 +68,7 @@ def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
         show(data=bg, ax=ax)
     else:
         bg_alpha = None
-    mappable = ax.imshow(data, cmap=cmap, interpolation='nearest', vmax=vmax, vmin=vmin, alpha=bg_alpha)
+    mappable = ax.imshow(data, cmap=cmap, interpolation=interpolation, vmax=vmax, vmin=vmin, alpha=bg_alpha)
     if colorbar:
         cb = plt.colorbar(mappable, ax=ax, fraction=0.045, pad=0.04)
         cb.formatter.set_powerlimits((-1, 1))

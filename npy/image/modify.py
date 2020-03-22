@@ -1,10 +1,13 @@
 import numpy as np
 from .basic import shape, nshape, to_NHWC, to_fmt, get_fmt, match_fmt
 from .dtype import assure_dtype_uint8
+from .decorators import allowable_fmts
+from ..constants import *
 
 __all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border']
 
 
+@allowable_fmts([NHWC, HWC])
 def rgb2gray(images_or_image, keep_dims=False) -> np.ndarray:
     """
 
@@ -24,6 +27,7 @@ def rgb2gray(images_or_image, keep_dims=False) -> np.ndarray:
     return result.astype(images_or_image.dtype)
 
 
+@allowable_fmts([NHWC, HWC, NHW])
 def gray2rgb(images) -> np.ndarray:
     H, W, C = shape(images)
     assert C == 1, 'C(%s) should be 1' % C
@@ -35,11 +39,12 @@ def gray2rgb(images) -> np.ndarray:
     return images
 
 
-def pad(images, K, shape=None):
-    if shape is None:
-        shape = images.shape[1:]
+@allowable_fmts([NHWC, NHW])
+def pad(images, K: int, shape_=None):
+    if shape_ is None:
+        shape_ = shape(images)
     pad_width = ((0, 0), (K, K), (K, K))
-    if len(shape) == 3:
+    if len(shape_) == 3:
         pad_width += ((0, 0),)
 
     return np.pad(images, pad_width, mode='constant')

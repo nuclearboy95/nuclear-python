@@ -17,7 +17,6 @@ def raise_unexpected_fmt(fmt):
 
 def shape(images_or_image) -> tuple:
     """
-
     :param np.ndarray images_or_image:
     :return:
     """
@@ -61,7 +60,7 @@ def iscolor(images_or_image) -> bool:
     return C == 3
 
 
-def assure_color_image(image):
+def assure_color_image(image):  # FIXME simplify the logic
     def gray2rgb(image_):
         return np.repeat(image_, 3, axis=-1)
 

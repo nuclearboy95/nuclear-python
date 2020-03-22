@@ -1,12 +1,26 @@
 from torch.utils.data import Dataset
+import torch
+import torch.nn as nn
+import os
+
+from npy import makedirpath
+from npy.log import sayd, saye
+import os
 
 
-__all__ = ['softmax', 'ArrayDataset']
+__all__ = ['softmax', 'Flatten', 'Module',
+           'ArrayDataset', 'ConcatDataset']
 
 
 def softmax(logits):
     exps = (logits - logits.max()).exp()
     return exps / exps.sum()
+
+
+class Flatten(nn.Module):
+    def forward(self, x):
+        x = x.view(x.size()[0], -1)
+        return x
 
 
 class ArrayDataset(Dataset):
@@ -30,3 +44,32 @@ class ArrayDataset(Dataset):
 
         else:
             return x
+
+
+class ConcatDataset(Dataset):
+    def __init__(self, *datasets):
+        self.datasets = datasets
+        lengths = [len(d) for d in datasets]
+        self._length = min(lengths)
+        assert min(lengths) == max(lengths), 'Length of the datasets should be the same'
+
+    def __getitem__(self, idx):
+        return tuple(d[idx] for d in self.datasets)
+
+    def __len__(self):
+        return self._length
+
+
+class Module(nn.Module):
+    def save(self, fpath):
+        makedirpath(fpath)
+        torch.save(self.state_dict(), fpath)
+        sayd(f'Saved to {fpath}.')
+
+    def load(self, fpath):
+        if os.path.exists(fpath):
+            self.load_state_dict(torch.load(fpath))
+            sayd(f'Loaded from {fpath}.')
+        else:
+            saye(f'Failed to load: {fpath} does not exist.')
+
