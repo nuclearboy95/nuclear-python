@@ -1,18 +1,10 @@
 import numpy as np
 from functools import partial
 from ..constants import *
-
+from ..errors import *
 
 __all__ = ['shape', 'nshape', 'iscolor', 'assure_color_image', 'get_fmt', 'to_fmt',
            'to_NHWC', 'to_HWC', 'to_NHW', 'to_HW', 'match_fmt']
-
-
-def raise_unexpected_shape(shape_):
-    raise ValueError(f'Unexpected shape: {shape_}')
-
-
-def raise_unexpected_fmt(fmt):
-    raise ValueError(f'Unexpected fmt: {fmt}')
 
 
 def shape(images_or_image) -> tuple:
@@ -22,7 +14,7 @@ def shape(images_or_image) -> tuple:
     """
     shape_ = images_or_image.shape[-3:]
     if len(shape_) <= 1:
-        raise_unexpected_shape(shape_)
+        raise UnknownImageShapeError(shape_)
 
     elif len(shape_) == 2:  # (H, W)
         H, W = shape_
@@ -36,7 +28,7 @@ def shape(images_or_image) -> tuple:
             return s2, s3, 1
 
     else:
-        raise_unexpected_shape(shape_)
+        raise UnknownImageShapeError(shape_)
 
 
 def nshape(images_or_image) -> tuple:
@@ -72,7 +64,7 @@ def assure_color_image(image):  # FIXME simplify the logic
         elif C == 3:  # [N, H, W, 3]
             return image
         else:
-            raise_unexpected_shape(image.shape)
+            raise UnknownImageShapeError(image.shape)
 
     elif len(shape_) == 3:
         if shape_[-1] == 3:  # [H, W, 3]
@@ -86,7 +78,7 @@ def assure_color_image(image):  # FIXME simplify the logic
         return gray2rgb(np.expand_dims(image, axis=-1))
 
     else:
-        raise_unexpected_shape(image.shape)
+        raise UnknownImageShapeError(image.shape)
 
 
 def get_fmt(images_or_image) -> str:
@@ -107,7 +99,7 @@ def get_fmt(images_or_image) -> str:
     elif shape_ == (N, H, W):
         return NHW
     else:
-        raise_unexpected_shape(shape_)
+        raise UnknownImageShapeError(shape_)
 
 
 def to_fmt(images_or_image, fmt) -> np.ndarray:
@@ -128,7 +120,7 @@ def to_fmt(images_or_image, fmt) -> np.ndarray:
     elif fmt == HW:
         result_shape = (H, W)
     else:
-        raise_unexpected_fmt(fmt)
+        raise UnknownImageFormatError(fmt)
 
     return images_or_image.reshape(result_shape)
 

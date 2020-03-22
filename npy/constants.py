@@ -7,7 +7,7 @@ NHWC = 'NHWC'
 NHW = 'NHW'
 HW = 'HW'
 
-# imagetype
+# dtype_range
 FLOAT32_0_1 = 'float32_0_1'
 FLOAT64_0_1 = 'float64_0_1'
 

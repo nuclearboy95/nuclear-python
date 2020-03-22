@@ -1,6 +1,6 @@
 import numpy as np
 from .basic import shape, nshape, to_NHWC, to_fmt, get_fmt, match_fmt
-from .dtype import assure_dtype_uint8
+from .dtype_range import assure_dtype_uint8
 from .decorators import allowable_fmts
 from ..constants import *
 
