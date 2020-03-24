@@ -2,10 +2,10 @@ import numpy as np
 import torchvision.transforms.functional as TF
 
 
-__all__ = ['RotationTransform']
+__all__ = ['RandomRotation']
 
 
-class RotationTransform:
+class RandomRotation:
     def __init__(self, angles):
         self.angles = angles
 

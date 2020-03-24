@@ -2,10 +2,11 @@ import numpy as np
 from PIL import Image
 from ..constants import MEAN_IMAGENET, STD_IMAGENET
 from .basic import shape, nshape
+import cv2
 
 
 __all__ = ['preprocess_imagenet', 'unpreprocess_imagenet', 'resize_imagenet', 'rescale',
-           'normalize', 'resize', 'scale', 'resizes']
+           'normalize', 'resize', 'scale', 'resizes', 'bilinears']
 
 
 def preprocess_imagenet(x):
@@ -90,3 +91,11 @@ def scale(image, s):
     w = int(W * s)
     return resize(image, (h, w))
 
+
+def bilinears(images, shape) -> np.ndarray:
+    N = images.shape[0]
+    new_shape = (N,) + shape
+    ret = np.zeros(new_shape, dtype=images.dtype)
+    for i in range(N):
+        ret[i] = cv2.resize(images[i], dsize=shape, interpolation=cv2.INTER_LINEAR)
+    return ret

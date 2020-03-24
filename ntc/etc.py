@@ -6,15 +6,22 @@ import os
 from npy import makedirpath
 from npy.log import sayd, saye
 import os
+from functools import reduce
 
 
-__all__ = ['softmax', 'Flatten', 'Module',
+__all__ = ['softmax', 'Flatten', 'Module', 'parameters',
            'ArrayDataset', 'ConcatDataset']
 
 
 def softmax(logits):
     exps = (logits - logits.max()).exp()
     return exps / exps.sum()
+
+
+def parameters(*modules) -> list:
+    params = [list(module.parameters()) for module in modules]
+    params = reduce(lambda x, y: x + y, params)
+    return params
 
 
 class Flatten(nn.Module):
@@ -24,16 +31,19 @@ class Flatten(nn.Module):
 
 
 class ArrayDataset(Dataset):
-    def __init__(self, x, y=None, tfs=None):
+    def __init__(self, x, y=None, tfs=None, repeat=1):
         super().__init__()
         self.x = x
         self.y = y
         self.tfs = tfs
+        self.repeat = repeat
+        self.N = self.x.shape[0]
 
     def __len__(self):
-        return self.x.shape[0]
+        return self.N * self.repeat
 
     def __getitem__(self, idx):
+        idx = idx % self.N
         x = self.x[idx]
 
         if self.tfs is not None:
@@ -47,7 +57,7 @@ class ArrayDataset(Dataset):
 
 
 class ConcatDataset(Dataset):
-    def __init__(self, *datasets):
+    def __init__(self, datasets):
         self.datasets = datasets
         lengths = [len(d) for d in datasets]
         self._length = min(lengths)
