@@ -17,14 +17,16 @@ def pretty(df, index=True, headers=True):
     return tabulate(df, tablefmt='psql', headers=headers, showindex=index)
 
 
-def split_by_column(df, col) -> dict:
+def split_by_column(df, col, drop=True) -> dict:
     """
 
     :param pd.DataFrame df:
     :param str col:
+    :param bool drop:
     :return:
     """
     dfs = {key: df for key, df in df.groupby(col)}
-    for key in dfs:
-        del dfs[key][col]
+    if drop:
+        for key in dfs:
+            del dfs[key][col]
     return dfs
