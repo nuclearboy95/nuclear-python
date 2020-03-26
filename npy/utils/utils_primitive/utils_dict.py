@@ -4,7 +4,7 @@ from .utils_list import isarray, isnum
 
 __all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
            'filter_d_of_l_of_num', 'filter_d_of_num', 'append_d_of_l', 'inv_d',
-           'filter_keys', 'replace_keys']
+           'filter_keys', 'replace_keys', 'drop_keys']
 
 
 def keys_d_of_l_of_num(d) -> list:
@@ -38,6 +38,12 @@ def keys_d_of_num(d) -> list:
 
 
 #############################
+
+
+def drop_keys(d: dict, keys: list) -> dict:
+    return {
+        k: v for k, v in d.items() if k not in keys
+    }
 
 
 def replace_keys(d: dict, key_d: dict) -> dict:

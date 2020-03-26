@@ -3,9 +3,9 @@ import json
 import yaml
 import multiprocessing as mp
 import os
-from .utils_files import home_rsc_path
-from .utils_files import makedirpath
 import functools
+
+from .utils_files import home_rsc_path, makedirpath
 
 
 def ensure_dir_exist(f):
@@ -43,9 +43,9 @@ def save_binary(d, fpath):
 
 
 @ensure_dir_exist
-def save_json(d, fpath):
+def save_json(d, fpath, ensure_ascii=True):
     with open(fpath, 'w') as f:
-        json.dump(d, f, indent=4)
+        json.dump(d, f, indent=4, ensure_ascii=ensure_ascii)
 
 
 @ensure_dir_exist
