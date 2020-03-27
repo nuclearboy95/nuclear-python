@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Type
 from ..transform import rescale
 from ...constants import *
 from ...errors import *
@@ -8,7 +9,7 @@ __all__ = ['assure_dtype', 'assure_dtype_float32', 'assure_dtype_uint8',
            'to_float32', 'to_uint8']
 
 
-def get_dtyperange(images_or_image) -> str:
+def get_dtyperange(images_or_image) -> Type[NPYDtypeRange]:
     """
 
     :param np.ndarray images_or_image:
@@ -20,37 +21,7 @@ def get_dtyperange(images_or_image) -> str:
     return dtyperange_of_minmax(dtype, min_v, max_v)
 
 
-def minmax_of_dtyperange(dtyperange) -> tuple:
-    """
-
-    :param str dtyperange:
-    :return:
-    """
-
-    if dtyperange in [FLOAT32_0_1, FLOAT64_0_1, FLOAT32_m1_1, FLOAT64_m1_1]:
-        max_v = 1.
-    elif dtyperange in [FLOAT32_0_255, FLOAT64_0_255, FLOAT32_m256_255, FLOAT64_m256_255]:
-        max_v = 255.
-    elif dtyperange in [UINT8_0_255]:
-        max_v = 255
-    else:
-        raise UnknownImageDtypeRangeError(dtyperange)
-
-    if dtyperange in [FLOAT32_0_1, FLOAT64_0_1, FLOAT32_0_255, FLOAT64_0_255]:
-        min_v = 0.
-    elif dtyperange in [FLOAT32_m256_255, FLOAT64_m256_255]:
-        min_v = -256.
-    elif dtyperange in [FLOAT32_m1_1, FLOAT64_m1_1]:
-        min_v = -1.
-    elif dtyperange in [UINT8_0_255]:
-        min_v = 0
-    else:
-        raise UnknownImageDtypeRangeError(dtyperange)
-
-    return min_v, max_v
-
-
-def dtyperange_of_minmax(dtype, min_v, max_v) -> str:
+def dtyperange_of_minmax(dtype, min_v, max_v) -> Type[NPYDtypeRange]:
     if dtype in [np.float32, np.float64]:
         if 0 <= max_v <= 1:
             if 0 <= min_v <= 1:  # [0, 1)
@@ -123,8 +94,8 @@ def assure_dtype_float32(images_or_image, min_to=0., max_to=1.) -> np.ndarray:
     imagetype_from = get_dtyperange(images_or_image)
     imagetype_to = dtyperange_of_minmax(np.float32, min_to, max_to)
 
-    min_from, max_from = minmax_of_dtyperange(imagetype_from)
-    min_to, max_to = minmax_of_dtyperange(imagetype_to)
+    min_from, max_from = imagetype_from.get_minmax()
+    min_to, max_to = imagetype_to.get_minmax()
 
     return rescale(images_or_image,
                    min_from=min_from, max_from=max_from, min_to=min_to, max_to=max_to,
@@ -140,8 +111,8 @@ def assure_dtype_uint8(images_or_image) -> np.ndarray:
     imagetype_from = get_dtyperange(images_or_image)
     imagetype_to = dtyperange_of_minmax(np.uint8, 0, 255)
 
-    min_from, max_from = minmax_of_dtyperange(imagetype_from)
-    min_to, max_to = minmax_of_dtyperange(imagetype_to)
+    min_from, max_from = imagetype_from.get_minmax()
+    min_to, max_to = imagetype_to.get_minmax()
 
     return rescale(images_or_image,
                    min_from=min_from, max_from=max_from, min_to=min_to, max_to=max_to,

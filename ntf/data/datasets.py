@@ -2,10 +2,10 @@ import numpy as np
 import tensorflow as tf
 
 
-__all__ = ['mix_datasets', 'repeat_elementwise', 'from_dataset_one', 'from_dataset', 'iterator_like']
+__all__ = ['mix', 'from_array', 'from_array_one', 'repeat_elementwise']
 
 
-def mix_datasets(datasets, lengths, fit_longest=True):
+def mix(datasets, lengths, fit_longest=True):
     if fit_longest:  # fit longest.
         lengths = np.array(lengths)
         weights = lengths / lengths.sum()
@@ -22,20 +22,7 @@ def mix_datasets(datasets, lengths, fit_longest=True):
         return d
 
 
-def repeat_elementwise(dataset, count) -> tf.data.Dataset:
-    """
-    Repeat element of each dataset by *count*.
-
-    :param tf.data.Dataset dataset:
-    :param int count: number_of_repeats
-    :return:
-    """
-    return dataset.flat_map(
-        lambda x: tf.data.Dataset.from_tensors(x).repeat(count)
-    )
-
-
-def from_dataset_one(x) -> tf.data.Dataset:
+def from_array_one(x) -> tf.data.Dataset:
     N = x.shape[0]
     shape_x = x.shape[1:]
 
@@ -52,7 +39,7 @@ def from_dataset_one(x) -> tf.data.Dataset:
     return d
 
 
-def from_dataset(x, y) -> tf.data.Dataset:
+def from_array(x, y) -> tf.data.Dataset:
     """
 
     :param np.ndarray x:
@@ -78,18 +65,14 @@ def from_dataset(x, y) -> tf.data.Dataset:
     return d
 
 
-def iterator_like(iterator, handle_ph=None) -> tuple:
+def repeat_elementwise(dataset, count) -> tf.data.Dataset:
     """
+    Repeat element of each dataset by *count*.
 
-    :param tf.data.Iterator iterator:
-    :param tf.Tensor handle_ph:
+    :param tf.data.Dataset dataset:
+    :param int count: number_of_repeats
     :return:
     """
-
-    if handle_ph is None:
-        handle_ph = tf.placeholder(tf.string, [])
-
-    iterator2 = tf.data.Iterator.from_string_handle(handle_ph, iterator.output_types,
-                                                    output_shapes=iterator.output_shapes)
-
-    return handle_ph, iterator2
+    return dataset.flat_map(
+        lambda x: tf.data.Dataset.from_tensors(x).repeat(count)
+    )
