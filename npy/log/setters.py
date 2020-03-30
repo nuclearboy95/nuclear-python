@@ -1,3 +1,4 @@
+import queue
 import logging
 import logging.handlers
 import coloredlogs
@@ -84,11 +85,20 @@ def telegram():
     from .telegram_handler import TelegramHandler
     global LOGGING_TO_TELEGRAM
     if not LOGGING_TO_TELEGRAM:
+
         fmt = logging.Formatter('%(message)s')
         th = TelegramHandler()
         th.setFormatter(fmt)
         th.setLevel(logging.WARNING)
-        _logger.addHandler(th)
+
+        que = queue.Queue(-1)
+        qh = logging.handlers.QueueHandler(que)
+        listener = logging.handlers.QueueListener(que, th)
+
+        _logger.addHandler(qh)
+
+        listener.start()
+
         LOGGING_TO_TELEGRAM = True
 
 
