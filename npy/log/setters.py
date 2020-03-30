@@ -5,10 +5,11 @@ import os
 
 _logger = None
 _sh = None
-logging_to_file = False
+LOGGING_TO_FILE = False
+LOGGING_TO_TELEGRAM = False
 
 
-__all__ = ['verbosity', 'save']
+__all__ = ['verbosity', 'save', 'telegram']
 
 
 def _init():
@@ -39,16 +40,16 @@ def _init():
 
 
 def save():
-    global logging_to_file
+    global LOGGING_TO_FILE
 
-    if not logging_to_file:
+    if not LOGGING_TO_FILE:
         fmt = logging.Formatter('P%(process)05d L%(levelno).1s [%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
         os.makedirs('log', exist_ok=True)
         fh = logging.handlers.TimedRotatingFileHandler('log/log.log', when='D')
         fh.setFormatter(fmt)
         fh.setLevel(logging.DEBUG)
         _logger.addHandler(fh)
-        logging_to_file = True
+        LOGGING_TO_FILE = True
 
 
 def verbosity(level=2):
@@ -77,6 +78,18 @@ def verbosity(level=2):
 
     else:
         _sh.setLevel(logging.CRITICAL)
+
+
+def telegram():
+    from .telegram_handler import TelegramHandler
+    global LOGGING_TO_TELEGRAM
+    if not LOGGING_TO_TELEGRAM:
+        fmt = logging.Formatter('%(message)s')
+        th = TelegramHandler()
+        th.setFormatter(fmt)
+        th.setLevel(logging.WARNING)
+        _logger.addHandler(th)
+        LOGGING_TO_TELEGRAM = True
 
 
 if _logger is None:

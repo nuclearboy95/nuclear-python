@@ -5,3 +5,4 @@ dist/*
 ckpts/*
 build/*
 .eggs/*
+y_*.py
