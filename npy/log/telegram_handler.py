@@ -9,8 +9,4 @@ class TelegramHandler(logging.Handler):
 
     def emit(self, record):
         msg = self.format(record)
-        chat_id = self.bot.get_updates()[-1].message.chat_id
-        self.bot.send_message(
-            chat_id=chat_id,
-            text=msg,
-        )
+        self.bot.send(msg)
