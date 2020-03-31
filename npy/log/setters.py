@@ -53,6 +53,23 @@ def save():
         LOGGING_TO_FILE = True
 
 
+def int2level(level):
+    if level <= 1:
+        return logging.DEBUG
+
+    elif level <= 2:
+        return logging.INFO
+
+    elif level <= 3:
+        return logging.WARNING
+
+    elif level <= 4:
+        return logging.ERROR
+
+    else:
+        return logging.CRITICAL
+
+
 def verbosity(level=2):
     """
 
@@ -65,23 +82,11 @@ def verbosity(level=2):
     if _logger is None:
         _init()
 
-    if level <= 1:
-        _sh.setLevel(logging.DEBUG)
-
-    elif level <= 2:
-        _sh.setLevel(logging.INFO)
-
-    elif level <= 3:
-        _sh.setLevel(logging.WARNING)
-
-    elif level <= 4:
-        _sh.setLevel(logging.ERROR)
-
-    else:
-        _sh.setLevel(logging.CRITICAL)
+    level = int2level(level)
+    _sh.setLevel(level)
 
 
-def telegram():
+def telegram(level=3):
     from .telegram_handler import TelegramHandler
     global LOGGING_TO_TELEGRAM
     if not LOGGING_TO_TELEGRAM:
@@ -89,10 +94,12 @@ def telegram():
         fmt = logging.Formatter('%(message)s')
         th = TelegramHandler()
         th.setFormatter(fmt)
-        th.setLevel(logging.WARNING)
+        level = int2level(level)
+        th.setLevel(level)
 
         que = queue.Queue(-1)
         qh = logging.handlers.QueueHandler(que)
+        qh.setLevel(level)
         listener = logging.handlers.QueueListener(que, th)
 
         _logger.addHandler(qh)

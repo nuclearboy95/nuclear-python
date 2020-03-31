@@ -2,8 +2,9 @@ import numpy as np
 from .basic import shape, to_NHWC, match_fmt, assure_dtype_uint8
 from .decorators import allowable_fmts
 from ..constants import *
+from PIL import Image, ImageDraw, ImageFont
 
-__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border']
+__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border', 'add_text']
 
 
 @allowable_fmts([NHWC, HWC])
@@ -66,3 +67,12 @@ def add_border(images_or_image, color=(0, 255, 0), border=0.07):
     result = match_fmt(result, images_or_image)
 
     return result
+
+
+def add_text(image, text, coord=(0, 0), color=(0, 255, 0), size=15):
+    p = Image.fromarray(image)
+    d = ImageDraw.Draw(p)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', size)
+    d.text(coord, text, fill=color, font=font)
+    image = np.asarray(p)
+    return image
