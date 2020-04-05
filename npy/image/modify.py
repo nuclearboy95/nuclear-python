@@ -59,7 +59,6 @@ def add_border(images_or_image, color=(0, 255, 0), border=0.07):
     T = border
     result = images_or_image.copy()
     result = to_NHWC(result)
-    result = assure_dtype_uint8(result)
     result[:, :T, :] = color
     result[:, -T:, :] = color
     result[:, :, :T] = color

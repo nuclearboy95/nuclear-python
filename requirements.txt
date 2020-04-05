@@ -9,3 +9,5 @@ Pillow>=5.3.0
 pandas
 imageio
 opencv-python
+torch
+tensorflow-gpu<=1.13.2
