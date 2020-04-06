@@ -3,7 +3,7 @@ import numpy as np
 import npy
 
 
-__all__ = ['ArrayDataset', 'ConcatDataset', 'PatchDataset']
+__all__ = ['ArrayDataset', 'DictionaryConcatDataset', 'PatchDataset']
 
 
 class ArrayDataset(Dataset):
@@ -32,15 +32,19 @@ class ArrayDataset(Dataset):
             return x
 
 
-class ConcatDataset(Dataset):
-    def __init__(self, datasets):
-        self.datasets = datasets
-        lengths = [len(d) for d in datasets]
+class DictionaryConcatDataset(Dataset):
+    def __init__(self, d_of_datasets):
+        self.d_of_datasets = d_of_datasets
+        lengths = [len(d) for d in d_of_datasets.values()]
         self._length = min(lengths)
+        self.keys = self.d_of_datasets.keys()
         assert min(lengths) == max(lengths), 'Length of the datasets should be the same'
 
     def __getitem__(self, idx):
-        return tuple(d[idx] for d in self.datasets)
+        return {
+            key: self.d_of_datasets[key][idx]
+            for key in self.keys
+        }
 
     def __len__(self):
         return self._length
