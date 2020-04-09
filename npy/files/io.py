@@ -5,7 +5,7 @@ import multiprocessing as mp
 import os
 import functools
 
-from .utils_files import home_rsc_path, makedirpath
+from .path import home_rsc_path, makedirpath
 
 
 def ensure_dir_exist(f):

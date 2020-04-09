@@ -11,3 +11,4 @@ imageio
 opencv-python
 torch
 tensorflow-gpu<=1.13.2
+yaml
