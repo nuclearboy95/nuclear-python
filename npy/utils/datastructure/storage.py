@@ -19,9 +19,13 @@ class ddict(defaultdict):
 
 
 class fdict:
-    def __init__(self, root_folder='./'):
+    def __init__(self, root_folder='./', auto_create_dir=True, read_only=False):
         self.root_folder = root_folder
-        os.makedirs(root_folder, exist_ok=True)
+        self.auto_create_dir = auto_create_dir
+        self.read_only = read_only
+
+        if self.auto_create_dir and not read_only:
+            os.makedirs(root_folder, exist_ok=True)
 
     def __getitem__(self, key):  # value = d[key]
         key = self._preprocess_key(key)
@@ -42,13 +46,17 @@ class fdict:
             return fdict(path)
 
     def __setitem__(self, key, value):  # d[key] = value
+        if self.read_only:
+            raise ValueError('Read only fdict.')
+
         key = self._preprocess_key(key)
         path = self._get_path(key)
         dirname = os.path.dirname(path)
 
         # 1. make a directory
         if not os.path.exists(dirname):
-            os.makedirs(dirname, exist_ok=True)
+            if self.auto_create_dir:
+                os.makedirs(dirname, exist_ok=True)
 
         if os.path.exists(path):
             if os.path.isdir(path):  # 2. if a directory
@@ -56,6 +64,9 @@ class fdict:
         save_binary(value, path)
 
     def __delitem__(self, key):  # del d[key]
+        if self.read_only:
+            raise ValueError('Read only fdict.')
+
         key = self._preprocess_key(key)
         path = self._get_path(key)
 
@@ -76,13 +87,16 @@ class fdict:
     def _is_file(path):
         return os.path.exists(path) and os.path.isfile(path)
 
-    def keys(self, recursive=False):
+    def keys(self, recursive=False, files_only=True):
         if recursive:
-            allnames = glob(os.path.join(self.root_folder, '**'), recursive=True)
+            fnames = glob(os.path.join(self.root_folder, '**'), recursive=True)
         else:
-            allnames = os.listdir(self.root_folder)
-        filenames = list(filter(os.path.isfile, allnames))
-        return sorted(filenames)
+            fnames = os.listdir(self.root_folder)
+
+        if files_only:
+            fnames = list(filter(lambda fname: os.path.isfile(self._get_path(fname)), fnames))
+
+        return sorted(fnames)
 
 
 FileDict = fdict

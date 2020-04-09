@@ -1,57 +1,51 @@
 import os
 
 
-__all__ = ['sub_files', 'path_listdir', 'rpath_listdir2', 'rpath_listdir', 'home_path', 'home_rsc_path', 'makedirpath']
+__all__ = ['rlistdir', 'listdir_path', 'home_path', 'home_rsc_path', 'makedirpath']
 
 
-def sub_files(path, endswith=None):
+def rlistdir(path='.', endswith=None, absolute=False):
+    """
+    returns a generator that iterates over all sub files (exclude dir) of a given path.
+
+    :param str path:
+    :param str endswith:
+    :param bool absolute:
+    :return:
+    """
     for root, dirs, files in os.walk(path):
         for file in files:
             if endswith is None or file.endswith(endswith):
-                yield os.path.join(root, file)
+                fpath = os.path.join(root, file)
+                if absolute:
+                    fpath = os.path.abspath(fpath)
+                yield fpath
 
 
-def path_listdir(dirname, prefix=None, only_files=False, absolute=True):
-    result = [os.path.join(dirname, basename)
-              for basename in os.listdir(dirname)
-              if not prefix or basename.startswith(prefix)]
-    result.sort()
+def listdir_path(dpath, prefix=None, file_only=False, absolute=False) -> list:
+    """
+    Similar to os.listdir() with path suffix.
 
-    if only_files:
-        result = list(filter(os.path.isfile, result))
+    :param dpath:
+    :param str prefix:
+    :param bool file_only:
+    :param bool absolute:
+    :return:
+    """
+    fnames = sorted(os.listdir(dpath))
 
-    if absolute:
-        result = list(map(os.path.abspath, result))
+    if prefix is not None:
+        fnames = list(filter(lambda fname: fname.startswith(prefix), fnames))
 
-    return result
+    fpaths = [os.path.join(dpath, fname) for fname in fnames]
 
-
-def rpath_listdir2(dname, only_files=False):
-    fdnames = path_listdir(dname)
-    fdnames.sort()
-    fnames = list(filter(os.path.isfile, fdnames))
-    dnames = list(filter(os.path.isdir, fdnames))
-    result = list()
-    result += fnames
-
-    if not only_files:
-        result += dnames
-
-    for child in map(lambda dn: rpath_listdir2(os.path.join(dname, dn), only_files=only_files), dnames):
-        result += child
-    return result
-
-
-def rpath_listdir(dname, only_files=False, absolute=True):
-    result = list(sub_files(dname))
-    result.sort()
-    if only_files:
-        result = list(filter(os.path.isfile, result))
+    if file_only:
+        fpaths = list(filter(os.path.isfile, fpaths))
 
     if absolute:
-        result = list(map(os.path.abspath, result))
+        fpaths = list(map(os.path.abspath, fpaths))
 
-    return result
+    return fpaths
 
 
 def home_path() -> str:
