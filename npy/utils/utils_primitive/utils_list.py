@@ -2,7 +2,7 @@ import numpy as np
 from collections.abc import Iterable
 
 
-__all__ = ['take', 'isarray', 'isnum']
+__all__ = ['take', 'isarray', 'isnum', 'shuffled']
 
 
 def take(l, inds_or_ind):
@@ -20,3 +20,11 @@ def isarray(obj) -> bool:
 
 def isnum(obj) -> bool:
     return np.issubdtype(type(obj), np.number)
+
+
+def shuffled(x, y=None):
+    inds = np.random.permutation(len(x))
+    if y is None:
+        return take(x, inds)
+    else:
+        return take(x, inds), take(y, inds)

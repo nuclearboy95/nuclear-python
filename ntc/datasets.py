@@ -3,7 +3,7 @@ import numpy as np
 import npy
 
 
-__all__ = ['ArrayDataset', 'DictionaryConcatDataset', 'PatchDataset']
+__all__ = ['RepeatDataset', 'DictionaryConcatDataset', 'PatchDataset', 'ArrayDataset']
 
 
 class ArrayDataset(Dataset):
@@ -32,6 +32,20 @@ class ArrayDataset(Dataset):
             return x
 
 
+class RepeatDataset(Dataset):
+    def __init__(self, dataset, repeat):
+        self.dataset = dataset
+        self.repeat = repeat
+        self.length = len(dataset)
+
+    def __len__(self):
+        return self.length * self.repeat
+
+    def __getitem__(self, idx):
+        n = idx % self.length
+        return self.dataset[n]
+
+
 class DictionaryConcatDataset(Dataset):
     def __init__(self, d_of_datasets):
         self.d_of_datasets = d_of_datasets
@@ -51,21 +65,21 @@ class DictionaryConcatDataset(Dataset):
 
 
 class PatchDataset(Dataset):
-    def __init__(self, memmap, memmap_label=None, transform=None, K=32, S=1):
+    def __init__(self, x, y=None, tfs=None, K=32, S=1):
         super(PatchDataset, self).__init__()
-        self.arr = memmap
-        self.label = memmap_label
-        self.transform = transform
+        self.x = x
+        self.y = y
+        self.tfs = tfs
         self.S = S
         self.K = K
 
     def __len__(self):
-        N = self.arr.shape[0]
+        N = self.x.shape[0]
         return N * self.row_num * self.col_num
 
     @npy.lazy_property
     def row_num(self):
-        N, H, W = self.arr.shape[:3]
+        N, H, W = self.x.shape[:3]
         K = self.K
         S = self.S
         I = npy.calc.cnn_output_size(H, K=K, S=S)
@@ -73,26 +87,26 @@ class PatchDataset(Dataset):
 
     @npy.lazy_property
     def col_num(self):
-        N, H, W = self.arr.shape[:3]
+        N, H, W = self.x.shape[:3]
         K = self.K
         S = self.S
         J = npy.calc.cnn_output_size(W, K=K, S=S)
         return J
 
     def __getitem__(self, idx):
-        N = self.arr.shape[0]
+        N = self.x.shape[0]
         n, i, j = np.unravel_index(idx, (N, self.row_num, self.col_num))
         K = self.K
         S = self.S
-        image = self.arr[n]
+        image = self.x[n]
         h, w = S * i, S * j
         patch = image[h: h + K, w: w + K]
 
-        if self.transform:
-            patch = self.transform(patch)
+        if self.tfs:
+            patch = self.tfs(patch)
 
-        if self.label is not None:
-            return patch, n, i, j, self.label[n]
+        if self.y is not None:
+            return patch, n, i, j, self.y[n]
 
         else:
             return patch, n, i, j

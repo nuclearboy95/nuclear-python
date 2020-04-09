@@ -1,9 +1,12 @@
 import functools
 import numpy as np
-import math
 import os
+import json
 from ..log import *
-from .utils_primitive import take
+
+
+__all__ = ['set_cuda', 'set_tf_log', 'lazy_property', 'failsafe',
+           'sample_multivariate', 'score2mask', 'pprint']
 
 
 def set_cuda(*args):
@@ -27,15 +30,7 @@ def lazy_property(f):
     return decorator
 
 
-def shuffled(x, y=None):
-    inds = np.random.permutation(len(x))
-    if y is None:
-        return take(x, inds)
-    else:
-        return take(x, inds), take(y, inds)
-
-
-def failsafe(value=None):
+def failsafe(return_value=None):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
@@ -44,7 +39,7 @@ def failsafe(value=None):
                 return result
             except Exception as e:
                 saye('@failsafe %s() ended with %s.' % (f.__name__, e.__class__.__name__))
-                return value
+                return return_value
         return wrapper
     return decorator
 
@@ -64,12 +59,25 @@ def sample_multivariate(mu, cov, N, D):
     return mu[np.newaxis, :] + np.dot(A, z).T
 
 
-def score2mask(H, W, K, Hs, Ws, scores):
+def score2mask(H, W, K, Hs, Ws, scores) -> np.ndarray:
+    """
+
+    :param int H:
+    :param int W:
+    :param int K:
+    :param Hs:
+    :param Ws:
+    :param scores:
+    :return:
+    """
     mask = np.zeros([H, W], dtype=np.float32)
     cnt = np.zeros([H, W], dtype=np.int32)
-    for H, W, score in zip(Hs, Ws, scores):
-        mask[H: H + K, W: W + K] += score
-        cnt[H: H + K, W: W + K] += 1
+    for h, w, s in zip(Hs, Ws, scores):
+        mask[h: h + K, w: w + K] += s
+        cnt[h: h + K, w: w + K] += 1
     cnt[cnt == 0] = 1  # avoid divide by zero
     return mask / cnt
 
+
+def pprint(obj):
+    print(json.dumps(obj, indent=4))
