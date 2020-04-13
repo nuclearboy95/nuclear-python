@@ -21,8 +21,8 @@ def load_binary(fpath, encoding='ASCII'):
         return p.load(f, encoding=encoding)
 
 
-def load_json(fpath):
-    with open(fpath, 'r') as f:
+def load_json(fpath, encoding=None):
+    with open(fpath, 'r', encoding=encoding) as f:
         return json.load(f)
 
 
