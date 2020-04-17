@@ -2,11 +2,13 @@ import functools
 import numpy as np
 import os
 import json
+from .utils_primitive import ranges
+from ..calc import cnn_output_size
 from ..log import *
 
 
 __all__ = ['set_cuda', 'set_tf_log', 'lazy_property', 'failsafe',
-           'sample_multivariate', 'score2mask', 'pprint']
+           'sample_multivariate', 'score2mask', 'pprint', 'avgpool2d']
 
 
 def set_cuda(*args):
@@ -81,3 +83,16 @@ def score2mask(H, W, K, Hs, Ws, scores) -> np.ndarray:
 
 def pprint(obj):
     print(json.dumps(obj, indent=4))
+
+
+def avgpool2d(x, K, S):
+    H, W = x.shape[:2]
+    I = cnn_output_size(H, K, S)
+    J = cnn_output_size(W, K, S)
+    ret = np.zeros((I, J), dtype=x.dtype)
+    for i, j in ranges(I, J):
+        h = i * S
+        w = j * S
+        p = x[h: h + K, w: w + K]
+        ret[i, j] = p.mean()
+    return ret
