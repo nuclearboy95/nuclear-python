@@ -4,7 +4,7 @@ from .decorators import allowable_fmts
 from ..constants import *
 from PIL import Image, ImageDraw, ImageFont
 
-__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border', 'add_text']
+__all__ = ['pad', 'rgb2gray', 'gray2rgb', 'add_border', 'add_text', 'crop', 'crop_CHW']
 
 
 @allowable_fmts([NHWC, HWC])
@@ -75,3 +75,21 @@ def add_text(image, text, coord=(0, 0), color=(0, 255, 0), size=15):
     d.text(coord, text, fill=color, font=font)
     image = np.asarray(p)
     return image
+
+
+def crop(image, i, j, K, S=1):
+    if S == 1:
+        h, w = i, j
+    else:
+        h = S * i
+        w = S * j
+    return image[h: h + K, w: w + K]
+
+
+def crop_CHW(image, i, j, K, S=1):
+    if S == 1:
+        h, w = i, j
+    else:
+        h = S * i
+        w = S * j
+    return image[:, h: h + K, w: w + K]

@@ -1,7 +1,6 @@
 import _pickle as p
 import json
 import yaml
-import multiprocessing as mp
 import os
 import functools
 
@@ -58,24 +57,6 @@ def save_yaml(d, fpath):
 def save_txt(s, fpath):
     with open(fpath, 'w') as f:
         return f.write(s)
-
-
-class AsyncWriter:
-    def __init__(self, processes=2):
-        self.pool = mp.Pool(processes)
-        self.res = None
-
-    def __enter__(self):
-        self.pool.__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.res is not None:  # wait until all write is done.
-            self.res.get()
-        return self.pool.__exit__(exc_type, exc_val, exc_tb)
-
-    def save_binary(self, d, path):
-        self.res = self.pool.apply_async(save_binary, (d, path))
 
 
 def load_rsc(*args):

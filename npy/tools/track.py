@@ -1,6 +1,6 @@
 import functools
-from .log import sayd
 import time
+from ..log import sayd
 
 
 TRACK_FLAG = False
