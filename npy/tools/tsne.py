@@ -1,8 +1,5 @@
-from MulticoreTSNE import MulticoreTSNE as TSNE
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_auc_score
 import numpy as np
-from npy import task, load_binary
 from .multirank.modify import flatten_vectors, unflatten_vectors
 from .multirank.recursive import get_lengths
 
@@ -11,6 +8,7 @@ __all__ = ['tsne_multirank', 'tsne']
 
 
 def tsne(X, **kwargs):
+    from MulticoreTSNE import MulticoreTSNE as TSNE
     model = TSNE(**kwargs)
     Y = model.fit_transform(X)
     return Y
