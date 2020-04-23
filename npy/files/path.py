@@ -1,7 +1,8 @@
 import os
+from glob import glob
 
 
-__all__ = ['rlistdir', 'listdir_path', 'home_path', 'home_rsc_path', 'makedirpath']
+__all__ = ['rlistdir', 'listdir_path', 'home_path', 'home_rsc_path', 'makedirpath', 'gb', 'lgb']
 
 
 def rlistdir(path='.', endswith=None, absolute=False):
@@ -60,3 +61,11 @@ def makedirpath(fpath: str):
     dpath = os.path.dirname(fpath)
     if dpath:
         os.makedirs(dpath, exist_ok=True)
+
+
+def gb(pathname='*'):
+    return glob(pathname)
+
+
+def lgb(pathname='*'):
+    return len(glob(pathname))
