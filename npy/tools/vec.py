@@ -2,7 +2,8 @@ import numpy as np
 
 
 __all__ = ['calc_cosine_similaritys', 'calc_cosine_similarity_pair',
-           'min_cosine', 'mean_cosine', 'max_cosine']
+           'min_cosine', 'mean_cosine', 'max_cosine',
+           'normalize']
 
 
 def calc_cosine_similaritys(source, targets):
@@ -42,3 +43,10 @@ def max_cosine(source, targets):
     # targets [N, D]
     cosine_similarity = calc_cosine_similaritys(source, targets)
     return cosine_similarity.max()
+
+
+def normalize(vectors) -> np.ndarray:
+    vectors = vectors.copy()
+
+    vectors /= np.linalg.norm(vectors, axis=-1, keepdims=True)
+    return vectors
