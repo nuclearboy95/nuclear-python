@@ -35,8 +35,7 @@ def get_name() -> str:
 
 
 def filewriter_factory(name: str):
-    time_str = datetime.datetime.now().strftime('%m-%d %H:%M:%S.%f')
-
+    time_str = datetime.datetime.now().strftime('%d %b %H:%M:%S')
     if name == '':
         exp_name = f'{time_str}'
     else:
