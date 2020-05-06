@@ -4,14 +4,28 @@ import numpy as np
 __all__ = ['corrupt_labels', 'filter_labels']
 
 
-def filter_labels(x, y, class_num):
+def filter_labels(x, y, class_num: int) -> tuple:
+    """
+
+    :param np.ndarray x:
+    :param np.ndarray y:
+    :param int class_num:
+    :return:
+    """
     m = y < class_num
     x = x[m]
     y = y[m]
     return x, y
 
 
-def corrupt_labels(y, c, class_num):
+def corrupt_labels(y, c: float, class_num: int) -> np.ndarray:
+    """
+
+    :param np.ndarray y:  [N]
+    :param float c:
+    :param int class_num:
+    :return:
+    """
     N = y.shape[0]
     m = np.zeros(N, dtype=np.bool)
     Nc = int(N * c)

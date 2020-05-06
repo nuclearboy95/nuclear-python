@@ -34,7 +34,7 @@ def get_name() -> str:
     return _DEFAULT_TB_NAME
 
 
-def filewriter_factory(name: str):
+def get_log_path(name: str):
     time_str = datetime.datetime.now().strftime('%d %b %H:%M:%S')
     if name == '':
         exp_name = f'{time_str}'
@@ -43,8 +43,13 @@ def filewriter_factory(name: str):
 
     sayi(f'Tensorboard exp name is {exp_name}')
 
-    log_name = f'tblog/{exp_name}'
-    return tf.summary.FileWriter(log_name, graph=tf.get_default_graph())
+    log_path = f'tblog/{exp_name}'
+    return log_path
+
+
+def filewriter_factory(name: str):
+    log_path = get_log_path(name)
+    return tf.summary.FileWriter(log_path, graph=tf.get_default_graph())
 
 
 writers = ddict(filewriter_factory)

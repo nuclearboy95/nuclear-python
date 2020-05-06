@@ -5,3 +5,4 @@ from . import tsne
 from . import http
 from . import track
 from . import vec
+from . import intrinsic_dimension
