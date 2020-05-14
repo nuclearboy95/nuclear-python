@@ -62,8 +62,7 @@ def train(model, device, train_loader, opt, epoch):
 
         met.update('loss', loss.item())
         met.update('acc', correct, ys.size(0))
-    else:
-        sayi(f'Epoch {epoch:03d}] Train Loss: {met.avg("loss"):.3f}, Acc: {met.avg("acc"):.3f}')
+
     return met.avgs
 
 
@@ -112,8 +111,10 @@ def main():
 
     sayi('Start training')
     for epoch in range(1, 100 + 1):
-        res_train = train(model, device, train_loader, opt, epoch)
-        res_test = test(model, device, test_loader)
+        d_train = train(model, device, train_loader, opt, epoch)
+        d_test = test(model, device, test_loader)
 
-        ntf.tb.add_scalars(res_train, prefix='train', step=epoch)
-        ntf.tb.add_scalars(res_test, prefix='test', step=epoch)
+        ntf.tb.add_scalars(d_train, prefix='train', step=epoch)
+        ntf.tb.add_scalars(d_test, prefix='test', step=epoch)
+
+        sayi(f'Epoch {epoch:03d}] Train Loss: {d_train["loss"]:.3f}, Acc: {d_train["acc"]:.3f}, Grad Norm: {d_train["grad_norm"]:.3f} | Test Loss: {d_test["loss"]:.3f}, Acc: {d_test["acc"]:.3f}')

@@ -6,7 +6,8 @@ from ...errors import *
 from typing import Type
 
 
-__all__ = ['get_fmt', 'to_fmt', 'to_NHWC', 'to_HWC', 'to_NHW', 'to_HW', 'match_fmt']
+__all__ = ['get_fmt', 'to_fmt', 'to_NHWC', 'to_HWC', 'to_NHW', 'to_HW', 'match_fmt',
+           'NHWC2NCHW', 'NCHW2NHWC', 'HWC2CHW', 'CHW2HWC']
 
 
 def get_fmt(images_or_image) -> Type[NPYImageFormat]:
@@ -51,6 +52,22 @@ def match_fmt(images_or_image, fmt_images_or_image) -> np.ndarray:
     """
     fmt = get_fmt(fmt_images_or_image)
     return to_fmt(images_or_image, fmt)
+
+
+def NCHW2NHWC(images: np.ndarray) -> np.ndarray:
+    return np.transpose(images, [0, 2, 3, 1])
+
+
+def NHWC2NCHW(images: np.ndarray) -> np.ndarray:
+    return np.transpose(images, [0, 3, 1, 2])
+
+
+def HWC2CHW(image: np.ndarray) -> np.ndarray:
+    return np.transpose(image, [2, 0, 1])
+
+
+def CHW2HWC(image: np.ndarray) -> np.ndarray:
+    return np.transpose(image, [1, 2, 0])
 
 
 to_NHWC = partial(to_fmt, fmt=NHWC)

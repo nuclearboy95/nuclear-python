@@ -18,4 +18,3 @@ def is_vector(X):
 
 def is_matrix(X):
     return is_vector(X[0])
-
