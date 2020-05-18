@@ -162,23 +162,28 @@ def run_op(sess, op, steps=None, verbose=True, hook=None, feed_dict=None) -> lis
     return result_d[key]
 
 
-def batch(data, batch_size, N=None, strict=False, shuffle=False):
+def batch(data, batch_size, N=None, strict=False, shuffle=False, verbose=False):
     if N is None:
-        N = data.shape[0]
+        N = len(data)
 
     if shuffle:
         inds = np.random.permutation(N)
     else:
         inds = np.arange(N)
 
+    i_batch_g = range(npy.calc.num_batch(N, batch_size, strict=strict))
+
+    if verbose:
+        i_batch_g = tqdm(i_batch_g)
+
     if isinstance(data, tuple):
-        for i_batch in range(npy.calc.num_batch(N, batch_size, strict=strict)):
+        for i_batch in i_batch_g:
             inds_batch = inds[i_batch * batch_size: (i_batch + 1) * batch_size]
             d_batch = tuple(v[inds_batch] for v in data)
             yield i_batch, d_batch
 
     else:
-        for i_batch in range(npy.calc.num_batch(N, batch_size, strict=strict)):
+        for i_batch in i_batch_g:
             inds_batch = inds[i_batch * batch_size: (i_batch + 1) * batch_size]
             x_batch = data[inds_batch]
             yield i_batch, x_batch
