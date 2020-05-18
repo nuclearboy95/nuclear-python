@@ -8,11 +8,13 @@ from ..calc import ceil_to_1digit
 from .basic import nshape, shape, assure_dtype
 from .miscs import flatten_image_list, merge
 
+__all__ = [
+    'show_heatmap', 'show', 'shows', 'shows_merged',
+    'plot_to_image'
+]
 
-__all__ = ['show_heatmap', 'show', 'shows', 'shows_merged', 'plot_to_image']
 
-
-def plot_to_image(figure):
+def plot_to_image(figure) -> np.ndarray:
     buf = io.BytesIO()
     figure.savefig(buf, format='png')
     plt.close(figure)
@@ -21,8 +23,10 @@ def plot_to_image(figure):
     return image
 
 
-def show(data, ax=None, title='', show_axis=False, interpolation=None, inverse=False):
+def show(data=None, ax=None, title='', show_axis=False, interpolation=None, inverse=False):
     if data is None:
+        if ax is not None:
+            ax.set_axis_off()
         return
 
     if ax is None:
@@ -90,7 +94,7 @@ def shows(images, show_shape=None, order='row'):
     return fig
 
 
-def shows_merged(images, ax=None, show_shape=None, order='row'):
+def shows_merged(images, ax=None, show_shape=None, order='row', title=None):
     """
     Show multiple images in a single axis.
 
@@ -98,6 +102,7 @@ def shows_merged(images, ax=None, show_shape=None, order='row'):
     :param ax:
     :param tuple show_shape:
     :param str order:
+    :param str title:
     :return:
     """
     if isinstance(images, list):
@@ -108,7 +113,7 @@ def shows_merged(images, ax=None, show_shape=None, order='row'):
         show_shape = (N, 1)
 
     image = merge(images, show_shape, order=order)
-    return show(data=image, ax=ax)
+    return show(data=image, ax=ax, title=title)
 
 
 def show_heatmap(ax, data, title='', colorbar=True, percentile=1.,
