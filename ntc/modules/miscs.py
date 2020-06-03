@@ -7,19 +7,13 @@ import os
 from functools import reduce
 
 
-__all__ = ['Flatten', 'Module', 'parameters']
+__all__ = ['Module', 'parameters']
 
 
 def parameters(*modules) -> list:
     params = [list(module.parameters()) for module in modules]
     params = reduce(lambda x, y: x + y, params)
     return params
-
-
-class Flatten(nn.Module):
-    def forward(self, x):
-        x = x.view(x.size()[0], -1)
-        return x
 
 
 class Module(nn.Module):
@@ -34,4 +28,3 @@ class Module(nn.Module):
             sayd(f'Loaded from {fpath}.')
         else:
             saye(f'Failed to load: {fpath} does not exist.')
-

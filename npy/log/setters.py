@@ -40,13 +40,15 @@ def _init():
     _sh = _logger.handlers[0]
 
 
-def save():
+def save(fpath='log/log.log'):
     global LOGGING_TO_FILE
 
     if not LOGGING_TO_FILE:
         fmt = logging.Formatter('P%(process)05d L%(levelno).1s [%(asctime)s] %(message)s', "%m-%d %H:%M:%S")
-        os.makedirs('log', exist_ok=True)
-        fh = logging.handlers.TimedRotatingFileHandler('log/log.log', when='D')
+        dname = os.path.dirname(fpath)
+        if dname:
+            os.makedirs(dname, exist_ok=True)
+        fh = logging.handlers.TimedRotatingFileHandler(fpath, when='D')
         fh.setFormatter(fmt)
         fh.setLevel(logging.DEBUG)
         _logger.addHandler(fh)
