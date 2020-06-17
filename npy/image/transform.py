@@ -97,5 +97,5 @@ def bilinears(images, shape) -> np.ndarray:
     new_shape = (N,) + shape
     ret = np.zeros(new_shape, dtype=images.dtype)
     for i in range(N):
-        ret[i] = cv2.resize(images[i], dsize=shape, interpolation=cv2.INTER_LINEAR)
+        ret[i] = cv2.resize(images[i], dsize=shape[::-1], interpolation=cv2.INTER_LINEAR)
     return ret

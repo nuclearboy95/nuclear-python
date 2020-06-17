@@ -8,7 +8,8 @@ from ..log import *
 
 
 __all__ = ['set_cuda', 'set_tf_log', 'lazy_property', 'failsafe',
-           'sample_multivariate', 'score2mask', 'pprint', 'avgpool2d']
+           'sample_multivariate', 'score2mask', 'pprint', 'avgpool2d',
+           'upsample_scoremask', 'upsample_scoremasks']
 
 
 def set_cuda(*args):
@@ -79,6 +80,29 @@ def score2mask(H, W, K, Hs, Ws, scores) -> np.ndarray:
         cnt[h: h + K, w: w + K] += 1
     cnt[cnt == 0] = 1  # avoid divide by zero
     return mask / cnt
+
+
+def upsample_scoremask(score_mask, output_shape, K: int, S: int) -> np.ndarray:
+    H, W = output_shape
+    mask = np.zeros([H, W], dtype=np.float32)
+    cnt = np.zeros([H, W], dtype=np.int32)
+
+    I, J = score_mask.shape[:2]
+    for i, j in ranges(I, J):
+        h, w = i * S, j * S
+
+        mask[h: h + K, w: w + K] += score_mask[i, j]
+        cnt[h: h + K, w: w + K] += 1
+
+    cnt[cnt == 0] = 1
+
+    return mask / cnt
+
+
+def upsample_scoremasks(score_masks, output_shape, K: int, S: int) -> np.ndarray:
+    N = score_masks.shape[0]
+    results = [upsample_scoremask(score_masks[n], output_shape, K, S) for n in range(N)]
+    return np.asarray(results)
 
 
 def pprint(obj):
