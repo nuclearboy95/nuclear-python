@@ -14,6 +14,7 @@ def get_NN_1_and_2(vecs) -> np.ndarray:
 def calc_id(vecs) -> float:  # [N, D]
     NN12 = get_NN_1_and_2(vecs)  # [N, 2]
     mu = NN12[:, 1] / NN12[:, 0]
+    mu = mu[~np.isnan(mu)]
     intrinsic_dimension = 1 / np.log(mu).mean()
 
     return intrinsic_dimension

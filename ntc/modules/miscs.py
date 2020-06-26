@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
 
+import numpy as np
 from npy import makedirpath
 from npy.log import sayd, saye
 import os
 from functools import reduce
 
 
-__all__ = ['Module', 'parameters']
+__all__ = ['Module', 'parameters', 'count_params']
 
 
 def parameters(*modules) -> list:
@@ -28,3 +29,10 @@ class Module(nn.Module):
             sayd(f'Loaded from {fpath}.')
         else:
             saye(f'Failed to load: {fpath} does not exist.')
+
+
+def count_params(module):
+    count = 0
+    for param in list(module.parameters()):
+        count += np.prod(param.size())
+    return count
