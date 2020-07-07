@@ -76,24 +76,10 @@ def test(model, device, test_loader):
 
 
 def get_dataloader():
-    from tensorflow import keras
-    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    x_train = x_train.astype(np.float32) / 255.
-    x_test = x_test.astype(np.float32) / 255.
-
-    x_train = np.expand_dims(x_train, axis=-1)
-    x_test = np.expand_dims(x_test, axis=-1)
-
-    x_train = np.transpose(x_train, [0, 3, 1, 2])
-    x_test = np.transpose(x_test, [0, 3, 1, 2])
-
-    x_train = torch.tensor(x_train)
-    y_train = torch.tensor(y_train, dtype=torch.long)
-    x_test = torch.tensor(x_test)
-    y_test = torch.tensor(y_test, dtype=torch.long)
-
-    d_train = TensorDataset(x_train, y_train)
-    d_test = TensorDataset(x_test, y_test)
+    import torchvision
+    from torchvision.transforms import ToTensor
+    d_train = torchvision.datasets.MNIST('./mnist/', train=True, transform=ToTensor(), download=True)
+    d_test = torchvision.datasets.MNIST('./mnist/', train=False, transform=ToTensor(), download=True)
 
     l_train = DataLoader(d_train, batch_size=64, shuffle=True, pin_memory=True)
     l_test = DataLoader(d_test, batch_size=256, shuffle=False, pin_memory=True)
