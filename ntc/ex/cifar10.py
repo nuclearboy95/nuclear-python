@@ -1,5 +1,4 @@
 from ntc.ns import *
-import ntf
 
 __all__ = ['main']
 
@@ -102,6 +101,7 @@ def get_dataloader():
 
 
 def main():
+    import ntf
     device = torch.device("cuda")
     model = Net().to(device)
     opt = optim.Adam(model.parameters(), lr=1e-4)

@@ -1,5 +1,4 @@
 from ntc.ns import *
-import ntf
 from npy.data import corrupt_labels
 
 from .. import abstain_loss
@@ -108,6 +107,7 @@ def get_dataloader(corrupt=0.1):
 
 
 def main():
+    import ntf
     device = torch.device("cuda")
     model = Net().to(device)
     opt = optim.Adam(model.parameters(), lr=3e-4)
