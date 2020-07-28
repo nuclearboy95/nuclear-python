@@ -1,10 +1,10 @@
 import numpy as np
 from .utils_list import isarray, isnum
 
-
 __all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
-           'filter_d_of_l_of_num', 'filter_d_of_num', 'append_d_of_l', 'inv_d',
-           'filter_keys', 'replace_keys', 'drop_keys']
+           'append_d_of_l', 'inv_d', 'replace_keys', 'drop_keys',
+           'filter_d_of_l_of_num', 'filter_d_of_num', 'filter_keys', 'filter_empty'
+           ]
 
 
 def keys_d_of_l_of_num(d) -> list:
@@ -13,6 +13,7 @@ def keys_d_of_l_of_num(d) -> list:
     :param dict d:
     :return:
     """
+
     def is_valid_key(k):
         if not isarray(d[k]):
             return False
@@ -30,6 +31,7 @@ def keys_d_of_num(d) -> list:
     :param dict d:
     :return:
     """
+
     def is_valid_key(k):
         return isnum(d[k])
 
@@ -52,6 +54,18 @@ def replace_keys(d: dict, key_d: dict) -> dict:
         for k, v in d.items()
     }
 
+
+def append_d_of_l(d_of_l: dict, d: dict):
+    for key, value in d.items():
+        d_of_l[key].append(value)
+    return d_of_l
+
+
+def inv_d(d: dict) -> dict:
+    return {v: k for k, v in d.items()}
+
+
+####################
 
 def filter_keys(d: dict, keys: list) -> dict:
     return {
@@ -83,11 +97,9 @@ def filter_d_of_num(d: dict) -> dict:
     return filter_keys(d, keys)
 
 
-def append_d_of_l(d_of_l: dict, d: dict):
-    for key, value in d.items():
-        d_of_l[key].append(value)
-    return d_of_l
-
-
-def inv_d(d: dict) -> dict:
-    return {v: k for k, v in d.items()}
+def filter_empty(d: dict) -> dict:
+    keys = list(d.keys())
+    for k in keys:
+        if d[k] is None:
+            del d[k]
+    return d

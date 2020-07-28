@@ -1,11 +1,9 @@
 import numpy as np
-from math import log, ceil, floor, log10
+from math import log, ceil, log10
 from functools import partial
-from itertools import product
 
 
-__all__ = ['npw', 'nmax', 'ranges', 'top_kth', 'max_n', 'max95', 'max99',
-           'range_strict', 'ij_range']
+__all__ = ['npw', 'nmax', 'top_kth', 'max_n', 'max95', 'max99', 'round_to_significants']
 
 
 def top_kth(arr, f):
@@ -41,33 +39,7 @@ def nmax(n):
         return npw10
 
 
-def ranges(*args):
-    generators = [range(arg) for arg in args]
-    return product(*generators)
-
-
-def ij_range(H, W, K=1, S=1, O=0):
-    """
-
-    :param int H:
-    :param int W:
-    :param int K:
-    :param int S:
-    :param int O:
-    :return:
-    """
-
-    for i in range(O, H - K + 1, S):
-        for j in range(O, W - K + 1, S):
-            yield i, j
-
-
-def range_strict(low, high, stride):
-    for i in range(low, high, stride):
-        yield i
-
-    print('range_strict(%d, %d, %d) end.' % (low, high, stride))
-    if (high - low) % stride != 0:
-        print('i am here', high-stride+1)
-        yield high - stride + 1
-
+def round_to_significants(v: int, n_significants: int) -> int:
+    n_digits = int(log10(abs(v))) + 1
+    v = round(v, -(n_digits - n_significants))
+    return v
