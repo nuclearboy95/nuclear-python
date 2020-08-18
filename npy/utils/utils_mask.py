@@ -2,8 +2,9 @@ import numpy as np
 from .utils_primitive import ranges
 from ..calc import cnn_output_size
 
+
 __all__ = ['score2mask', 'avgpool2d',
-           'upsample_scoremask', 'upsample_scoremasks']
+           'upsample_scoremask', 'upsample_scoremasks', 'get_contiguous_blocks']
 
 
 def score2mask(H, W, K, Hs, Ws, scores) -> np.ndarray:
@@ -60,3 +61,32 @@ def avgpool2d(x, K, S):
         p = x[h: h + K, w: w + K]
         ret[i, j] = p.mean()
     return ret
+
+
+def get_contiguous_blocks(arr) -> list:
+    """
+
+    :param np.ndarray arr: boolean list.
+    :return:
+    """
+    N = len(arr)
+    blocks = list()
+
+    on = False
+    start = -1
+    for n in range(N):
+        if on:
+            if not arr[n]:
+                block = (start, n - 1)
+                blocks.append(block)
+                on = False
+        else:
+            if arr[n]:
+                start = n
+                on = True
+    else:
+        if on:
+            block = (start, N - 1)
+            blocks.append(block)
+
+    return blocks

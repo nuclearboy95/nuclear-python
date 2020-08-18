@@ -5,8 +5,14 @@ import json
 
 from ..log import *
 
-__all__ = ['set_cuda', 'set_tf_log', 'lazy_property', 'failsafe',
+__all__ = ['set_warning', 'set_cuda', 'set_tf_log',
+           'lazy_property', 'failsafe',
            'sample_multivariate', 'pprint']
+
+
+def set_warning():
+    import warnings
+    warnings.filterwarnings('ignore')
 
 
 def set_cuda(*args):
