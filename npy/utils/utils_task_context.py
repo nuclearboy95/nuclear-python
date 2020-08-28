@@ -1,10 +1,11 @@
 import time
 from contextlib import contextmanager
 import cProfile
-from ..log import sayd
+import traceback
+from ..log import sayd, saye
+import npy
 
-
-__all__ = ['task']
+__all__ = ['task', 'sandbox']
 
 
 @contextmanager
@@ -31,3 +32,13 @@ def task(blockname='Noname', debug=False, detailed=False, sortby='cumtime', verb
         else:
             e = time.time()
             sayd('%s end. Took %.2fs' % (blockname, e - s))
+
+
+@contextmanager
+def sandbox(blockname='Noname', send=True):
+    npy.log.telegram(4)
+    try:
+        yield
+    except:
+        if send:
+            saye(traceback.format_exc())
