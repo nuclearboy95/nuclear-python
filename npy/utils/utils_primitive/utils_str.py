@@ -5,7 +5,7 @@ __all__ = ['str2float', 'str2int', 'str2int_l', 'countchar', 'rmchar']
 
 def str2float(v: str) -> float:
     v = v.strip()
-    if v.startswith(str2float) and v.endswith(')'):
+    if v.startswith('(') and v.endswith(')'):
         return -str2int(v[1:-1])
 
     v = ''.join(re.findall(r'[\d.]+', v))

@@ -1,7 +1,6 @@
 import torch
 
-
-__all__ = ['abstain_loss', 'calc_correct', 'to_device']
+__all__ = ['abstain_loss', 'calc_correct', 'to_device', 'to_numpy']
 
 
 def abstain_loss(logits, targets, abstain_coef):
@@ -30,14 +29,34 @@ def to_device(obj, device, non_blocking=False):
     if isinstance(obj, torch.Tensor):
         return obj.to(device, non_blocking=non_blocking)
 
-    if isinstance(obj, dict):
+    elif isinstance(obj, dict):
         return {k: to_device(v, device, non_blocking=non_blocking)
                 for k, v in obj.items()}
 
-    if isinstance(obj, list):
+    elif isinstance(obj, list):
         return [to_device(v, device, non_blocking=non_blocking)
                 for v in obj]
 
-    if isinstance(obj, tuple):
+    elif isinstance(obj, tuple):
         return tuple([to_device(v, device, non_blocking=non_blocking)
-                     for v in obj])
+                      for v in obj])
+
+    else:
+        raise TypeError('Unknown type.')
+
+
+def to_numpy(obj):
+    if isinstance(obj, torch.Tensor):
+        return obj.detach().cpu().numpy()
+
+    elif isinstance(obj, dict):
+        return {k: to_numpy(v) for k, v in obj.items()}
+
+    elif isinstance(obj, list):
+        return [to_numpy(v) for v in obj]
+
+    elif isinstance(obj, tuple):
+        return tuple([to_numpy(v) for v in obj])
+
+    else:
+        raise TypeError('Unknown type.')
