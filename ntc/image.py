@@ -5,9 +5,8 @@ from torchvision import transforms
 from PIL import Image
 from .constants import MEAN_IMAGENET, STD_IMAGENET
 
-
-__all__ = ['show_imagenet_tensor', 'preprocess_imagenet_pil', 'read_imagenet_tensor',
-           'preprocess_imagenet',
+__all__ = ['show_imagenet_tensor',
+           'preprocess_imagenet', 'unpreprocess_imagenet',
            'NHWC2NCHW', 'NCHW2NHWC', 'HWC2CHW', 'CHW2HWC',
            'to_numpy'
            ]
@@ -27,28 +26,35 @@ def show_imagenet_tensor(inp, title=None, **kwargs):
         plt.title(title)
 
 
-preprocess_imagenet_pil = transforms.Compose([
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=MEAN_IMAGENET,
-                                     std=STD_IMAGENET),
-            ])
+def preprocess_imagenet(images) -> torch.Tensor:
+    """
+
+    :param np.ndarray images:
+    :return:
+    """
+    images = NHWC2NCHW(images)
+    images = images.astype(np.float32)
+    images /= 255.
+    images -= np.array(MEAN_IMAGENET)
+    images /= np.array(STD_IMAGENET)
+    images = torch.from_numpy(images)
+    return images
 
 
-preprocess_imagenet = transforms.Compose([
-                transforms.ToPILImage(),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=MEAN_IMAGENET,
-                                     std=STD_IMAGENET),
-            ])
+def unpreprocess_imagenet(images) -> np.ndarray:
+    """
 
-
-read_imagenet_tensor = transforms.Compose([
-    lambda x: Image.open(x),
-    preprocess_imagenet_pil,
-    lambda x: torch.unsqueeze(x, 0)
-])
+    :param torch.Tensor images:
+    :return:
+    """
+    images = images.detach().cpu().numpy()
+    images = NCHW2NHWC(images)
+    images *= np.array(STD_IMAGENET)
+    images += np.array(MEAN_IMAGENET)
+    images *= 255.
+    np.clip(images, 0, 255, out=images)
+    images = images.astype(np.uint8)
+    return images
 
 
 def NCHW2NHWC(images: np.ndarray) -> np.ndarray:

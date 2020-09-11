@@ -1,6 +1,5 @@
 import numpy as np
 
-
 __all__ = ['info', 'prinfo']
 
 
@@ -11,15 +10,11 @@ def _info_ndarray(obj, name) -> str:
     :param str name:
     :return:
     """
+    res_str = f'[np.ndarray] {name} shape: {obj.shape} dtype: {obj.dtype}'
     if np.prod(obj.shape) != 0:
-        return '[np.ndarray] %s shape: %s dtype: %s, max: %.3g  min: %.3g  mean: %.3g  std: %.3g  med: %.3g' % (
-            name, obj.shape, obj.dtype, obj.max(), obj.min(), obj.mean(), obj.std(), np.median(obj)
-        )
+        res_str += f'\n[np.ndarray] max: {obj.max():.3g}, min: {obj.min():.3g}, mean: {obj.mean():.3g}'
 
-    else:
-        return '[np.ndarray] %s shape: %s dtype: %s' % (
-            name, obj.shape, obj.dtype
-        )
+    return res_str
 
 
 def _info_list(obj, name) -> str:
@@ -50,13 +45,30 @@ def _info_tuple(obj, name) -> str:
         return '[tuple] %s length: %s' % (name, len(obj))
 
 
-def info(obj, name='') -> str:
+def _info_torchtensor(obj, name) -> str:
+    """
+    :param torch.Tensor obj:
+    :param str name:
+    :return:
+    """
+    res_str = f'[torch.Tensor] {name} shape: {obj.shape}, dtype: {obj.dtype}'
+    if np.prod(obj.shape) != 0:
+        res_str += f'\n[torch.Tensor] max: {obj.max():.3g}, min: {obj.min():.3g}, mean: {obj.mean():.3g}'
+
+    return res_str
+
+
+def info(obj, name='***') -> str:
+    import torch
     if isinstance(obj, np.ndarray):
         return _info_ndarray(obj, name)
     elif isinstance(obj, list):
         return _info_list(obj, name)
     elif isinstance(obj, tuple):
         return _info_tuple(obj, name)
+    elif isinstance(obj, torch.Tensor):
+        return _info_torchtensor(obj, name)
+
     return str(obj)
 
 
