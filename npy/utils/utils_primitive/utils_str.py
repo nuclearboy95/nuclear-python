@@ -8,7 +8,7 @@ def str2float(v: str) -> float:
     if v.startswith('(') and v.endswith(')'):
         return -str2int(v[1:-1])
 
-    v = ''.join(re.findall(r'[\d.]+', v))
+    v = ''.join(re.findall(r'[\d.\-]+', v))
     if not v:
         return 0.
     else:
@@ -20,7 +20,7 @@ def str2int(v: str) -> int:
     if v.startswith('(') and v.endswith(')'):
         return -str2int(v[1:-1])
 
-    v = ''.join(re.findall(r'\d+', v))
+    v = ''.join(re.findall(r'[\d\-]+', v))
     if not v:
         return 0
     else:

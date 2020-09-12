@@ -32,11 +32,11 @@ def preprocess_imagenet(images) -> torch.Tensor:
     :param np.ndarray images:
     :return:
     """
-    images = NHWC2NCHW(images)
     images = images.astype(np.float32)
     images /= 255.
     images -= np.array(MEAN_IMAGENET)
     images /= np.array(STD_IMAGENET)
+    images = NHWC2NCHW(images)
     images = torch.from_numpy(images)
     return images
 
