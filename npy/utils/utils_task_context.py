@@ -5,7 +5,7 @@ import traceback
 from ..log import sayd, saye
 import npy
 
-__all__ = ['task', 'sandbox']
+__all__ = ['task', 'sandbox', 'Axof', 'Rowof', 'Colof']
 
 
 @contextmanager
@@ -42,3 +42,23 @@ def sandbox(blockname='Noname', send=True):
     except:
         if send:
             saye(traceback.format_exc())
+
+
+@contextmanager
+def Axof(axes, row=None, col=None):
+    ax = axes
+    if row is not None:
+        ax = ax[row]
+    if col is not None:
+        ax = ax[col]
+    yield ax
+
+
+@contextmanager
+def Rowof(axes, row):
+    yield axes[row]
+
+
+@contextmanager
+def Colof(axes, col):
+    yield axes[col]

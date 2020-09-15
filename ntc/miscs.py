@@ -49,6 +49,9 @@ def to_numpy(obj):
     if isinstance(obj, torch.Tensor):
         return obj.detach().cpu().numpy()
 
+    elif isinstance(obj, np.ndarray):
+        return obj
+
     elif isinstance(obj, dict):
         return {k: to_numpy(v) for k, v in obj.items()}
 

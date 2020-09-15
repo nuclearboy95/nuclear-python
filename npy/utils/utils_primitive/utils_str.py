@@ -23,6 +23,8 @@ def str2int(v: str) -> int:
     v = ''.join(re.findall(r'[\d\-]+', v))
     if not v:
         return 0
+    elif v == '-':
+        return 0
     else:
         return int(v)
 
