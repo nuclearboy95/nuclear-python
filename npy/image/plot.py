@@ -10,7 +10,7 @@ from .miscs import flatten_image_list, merge
 
 __all__ = [
     'show_heatmap', 'show', 'shows', 'shows_merged',
-    'plot_to_image'
+    'plot_to_image', 'blank'
 ]
 
 
@@ -52,6 +52,16 @@ def show(data=None, ax=None, title='', show_axis=False, interpolation=None, inve
         ax.set_axis_off()
 
     return ax
+
+
+def blank(ax, show_axis=False):
+    ax.imshow(np.full((256, 256), 255, dtype=np.uint8), cmap='gray', vmax=255, vmin=0)
+    if show_axis:
+        ax.set_yticks([])
+        ax.set_xticks([])
+
+    else:
+        ax.set_axis_off()
 
 
 def shows(images, show_shape=None, order='row'):

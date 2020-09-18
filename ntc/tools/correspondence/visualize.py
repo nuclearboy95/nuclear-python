@@ -112,8 +112,7 @@ def plot_matchvolume_and_confidence(img0, img1, L, matchvolume_AB, matchvolume_A
             ax.set_title('Confidence (tgt)')
 
         with Colof(row, 2) as ax:
-            ax.set_axis_off()
-            ax.imshow(np.full((256, 256), 255, dtype=np.uint8), cmap='gray', vmax=255, vmin=0)
+            npy.image.blank(ax)
 
     plt.tight_layout()
 
@@ -233,8 +232,7 @@ def plot_matchvolume_and_anomalymap(img0, img1, T, matchvolume, anomaly_map, ano
 
     with Rowof(axes, 3) as row:
         with Colof(row, 0) as ax:
-            ax.set_axis_off()
-            ax.imshow(np.full((32, 32), 255, dtype=np.uint8), cmap='gray', vmax=255, vmin=0)
+            npy.image.blank(ax)
             ax.set_title(f'Anomaly score: {anomaly_score:.4f}')
 
         with Colof(row, 1) as ax:
