@@ -7,7 +7,12 @@ from ..log import *
 
 __all__ = ['set_warning', 'set_cuda', 'set_tf_log',
            'lazy_property', 'failsafe',
-           'sample_multivariate', 'pprint']
+           'sample_multivariate', 'pprint', 'get_hostname']
+
+
+def get_hostname():
+    import socket
+    return socket.gethostname()
 
 
 def set_warning():
