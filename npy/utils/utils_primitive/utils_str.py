@@ -11,6 +11,8 @@ def str2float(v: str) -> float:
     v = ''.join(re.findall(r'[\d.\-]+', v))
     if not v:
         return 0.
+    elif v == '-':
+        return 0
     else:
         return float(v)
 
