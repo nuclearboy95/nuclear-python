@@ -1,6 +1,6 @@
 import re
 
-__all__ = ['str2float', 'str2int', 'str2int_l', 'countchar', 'rmchar']
+__all__ = ['str2float', 'str2int', 'str2int_l', 'countchar', 'rmchar', 'rmchars', 'rmws']
 
 
 def str2float(v: str) -> float:
@@ -41,3 +41,13 @@ def countchar(s: str, c: str) -> int:
 
 def rmchar(s: str, c: str) -> str:
     return s.replace(c, '')
+
+
+def rmchars(s: str, cs: list) -> str:
+    for c in cs:
+        s = rmchar(s, c)
+    return s
+
+
+def rmws(s: str) -> str:
+    return rmchars(s, ['\n', ' ', '\t'])

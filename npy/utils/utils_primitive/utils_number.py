@@ -40,6 +40,9 @@ def nmax(n):
 
 
 def round_to_significants(v: int, n_significants: int) -> int:
+    if v == 0:
+        return 0
+
     n_digits = int(log10(abs(v))) + 1
     v = round(v, -(n_digits - n_significants))
     return v
