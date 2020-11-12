@@ -1,7 +1,7 @@
 import re
 
 __all__ = ['str2float', 'str2int', 'int_or_str2int', 'str2int_l',
-           'countchar', 'rmchar', 'rmchars', 'rmws', 'include_exclude']
+           'countchar', 'countcharfront', 'rmchar', 'rmchars', 'rmws', 'include_exclude']
 
 
 def str2float(s: str) -> float:
@@ -45,6 +45,16 @@ def str2int_l(l: list) -> list:
 
 def countchar(s: str, c: str) -> int:
     return sum([int(cc == c) for cc in s])
+
+
+def countcharfront(s: str, c: str) -> int:
+    count = 0
+    for v in s:
+        if v == c:
+            count += 1
+        elif not v.isspace():
+            return count
+    return count
 
 
 def rmchar(s: str, c: str) -> str:
