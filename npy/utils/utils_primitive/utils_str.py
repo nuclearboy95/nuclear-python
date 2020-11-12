@@ -1,7 +1,9 @@
 import re
 
 __all__ = ['str2float', 'str2int', 'int_or_str2int', 'str2int_l',
-           'countchar', 'countcharfront', 'rmchar', 'rmchars', 'rmws', 'include_exclude']
+           'countchar', 'countcharfront', 'rmchar', 'rmchars', 'rmws',
+           'include_exclude', 'endswith_any', 'startswith_any']
+
 
 
 def str2float(s: str) -> float:
@@ -81,3 +83,11 @@ def include_exclude(s: str, includes: list = None, excludes: list = None) -> boo
             return False
 
     return True
+
+
+def endswith_any(s: str, prefix_list: list) -> bool:
+    return any(s.endswith(prefix) for prefix in prefix_list)
+
+
+def startswith_any(s: str, prefix_list: list) -> bool:
+    return any(s.startswith(prefix) for prefix in prefix_list)

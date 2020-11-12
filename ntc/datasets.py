@@ -50,12 +50,13 @@ class DictionaryConcatDataset(Dataset):
 
         if d_of_datasets is None:
             d_of_datasets = dict()
+            self._length = 0
+        else:
+            lengths = [len(d) for d in d_of_datasets.values()]
+            assert min(lengths) == max(lengths), 'Length of the datasets should be the same'
+            self._length = min(lengths)
 
         self.d_of_datasets = d_of_datasets
-
-        lengths = [len(d) for d in d_of_datasets.values()]
-        assert min(lengths) == max(lengths), 'Length of the datasets should be the same'
-        self._length = min(lengths)
 
     def __setitem__(self, key, value):
         dataset = value
