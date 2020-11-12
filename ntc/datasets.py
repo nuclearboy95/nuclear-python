@@ -2,7 +2,6 @@ from torch.utils.data import Dataset
 import numpy as np
 import npy
 
-
 __all__ = ['RepeatDataset', 'DictionaryConcatDataset', 'PatchDataset', 'ArrayDataset']
 
 
@@ -47,21 +46,36 @@ class RepeatDataset(Dataset):
 
 
 class DictionaryConcatDataset(Dataset):
-    def __init__(self, d_of_datasets):
+    def __init__(self, d_of_datasets=None):
+
+        if d_of_datasets is None:
+            d_of_datasets = dict()
+
         self.d_of_datasets = d_of_datasets
+
         lengths = [len(d) for d in d_of_datasets.values()]
-        self._length = min(lengths)
-        self.keys = self.d_of_datasets.keys()
         assert min(lengths) == max(lengths), 'Length of the datasets should be the same'
+        self._length = min(lengths)
+
+    def __setitem__(self, key, value):
+        dataset = value
+        if len(self.d_of_datasets):
+            assert self._length == len(dataset), 'Length of the datasets should be the same'
+        else:
+            self._length = len(dataset)
+        self.d_of_datasets[key] = dataset
 
     def __getitem__(self, idx):
         return {
             key: self.d_of_datasets[key][idx]
-            for key in self.keys
+            for key in self.keys()
         }
 
     def __len__(self):
         return self._length
+
+    def keys(self):
+        return self.d_of_datasets.keys()
 
 
 class PatchDataset(Dataset):
