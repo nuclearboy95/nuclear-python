@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 __all__ = ['abstain_loss', 'calc_correct', 'to_device', 'to_numpy']
 

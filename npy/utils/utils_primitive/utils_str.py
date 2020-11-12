@@ -1,34 +1,42 @@
 import re
 
-__all__ = ['str2float', 'str2int', 'str2int_l', 'countchar', 'rmchar', 'rmchars', 'rmws']
+__all__ = ['str2float', 'str2int', 'int_or_str2int', 'str2int_l',
+           'countchar', 'rmchar', 'rmchars', 'rmws', 'include_exclude']
 
 
-def str2float(v: str) -> float:
-    v = v.strip()
-    if v.startswith('(') and v.endswith(')'):
-        return -str2int(v[1:-1])
+def str2float(s: str) -> float:
+    s = s.strip()
+    if s.startswith('(') and s.endswith(')'):
+        return -str2int(s[1:-1])
 
-    v = ''.join(re.findall(r'[\d.\-]+', v))
-    if not v:
+    s = ''.join(re.findall(r'[\d.\-]+', s))
+    if not s:
         return 0.
-    elif v == '-':
+    elif s == '-':
         return 0
     else:
-        return float(v)
+        return float(s)
 
 
-def str2int(v: str) -> int:
-    v = v.strip()
-    if v.startswith('(') and v.endswith(')'):
-        return -str2int(v[1:-1])
+def str2int(s: str) -> int:
+    s = s.strip()
+    if s.startswith('(') and s.endswith(')'):
+        return -str2int(s[1:-1])
 
-    v = ''.join(re.findall(r'[\d\-]+', v))
-    if not v:
+    s = ''.join(re.findall(r'[\d\-]+', s))
+    if not s:
         return 0
-    elif v == '-':
+    elif s == '-':
         return 0
     else:
-        return int(v)
+        return int(s)
+
+
+def int_or_str2int(v) -> int:
+    if isinstance(v, str):
+        return str2int(v)
+    else:
+        return v
 
 
 def str2int_l(l: list) -> list:
@@ -51,3 +59,15 @@ def rmchars(s: str, cs: list) -> str:
 
 def rmws(s: str) -> str:
     return rmchars(s, ['\n', ' ', '\t'])
+
+
+def include_exclude(s: str, includes: list = None, excludes: list = None) -> bool:
+    if includes is not None:
+        if any([v not in s for v in includes]):
+            return False
+
+    if excludes is not None:
+        if any([v in s for v in excludes]):
+            return False
+
+    return True
