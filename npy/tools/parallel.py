@@ -1,7 +1,8 @@
 import multiprocessing as mp
 import time
 import traceback
-from npy import sayd, sayw
+from ..log import sayd, sayw
+
 
 __all__ = ['Worker', 'WorkerManager']
 
