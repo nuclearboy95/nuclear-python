@@ -3,7 +3,8 @@ from .utils_list import isarray, isnum
 
 __all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
            'append_d_of_l', 'inv_d', 'replace_keys', 'drop_keys',
-           'filter_d_of_l_of_num', 'filter_d_of_num', 'filter_keys', 'filter_empty'
+           'filter_d_of_l_of_num', 'filter_d_of_num', 'filter_keys', 'filter_empty',
+           'dict_eq', 'l_of_dict_eq'
            ]
 
 
@@ -103,3 +104,17 @@ def filter_empty(d: dict) -> dict:
         if d[k] is None:
             del d[k]
     return d
+
+
+####################
+
+def dict_eq(d1: dict, d2: dict) -> bool:
+    if d1.keys() != d2.keys():
+        return False
+    return all([d1[key] == d2[key] for key in d1])
+
+
+def l_of_dict_eq(l1: list, l2: list) -> bool:
+    if len(l1) != len(l2):
+        return False
+    return all([dict_eq(d1, d2) for d1, d2 in zip(l1, l2)])

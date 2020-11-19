@@ -2,7 +2,6 @@ from collections import defaultdict
 from abc import ABCMeta
 import numpy as np
 
-
 __all__ = ['d_of_l', 'd_of_f', 'd_of_i',
            'd_of_d_of_l', 'd_of_d_of_f',
            'attrdict']
@@ -59,6 +58,13 @@ class d_of_l(d_of_sth):
     def appends(self, d):
         for key, value in d.items():
             self[key].append(value)
+
+    def extends(self, _d_of_l, invert=False):
+        for key in _d_of_l.keys():
+            if invert:
+                _d_of_l[key].extend(self[key])
+            else:
+                self[key].extend(_d_of_l[key])
 
 
 class d_of_f(d_of_sth):

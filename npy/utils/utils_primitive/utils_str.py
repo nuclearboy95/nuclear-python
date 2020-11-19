@@ -5,7 +5,6 @@ __all__ = ['str2float', 'str2int', 'int_or_str2int', 'str2int_l',
            'include_exclude', 'endswith_any', 'startswith_any']
 
 
-
 def str2float(s: str) -> float:
     s = s.strip()
     if s.startswith('(') and s.endswith(')'):
