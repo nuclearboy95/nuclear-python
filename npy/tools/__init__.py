@@ -1,5 +1,6 @@
 from .bash_commands import *
 from .short_hands import *
+from .parallel import *
 from . import multirank
 from . import tsne
 from . import http

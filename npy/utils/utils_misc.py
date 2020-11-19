@@ -7,7 +7,8 @@ from ..log import *
 
 __all__ = ['set_warning', 'set_cuda', 'set_tf_log',
            'lazy_property', 'failsafe',
-           'sample_multivariate', 'pprint', 'get_hostname']
+           'sample_multivariate', 'pprint', 'get_hostname',
+           'log_function', 'log_function_self']
 
 
 def get_hostname():
@@ -74,3 +75,42 @@ def sample_multivariate(mu, cov, N, D):
 
 def pprint(obj):
     print(json.dumps(obj, ensure_ascii=False, indent=4))
+
+
+def log_function_self(log_args=True):
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            log_str = f'{f.__name__} called.'
+            if log_args:
+                log_str += ' ('
+                log_str += ', '.join([str(arg) for arg in args[1:]])
+                log_str += ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
+                log_str += ')'
+
+            sayd(log_str)
+            result = f(*args, **kwargs)
+            return result
+        return wrapper
+
+    return decorator
+
+
+def log_function(log_args=True):
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            log_str = f'{f.__name__} called.'
+            if log_args:
+                log_str += ' ('
+                log_str += ', '.join([str(arg) for arg in args])
+                log_str += ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
+                log_str += ')'
+
+            sayd(log_str)
+            result = f(*args, **kwargs)
+            return result
+        return wrapper
+
+    return decorator
+
