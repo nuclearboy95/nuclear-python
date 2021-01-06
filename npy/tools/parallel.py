@@ -76,7 +76,10 @@ class Worker(mp.Process):
 
     @property
     def isalive(self):
-        return self.status['isalive']
+        try:
+            return self.status['isalive']
+        except:
+            return False
 
     @isalive.setter
     def isalive(self, v):

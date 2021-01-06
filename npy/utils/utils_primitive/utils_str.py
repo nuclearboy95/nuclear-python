@@ -6,6 +6,9 @@ __all__ = ['str2float', 'str2int', 'int_or_str2int', 'str2int_l',
 
 
 def str2float(s: str) -> float:
+    if isinstance(s, float) or isinstance(s, int):
+        return s
+
     s = s.strip()
     if s.startswith('(') and s.endswith(')'):
         return -str2int(s[1:-1])
@@ -20,6 +23,11 @@ def str2float(s: str) -> float:
 
 
 def str2int(s: str) -> int:
+    if isinstance(s, int):
+        return s
+    elif isinstance(s, float):
+        return int(s)
+
     s = s.strip()
     if s.startswith('(') and s.endswith(')'):
         return -str2int(s[1:-1])
