@@ -93,7 +93,7 @@ def log_function_self(log_args=True):
             log_str = f'{f.__name__} called.'
             if log_args:
                 log_str += ' ('
-                arg_str = ', '.join([str(arg) for arg in args])
+                arg_str = ', '.join([str(arg) for arg in args[1:]])
                 kwargs_str = ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
                 log_str += ', '.join([arg_str, kwargs_str])
                 log_str += ')'
