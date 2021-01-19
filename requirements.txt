@@ -10,3 +10,4 @@ pandas
 imageio
 opencv-python
 pyyaml
+requests
