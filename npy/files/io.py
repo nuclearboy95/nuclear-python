@@ -70,6 +70,17 @@ def load_rsc(*args):
         return None
 
 
+def load_rsc_json(*args, encoding=None):
+    path = os.sep.join(args) + '.json'
+    path_rsc = home_rsc_path()
+    os.makedirs(path_rsc, exist_ok=True)
+    path = os.path.join(path_rsc, path)
+    try:
+        return load_json(path, encoding=encoding)
+    except FileNotFoundError:
+        return None
+
+
 def save_rsc(d, *args):
     path = os.sep.join(args)
     path_rsc = home_rsc_path()
@@ -78,6 +89,16 @@ def save_rsc(d, *args):
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     save_binary(d, path)
+
+
+def save_rsc_json(d, *args, ensure_ascii=True):
+    path = os.sep.join(args) + '.json'
+    path_rsc = home_rsc_path()
+    os.makedirs(path_rsc, exist_ok=True)
+    path = os.path.join(path_rsc, path)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    save_json(d, path, ensure_ascii=ensure_ascii)
 
 
 ldj = load_json
