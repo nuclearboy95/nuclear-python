@@ -21,7 +21,8 @@ def log_function_self(log_args=True):
                 log_str += ' ('
                 arg_str = ', '.join([str(arg) for arg in args[1:]])
                 kwargs_str = ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
-                log_str += ', '.join([arg_str, kwargs_str])
+
+                log_str += ', '.join(list(filter(lambda x: x.strip(), [arg_str, kwargs_str])))
                 log_str += ')'
 
             sayd(log_str)
@@ -42,7 +43,8 @@ def log_function(log_args=True):
                 log_str += ' ('
                 arg_str = ', '.join([str(arg) for arg in args])
                 kwargs_str = ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
-                log_str += ', '.join([arg_str, kwargs_str])
+
+                log_str += ', '.join(list(filter(lambda x: x.strip(), [arg_str, kwargs_str])))
                 log_str += ')'
 
             sayd(log_str)
