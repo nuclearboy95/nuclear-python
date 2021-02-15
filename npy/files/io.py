@@ -42,8 +42,8 @@ def save_binary(d, fpath):
 
 
 @ensure_dir_exist
-def save_json(d, fpath, ensure_ascii=True):
-    with open(fpath, 'w') as f:
+def save_json(d, fpath, ensure_ascii=True, encoding=None):
+    with open(fpath, 'w', encoding=encoding) as f:
         json.dump(d, f, indent=4, ensure_ascii=ensure_ascii)
 
 
@@ -59,46 +59,37 @@ def save_txt(s, fpath):
         return f.write(s)
 
 
-def load_rsc(*args):
-    path = os.sep.join(args)
+def get_rsc_path(*args):
+    fpath = os.sep.join(args)
     path_rsc = home_rsc_path()
-    os.makedirs(path_rsc, exist_ok=True)
-    path = os.path.join(path_rsc, path)
+    fpath = os.path.join(path_rsc, fpath)
+    return fpath
+
+
+def load_rsc(*args):
+    fpath = get_rsc_path(*args)
     try:
-        return load_binary(path)
+        return load_binary(fpath)
     except FileNotFoundError:
         return None
 
 
 def load_rsc_json(*args, encoding=None):
-    path = os.sep.join(args) + '.json'
-    path_rsc = home_rsc_path()
-    os.makedirs(path_rsc, exist_ok=True)
-    path = os.path.join(path_rsc, path)
+    fpath = get_rsc_path(*args) + '.json'
     try:
-        return load_json(path, encoding=encoding)
+        return load_json(fpath, encoding=encoding)
     except FileNotFoundError:
         return None
 
 
 def save_rsc(d, *args):
-    path = os.sep.join(args)
-    path_rsc = home_rsc_path()
-    os.makedirs(path_rsc, exist_ok=True)
-    path = os.path.join(path_rsc, path)
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-
-    save_binary(d, path)
+    fpath = get_rsc_path(*args)
+    save_binary(d, fpath)
 
 
 def save_rsc_json(d, *args, ensure_ascii=True):
-    path = os.sep.join(args) + '.json'
-    path_rsc = home_rsc_path()
-    os.makedirs(path_rsc, exist_ok=True)
-    path = os.path.join(path_rsc, path)
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-
-    save_json(d, path, ensure_ascii=ensure_ascii)
+    fpath = get_rsc_path(*args) + '.json'
+    save_json(d, fpath, ensure_ascii=ensure_ascii)
 
 
 ldj = load_json
