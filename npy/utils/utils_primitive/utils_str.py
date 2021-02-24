@@ -77,7 +77,7 @@ def rmchars(s: str, cs: list) -> str:
 
 
 def rmws(s: str) -> str:
-    return rmchars(s, ['\n', ' ', '\t'])
+    return rmchars(s, ['\n', ' ', '\t', '\xa0', '\u3000'])
 
 
 def include_exclude(s: str, includes: list = None, excludes: list = None) -> bool:
