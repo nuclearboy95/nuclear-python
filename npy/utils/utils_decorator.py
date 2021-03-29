@@ -16,14 +16,16 @@ def log_function_self(log_args=True):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
-            log_str = f'{f.__name__} called.'
+            log_str = f'Called: {f.__name__}'
             if log_args:
-                log_str += ' ('
+                log_str += '('
                 arg_str = ', '.join([str(arg) for arg in args[1:]])
                 kwargs_str = ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
 
                 log_str += ', '.join(list(filter(lambda x: x.strip(), [arg_str, kwargs_str])))
-                log_str += ')'
+                log_str += ').'
+            else:
+                log_str += '().'
 
             sayd(log_str)
             result = f(*args, **kwargs)
@@ -38,14 +40,16 @@ def log_function(log_args=True):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
-            log_str = f'{f.__name__} called.'
+            log_str = f'Called: {f.__name__}'
             if log_args:
-                log_str += ' ('
+                log_str += '('
                 arg_str = ', '.join([str(arg) for arg in args])
                 kwargs_str = ', '.join([f'{k}={arg}' for k, arg in kwargs.items()])
 
                 log_str += ', '.join(list(filter(lambda x: x.strip(), [arg_str, kwargs_str])))
-                log_str += ')'
+                log_str += ').'
+            else:
+                log_str += '().'
 
             sayd(log_str)
             result = f(*args, **kwargs)
