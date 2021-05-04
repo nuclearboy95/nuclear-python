@@ -11,10 +11,10 @@ LOGGING_TO_TELEGRAM = False
 DATE_FMT = "%d %b %H:%M:%S"
 LOG_FMT = '[%(asctime)s] %(message)s'
 
-__all__ = ['verbosity', 'save', 'telegram', 'set_datefmt', 'set_fmt']
+__all__ = ['verbosity', 'save', 'telegram', 'set_datefmt', 'set_fmt', 'init']
 
 
-def _init():
+def init():
     global _logger
     global _sh
 
@@ -93,7 +93,7 @@ def verbosity(level=2):
         return
 
     if _logger is None:
-        _init()
+        init()
 
     level = int2level(level)
     _sh.setLevel(level)
@@ -122,4 +122,4 @@ def telegram(level=3):
 
 
 if _logger is None:
-    _init()
+    init()

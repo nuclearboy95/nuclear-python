@@ -37,6 +37,10 @@ def str2int(s: str) -> int:
         return 0
     elif s == '-':
         return 0
+    elif s == '--':
+        return 0
+    elif s == '---':
+        return 0
     else:
         return int(s)
 
