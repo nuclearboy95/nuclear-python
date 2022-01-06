@@ -4,7 +4,7 @@ from .utils_list import isarray, isnum
 __all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
            'append_d_of_l', 'inv_d', 'replace_keys', 'drop_keys',
            'filter_d_of_l_of_num', 'filter_d_of_num', 'filter_keys', 'filter_empty',
-           'dict_eq', 'l_of_dict_eq'
+           'dict_eq', 'l_of_dict_eq', 'add_d_of_l'
            ]
 
 
@@ -59,6 +59,18 @@ def replace_keys(d: dict, key_d: dict) -> dict:
 def append_d_of_l(d_of_l: dict, d: dict):
     for key, value in d.items():
         d_of_l[key].append(value)
+    return d_of_l
+
+
+def add_d_of_l(d_of_l: dict, d_of_l2: dict, reverse=False):
+    if d_of_l is None:
+        return d_of_l2
+
+    if reverse:
+        d_of_l, d_of_l2 = d_of_l2, d_of_l
+
+    for key in d_of_l:
+        d_of_l[key] = d_of_l[key] + d_of_l2[key]
     return d_of_l
 
 

@@ -12,7 +12,7 @@ __all__ = ['lazy_property', 'failsafe',
            'return_array', 'return_dict', 'return_list', 'return_attrdict', 'return_dataframe']
 
 
-def log_function_self(log_args=True):
+def log_function_self(log_args=True, log_finish=False):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
@@ -29,6 +29,9 @@ def log_function_self(log_args=True):
 
             sayd(log_str)
             result = f(*args, **kwargs)
+
+            if log_finish:
+                sayd(f'Finish: {f.__name__}')
             return result
 
         return wrapper
@@ -36,7 +39,7 @@ def log_function_self(log_args=True):
     return decorator
 
 
-def log_function(log_args=True):
+def log_function(log_args=True, log_finish=False):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
@@ -53,6 +56,9 @@ def log_function(log_args=True):
 
             sayd(log_str)
             result = f(*args, **kwargs)
+
+            if log_finish:
+                sayd(f'Finish: {f.__name__}')
             return result
 
         return wrapper
