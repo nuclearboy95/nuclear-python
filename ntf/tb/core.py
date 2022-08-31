@@ -5,8 +5,9 @@ import datetime
 
 _DEFAULT_TB_NAME = ''
 _USE_TB = True
+_ROOT_PATH = './tblog'
 
-__all__ = ['set_name', 'get_name', 'add_summary', 'off', 'on']
+__all__ = ['set_name', 'get_name', 'add_summary', 'off', 'on', 'set_root_path']
 
 
 def off():
@@ -34,6 +35,16 @@ def get_name() -> str:
     return _DEFAULT_TB_NAME
 
 
+def get_root_path() -> str:
+    global _ROOT_PATH
+    return _ROOT_PATH
+
+
+def set_root_path(v: str):
+    global _ROOT_PATH
+    _ROOT_PATH = v
+
+
 def get_log_path(name: str):
     time_str = datetime.datetime.now().strftime('%d %b %H:%M:%S')
     if name == '':
@@ -43,7 +54,7 @@ def get_log_path(name: str):
 
     sayi(f'Tensorboard exp name is {exp_name}')
 
-    log_path = f'tblog/{exp_name}'
+    log_path = os.path.join(get_root_path(), exp_name)
     return log_path
 
 

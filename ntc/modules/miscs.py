@@ -8,7 +8,7 @@ import os
 from functools import reduce
 
 
-__all__ = ['Module', 'parameters', 'count_params']
+__all__ = ['Module', 'parameters', 'count_params', 'calc_norm']
 
 
 def parameters(*modules) -> list:
@@ -36,3 +36,11 @@ def count_params(module):
     for param in list(module.parameters()):
         count += np.prod(param.size())
     return count
+
+
+def calc_norm(params):
+    ret = 0.
+    for p in params:
+        norm = p.grad.data.norm(2)
+        ret += norm ** 2
+    return ret ** 0.5
