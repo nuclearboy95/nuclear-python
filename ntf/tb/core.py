@@ -2,6 +2,7 @@ import tensorflow as tf
 from npy import ddict
 from npy.ns import sayi
 import datetime
+import os
 
 _DEFAULT_TB_NAME = ''
 _USE_TB = True
