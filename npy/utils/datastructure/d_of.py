@@ -2,9 +2,12 @@ from collections import defaultdict
 from abc import ABCMeta
 import numpy as np
 
-__all__ = ['d_of_l', 'd_of_f', 'd_of_i',
-           'd_of_d_of_l', 'd_of_d_of_f',
-           'attrdict']
+__all__ = [
+    'd_of_sth', 'attrdict',
+    'd_of_l', 'd_of_f', 'd_of_i', 'd_of_d',
+    'd_of_d_of_l', 'd_of_d_of_f', 'd_of_d_of_d',
+    'd_of_d_of_d_of_d', 'd_of_d_of_d_of_d_of_d',
+]
 
 
 class BetterDict(dict):
@@ -77,6 +80,13 @@ class d_of_i(d_of_sth):
         super().__init__(int, *args, **kwargs)
 
 
+class d_of_d(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(defaultdict, *args, **kwargs)
+
+
+##########
+
 class d_of_d_of_l(d_of_sth):
     def __init__(self, *args, **kwargs):
         super().__init__(d_of_l, *args, **kwargs)
@@ -85,3 +95,20 @@ class d_of_d_of_l(d_of_sth):
 class d_of_d_of_f(d_of_sth):
     def __init__(self, *args, **kwargs):
         super().__init__(d_of_f, *args, **kwargs)
+
+
+class d_of_d_of_d(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(d_of_d, *args, **kwargs)
+
+
+########
+
+class d_of_d_of_d_of_d(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(d_of_d_of_d, *args, **kwargs)
+
+
+class d_of_d_of_d_of_d_of_d(d_of_sth):
+    def __init__(self, *args, **kwargs):
+        super().__init__(d_of_d_of_d_of_d, *args, **kwargs)
