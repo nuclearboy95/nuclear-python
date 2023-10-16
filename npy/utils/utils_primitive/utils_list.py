@@ -2,7 +2,7 @@ import numpy as np
 from collections.abc import Iterable
 
 
-__all__ = ['take', 'isarray', 'isnum', 'shuffled']
+__all__ = ['take', 'isarray', 'isnum', 'shuffled', 'normalize_l']
 
 
 def take(l, inds_or_ind):
@@ -28,3 +28,15 @@ def shuffled(x, y=None):
         return take(x, inds)
     else:
         return take(x, inds), take(y, inds)
+
+
+def normalize_l(arr):
+    only_values = arr[~np.isinf(arr)]
+    if len(only_values) == 0:
+        return arr
+    vmax = np.max(only_values)
+    vmin = np.min(only_values)
+    dur = vmax - vmin
+    if dur == 0:
+        dur = 1
+    return (arr - vmin) / dur

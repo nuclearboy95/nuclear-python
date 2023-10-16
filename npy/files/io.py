@@ -38,6 +38,11 @@ def load_txt(fpath):
         return f.read()
 
 
+def load_txtlines(fpath):
+    with open(fpath, 'r') as f:
+        return [l.strip() for l in f.readlines()]
+
+
 def load_video(fpath):
     vidcap = cv2.VideoCapture(fpath)
 
