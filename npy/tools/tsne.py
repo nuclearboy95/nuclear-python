@@ -23,13 +23,15 @@ def tsne_multirank(X, **kwargs):
     return Y
 
 
-def draw_tsne(X, n=4):  # [C, N, D]
+def draw_tsne(X, n=4, **kwargs):  # [C, N, D]
     emb = tsne_multirank(X, n_jobs=n)
     C = len(emb)
 
     for c in range(C):
         print(c, len(emb[c]))
-        plt.scatter(*emb[c].T, s=10)
+
+        _kwargs = {k: v[c] if isinstance(v, list) else v for k, v in kwargs.items()}
+        plt.scatter(*emb[c].T, s=10, **_kwargs)
 
 
 def test():
