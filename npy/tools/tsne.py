@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from ..utils import index_l_of_d
 from .multirank.modify import flatten_vectors, unflatten_vectors
 from .multirank.recursive import get_lengths
 
@@ -30,7 +31,7 @@ def draw_tsne(X, n=4, **kwargs):  # [C, N, D]
     for c in range(C):
         print(c, len(emb[c]))
 
-        _kwargs = {k: v[c] if isinstance(v, list) else v for k, v in kwargs.items()}
+        _kwargs = index_l_of_d(kwargs, c)
         plt.scatter(*emb[c].T, s=10, **_kwargs)
 
 

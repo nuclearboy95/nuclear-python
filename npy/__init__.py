@@ -8,3 +8,4 @@ from . import log
 from . import ex
 from . import calc
 from . import data
+from . import viz

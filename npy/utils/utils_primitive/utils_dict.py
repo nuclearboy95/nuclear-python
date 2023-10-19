@@ -4,7 +4,7 @@ from .utils_list import isarray, isnum
 __all__ = ['keys_d_of_l_of_num', 'keys_d_of_num',
            'append_d_of_l', 'inv_d', 'replace_keys', 'drop_keys',
            'filter_d_of_l_of_num', 'filter_d_of_num', 'filter_keys', 'filter_empty',
-           'dict_eq', 'l_of_dict_eq', 'add_d_of_l', 'merge_l_of_d'
+           'dict_eq', 'l_of_dict_eq', 'add_d_of_l', 'merge_l_of_d', 'index_l_of_d',
            ]
 
 
@@ -142,3 +142,10 @@ def l_of_dict_eq(l1: list, l2: list) -> bool:
     if len(l1) != len(l2):
         return False
     return all([dict_eq(d1, d2) for d1, d2 in zip(l1, l2)])
+
+
+############
+
+def index_l_of_d(d, i):
+    _kwargs = {k: v[i] if isinstance(v, list) else v for k, v in d.items()}
+    return _kwargs
