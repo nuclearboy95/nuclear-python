@@ -26,7 +26,7 @@ def is_matrix(X):
 def is_multirank(X):
     if is_singleton(X):
         return False
-    return is_matrix(X)
+    return is_matrix(X[0])
 
 
 #########
