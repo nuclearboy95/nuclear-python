@@ -2,4 +2,4 @@
 
 rm dist/*
 python setup.py sdist
-pip install dist/nuclear-python-*.tar.gz
+pip install dist/nuclear_python-*.tar.gz
