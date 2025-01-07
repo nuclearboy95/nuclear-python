@@ -4,8 +4,16 @@ import cProfile
 import traceback
 from ..log import sayd, saye
 import npy
+import warnings
 
-__all__ = ['task', 'sandbox', 'Axof', 'Rowof', 'Colof']
+__all__ = ['task', 'sandbox', 'Axof', 'Rowof', 'Colof', 'suppressed']
+
+
+@contextmanager
+def suppressed():
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        yield
 
 
 @contextmanager

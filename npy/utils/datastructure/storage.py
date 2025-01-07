@@ -5,7 +5,24 @@ from glob import glob
 from collections import defaultdict
 
 
-__all__ = ['fdict', 'FileDict', 'SpawningCache', 'ddict', 'rsc']
+__all__ = ["filedict", "FileDict", "SpawningCache", "ddict", "rsc", "fdict"]
+
+
+class fdict(dict):
+    def __init__(self, f, d=None):
+        self.f = f
+        if d is None:
+            d = dict()
+        self.d = d
+
+    def __getitem__(self, key):
+        try:
+            return self.d[key]
+        except (KeyError, TypeError):
+            pass
+        v = self.f(key)
+        self.d[key] = v
+        return v
 
 
 class ddict(defaultdict):
@@ -18,8 +35,8 @@ class ddict(defaultdict):
             return ret
 
 
-class fdict:
-    def __init__(self, root_folder='./', auto_create_dir=True, read_only=False):
+class filedict:
+    def __init__(self, root_folder="./", auto_create_dir=True, read_only=False):
         self.root_folder = root_folder
         self.auto_create_dir = auto_create_dir
         self.read_only = read_only
@@ -36,18 +53,18 @@ class fdict:
                 try:
                     return load_binary(path)
                 except EOFError:
-                    print('EOFError during loading. Key:', key)
+                    print("EOFError during loading. Key:", key)
                     raise
 
             else:
-                return fdict(path)
+                return filedict(path)
 
         else:
-            return fdict(path)
+            return filedict(path)
 
     def __setitem__(self, key, value):  # d[key] = value
         if self.read_only:
-            raise ValueError('Read only fdict.')
+            raise ValueError("Read only filedict.")
 
         key = self._preprocess_key(key)
         path = self._get_path(key)
@@ -65,7 +82,7 @@ class fdict:
 
     def __delitem__(self, key):  # del d[key]
         if self.read_only:
-            raise ValueError('Read only fdict.')
+            raise ValueError("Read only filedict.")
 
         key = self._preprocess_key(key)
         path = self._get_path(key)
@@ -89,18 +106,20 @@ class fdict:
 
     def keys(self, recursive=False, files_only=True):
         if recursive:
-            fnames = glob(os.path.join(self.root_folder, '**'), recursive=True)
+            fnames = glob(os.path.join(self.root_folder, "**"), recursive=True)
         else:
             fnames = os.listdir(self.root_folder)
 
         if files_only:
-            fnames = list(filter(lambda fname: os.path.isfile(self._get_path(fname)), fnames))
+            fnames = list(
+                filter(lambda fname: os.path.isfile(self._get_path(fname)), fnames)
+            )
 
         return sorted(fnames)
 
 
-FileDict = fdict
-rsc = fdict(home_rsc_path())
+FileDict = filedict
+rsc = filedict(home_rsc_path())
 
 
 class SpawningCache:

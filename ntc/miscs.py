@@ -1,7 +1,29 @@
 import torch
 import numpy as np
+from npy import attrdict
 
-__all__ = ['abstain_loss', 'calc_correct', 'to_device', 'to_numpy']
+__all__ = ["abstain_loss", "calc_correct", "to_device", "to_numpy", "submodules", "memory_stats"]
+
+
+def memory_stats(by=1_000_000_000, ndigits=3):
+    d = torch.cuda.memory_stats()
+    
+    def foo(v):
+        return round(v / by, ndigits)
+    
+    return attrdict({
+        'current': foo(d['allocated_bytes.all.current']),
+        'peak': foo(d['allocated_bytes.all.peak'])
+    })
+
+
+def submodules(module, name=""):
+    for k, module in module.named_modules():        
+        if name:
+            k2 = f'{name}.{k}' if k else name
+        else:
+            k2 = k
+        yield k2, module
 
 
 def abstain_loss(logits, targets, abstain_coef):
@@ -31,19 +53,18 @@ def to_device(obj, device, non_blocking=False):
         return obj.to(device, non_blocking=non_blocking)
 
     elif isinstance(obj, dict):
-        return {k: to_device(v, device, non_blocking=non_blocking)
-                for k, v in obj.items()}
+        return {
+            k: to_device(v, device, non_blocking=non_blocking) for k, v in obj.items()
+        }
 
     elif isinstance(obj, list):
-        return [to_device(v, device, non_blocking=non_blocking)
-                for v in obj]
+        return [to_device(v, device, non_blocking=non_blocking) for v in obj]
 
     elif isinstance(obj, tuple):
-        return tuple([to_device(v, device, non_blocking=non_blocking)
-                      for v in obj])
+        return tuple([to_device(v, device, non_blocking=non_blocking) for v in obj])
 
     else:
-        raise TypeError('Unknown type.')
+        raise TypeError("Unknown type.")
 
 
 def to_numpy(obj):
@@ -63,4 +84,4 @@ def to_numpy(obj):
         return tuple([to_numpy(v) for v in obj])
 
     else:
-        raise TypeError('Unknown type.')
+        raise TypeError("Unknown type.")

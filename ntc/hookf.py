@@ -27,7 +27,7 @@ def print_stack(N=4):
 
 def log_pre(
     inspect=True,
-    stack_depth=5,
+    stack_depth=6,
     with_kwargs=True,
     range=False,
     device=False,
@@ -43,46 +43,33 @@ def log_pre(
     if with_kwargs:
 
         def hook(module, input_, inputkwargs):
-            frame = ins.stack()[::-1][-stack_depth]
-            res = ""
-            if inspect:
-                res += get_codeline(frame) + "; "
-
-            s = []
-
-            if len(input_):
-                s.append(f"args={info2(input_, **info_kwargs)}")
-
-            if len(inputkwargs):
-                s.append(f"kwargs={info2(inputkwargs, **info_kwargs)}")
-
-            res += f"In: {', '.join(s)}"
-            print(res)
+            print_forward(
+                module,
+                in_args=input_,
+                in_kwargs=inputkwargs,
+                inspect=inspect,
+                stack_depth=stack_depth,
+                info_kwargs=info_kwargs,
+            )
 
         return hook
-
     else:
 
         def hook(module, input_):
-            frame = ins.stack()[::-1][-stack_depth]
-            res = ""
-            if inspect:
-                res += get_codeline(frame) + "; "
+            print_forward(
+                module,
+                in_args=input_,
+                inspect=inspect,
+                stack_depth=stack_depth,
+                info_kwargs=info_kwargs,
+            )
 
-            s = []
-
-            if len(input_):
-                s.append(f"args={info2(input_, **info_kwargs)}")
-
-            res += f"In: {', '.join(s)}"
-            print(res)
-
-    return hook
+        return hook
 
 
 def log_post(
+    stack_depth=6,
     inspect=True,
-    stack_depth=5,
     with_kwargs=True,
     range=False,
     device=False,
@@ -98,46 +85,62 @@ def log_post(
     if with_kwargs:
 
         def hook(module, input_, inputkwargs, output_):
-            frame = ins.stack()[::-1][-stack_depth]
-            res = ""
-
-            if inspect:
-                res += get_codeline(frame) + "; "
-
-            s = []
-
-            if len(input_):
-                s.append(f"args={info2(input_, **info_kwargs)}")
-
-            if len(inputkwargs):
-                s.append(f"kwargs={info2(inputkwargs, **info_kwargs)}")
-
-            res += f"In: {', '.join(s)} => "
-
-            if output_:
-                res += f"{info2(output_, **info_kwargs)}"
-
-            print(res)
+            print_forward(
+                module,
+                in_args=input_,
+                in_kwargs=inputkwargs,
+                output=output_,
+                inspect=inspect,
+                stack_depth=stack_depth,
+                info_kwargs=info_kwargs,
+            )
 
         return hook
     else:
 
         def hook(module, input_, output_):
-            frame = ins.stack()[::-1][-stack_depth]
-            res = ""
-            if inspect:
-                res += get_codeline(frame) + "; "
-
-            s = []
-
-            if len(input_):
-                s.append(f"args={info2(input_, **info_kwargs)}")
-
-            res += f"In: {', '.join(s)} => "
-
-            if output_:
-                res += f"{info2(output_, **info_kwargs)}"
-
-            print(res)
+            print_forward(
+                module,
+                in_args=input_,
+                output=output_,
+                inspect=inspect,
+                stack_depth=stack_depth,
+                info_kwargs=info_kwargs,
+            )
 
         return hook
+
+
+def print_forward(
+    module,
+    in_args=None,
+    in_kwargs=None,
+    output=None,
+    inspect=True,
+    stack_depth=6,
+    info_kwargs=None,
+):
+    frame = ins.stack()[::-1][-stack_depth]
+    res = ""
+
+    if inspect:
+        res += get_codeline(frame) + "; "
+
+    any_args = in_args is not None and len(in_args)
+    any_kwargs = in_kwargs is not None and len(in_kwargs)
+    
+    l = []
+    if any_args:
+        for v in in_args:
+            l.append(info2(v, **info_kwargs))
+
+    if any_kwargs:
+        for k, v in in_kwargs.items():
+            l.append(f"{k}={info2(v, **info_kwargs)}")
+            
+    res += f"f({', '.join(l)})"    
+
+    if output is not None:
+        res += f" => {info2(output, **info_kwargs)}"
+
+    print(res)

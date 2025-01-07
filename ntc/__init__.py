@@ -9,3 +9,4 @@ from . import loss
 from . import tools
 from . import utils
 from . import hookf
+from . import hook
